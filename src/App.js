@@ -8,18 +8,32 @@ class App extends Component {
     mode: 'summary',
     showExpenseInput: false,
     expenses: [],
-    expenseCategories: []
+    expenseCategories: [],
+    expenseCategoriesMap: {}
   };
 
   componentDidMount() {
     this.getFromApi('/api/v1/categories')
-      .then(categories => this.setState({expenseCategories: categories}))
-      .catch(error => console.log(error));
-    this.getFromApi('/api/v1/expenses')
-      .then(data => this.setState({expenses: data.rows}))
+      .then(categories => {
+        const expenseCategoriesMap = categories.rows.reduce((accum,category) => {
+          if(!accum[category.id]) {
+            accum[category.id] = category.name;
+          }
+          return accum;
+        },{});
+        this.setState({
+          expenseCategories: categories.rows,
+          expenseCategoriesMap
+        });
+      })
+      .then(
+        this.getFromApi('/api/v1/expenses')
+          .then(data => this.setState({expenses: data.rows}))
+          .catch(error => console.log(error))
+      )
       .catch(error => console.log(error));
   }
-
+  
   getFromApi = async (url) => {
     const response = await fetch(url);
     const body = response.json();
@@ -61,15 +75,30 @@ class App extends Component {
   render() {
     const expenses = this.state.expenses.map((expense, index) => {
       return <li key={index}>
-        {expense.category}, {expense.amount}, {expense.description}
+        {this.state.expenseCategoriesMap[expense.category]}, {expense.amount}, {expense.description}
+      </li>
+    });
+
+    const categories = this.state.expenseCategories.map((category, index) => {
+      return <li key={index}>
+        {category.id} - {category.name}
       </li>
     });
     
     return (
       <div className="oozetracker2">
-        <ul>
-          {expenses}
-        </ul>
+        <div>
+          <h2>Categories</h2>
+          <ul>
+            {categories}
+          </ul>
+        </div>
+        <div>
+          <h2>Expenses</h2>
+          <ul>
+            {expenses}
+          </ul>
+        </div>
 
         {this.expenseForm()}
 
