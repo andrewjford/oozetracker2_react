@@ -7,29 +7,21 @@ class App extends Component {
   state = {
     mode: 'summary',
     showExpenseInput: false,
-    expenses: [
-      {category: 'Groceries', description: "tiger", amount: "3812.70"},
-      {category: 'Apparel', description: "doggie", amount: "129.33"}
-    ],
-    expenseCategories: [
-      'Groceries',
-      'Dining Out',
-      'Entertainment',
-      'Transportation',
-      'Apparel',
-      'Health',
-      'Alcohol'
-    ]
+    expenses: [],
+    expenseCategories: []
   };
 
   componentDidMount() {
-    this.getCategories()
+    this.getFromApi('/api/v1/categories')
       .then(categories => this.setState({expenseCategories: categories}))
+      .catch(error => console.log(error));
+    this.getFromApi('/api/v1/expenses')
+      .then(data => this.setState({expenses: data.rows}))
       .catch(error => console.log(error));
   }
 
-  getCategories = async () => {
-    const response = await fetch('/api/v1/categories');
+  getFromApi = async (url) => {
+    const response = await fetch(url);
     const body = response.json();
 
     if(response.status !== 200) {
