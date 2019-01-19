@@ -22,6 +22,23 @@ class App extends Component {
     ]
   };
 
+  componentDidMount() {
+    this.getCategories()
+      .then(categories => this.setState({expenseCategories: categories}))
+      .catch(error => console.log(error));
+  }
+
+  getCategories = async () => {
+    const response = await fetch('/api/v1/categories');
+    const body = response.json();
+
+    if(response.status !== 200) {
+      throw Error(body.message);
+    }
+
+    return body;
+  }
+
   expenseForm = () => {
     if (this.state.showExpenseInput) {
       return (
