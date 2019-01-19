@@ -10,25 +10,16 @@ export default class ExpenseInput extends React.Component {
       description: '',
       amount: 0,
       date: theDate,
-      category: this.props.expenseCategories[0]
+      category: this.props.expenseCategories[0].id
     };
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleAmountChange = this.handleAmountChange.bind(this);
-    this.handleCategoryChange = this.handleCategoryChange.bind(this);
   }
 
-  // categories = this.props.expenseCategories.map((category) => {
-  //   return (
-  //     <Picker.Item label={category} value={category} key={category}/>
-  //   )
-  // });
-
-  handleSubmit() {
+  handleSubmit = (event) => {
+    event.preventDefault();
     this.props.createExpense(this.state);
   }
 
-  handleAmountChange(text) {
+  handleAmountChange = (text) => {
     this.setState({amount: text});
   }
 
@@ -36,16 +27,37 @@ export default class ExpenseInput extends React.Component {
     this.setState({description: event.target.value});
   }
 
-  handleCategoryChange(newCategory) {
-    this.setState({category: newCategory});
+  handleAmountChange = (event) => {
+    this.setState({amount: event.target.value});
+  }
+
+  handleCategoryChange = (event) => {
+    this.setState({category: event.target.value});
   }
 
   render() {
+    const categories = this.props.expenseCategories.map(category => {
+      return (
+        <option key={category.id} value={category.id}>{category.name}</option>
+      );
+    });
     return (
       <form onSubmit={this.handleSubmit}>
         <label>
           Description
           <input type="text" value={this.state.description} onChange={this.handleDescriptionChange}/>
+        </label>
+
+        <label>
+          Amount
+          <input type="number" value={this.state.amount} onChange={this.handleAmountChange}/>
+        </label>
+
+        <label>
+          Category
+          <select onChange={this.handleCategoryChange}>
+            {categories}
+          </select>
         </label>
 
 
@@ -62,7 +74,7 @@ export default class ExpenseInput extends React.Component {
           {this.categories}
         </Picker> */}
 
-        <button onClick={this.handleSubmit}>Submit</button>
+        <button>Submit</button>
       </form>
     )
   }

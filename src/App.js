@@ -45,31 +45,47 @@ class App extends Component {
     return body;
   }
 
+  postToApi = async (url,body) => {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers : {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+
+    if(response.status !== 201) {
+      throw Error(body.message);
+    }
+    return response.json();
+  }
+
   expenseForm = () => {
     if (this.state.showExpenseInput) {
       return (
         <ExpenseInput 
           expenseCategories={this.state.expenseCategories}
-          createExpense={this.addExpense}/>
+          createExpense={this.createExpense}/>
       )
     } else {
       return null;
     }
-  };
+  }
 
   handleAddExpenseClick = (event) => {
     this.setState((state) => {
       return {showExpenseInput: true};
     });
-  };
+  }
 
-  addExpense = (newExpense) => {
-    this.setState(() => {
-      return {
-        showExpenseInput: false,
-        expenses: [...this.state.expenses, newExpense]
-      }
-    });
+  createExpense = (newExpense) => {
+    this.postToApi('/api/v1/expenses', newExpense)
+      .then((responseExpense) => {
+        this.setState(() => {
+          return {
+            showExpenseInput: false,
+            expenses: [...this.state.expenses, responseExpense]
+          }
+        });
+      })
   }
   
   render() {
