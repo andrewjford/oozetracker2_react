@@ -6,7 +6,7 @@ import EditCategories from './Components/EditCategories';
 import BackendCallout from './Components/BackendCallout';
 import './App.css';
 
-class App extends Component {
+export default class Home extends Component {
 
   state = {
     mode: 'summary',
@@ -65,8 +65,8 @@ class App extends Component {
     return (
       <div className='navigationMenu'>
         <button onClick={this.handleAddExpenseClick}>Add Expense</button>
-        <Link to="/categories">Categories</Link>
-        <Link to="/">Summary</Link>
+        <button onClick={this.handleEditCategoriesClick}>Edit Category</button>
+        <button onClick={this.handleSummaryClick}>Summary View</button>
       </div>
     );
   }
@@ -101,22 +101,13 @@ class App extends Component {
   
   render() {
     return (
-      <BrowserRouter>
-        <div>
-          <Route exact path='/' component={this.mainContainer}/>
-          <Route path='/categories' render={(props) => <EditCategories {...props} state={this.state} />}/>
-          {this.navigationMenu()}
-        </div>
-      </BrowserRouter>
+      <div className="oozetracker2">
+        {this.mainContainer()}
+        {this.expenseForm()}
+
+        {this.navigationMenu()}
+
+      </div>
     );
   }
 }
-
-// <div className="oozetracker2">
-//   {this.mainContainer()}
-//   {this.expenseForm()}
-
-//   {this.navigationMenu()}
-
-// </div>
-export default App;
