@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import ExpenseInput from './Components/ExpenseInput';
+import SummaryDisplay from './Components/SummaryDisplay';
+import EditCategories from './Components/EditCategories';
+import BackendCallout from './Components/BackendCallout';
 import './App.css';
 
 class App extends Component {
@@ -13,7 +16,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    this.getFromApi('/api/v1/categories')
+    BackendCallout.getFromApi('/api/v1/categories')
       .then(categories => {
         const expenseCategoriesMap = categories.rows.reduce((accum,category) => {
           if(!accum[category.id]) {
@@ -27,35 +30,11 @@ class App extends Component {
         });
       })
       .then(
-        this.getFromApi('/api/v1/expenses')
+        BackendCallout.getFromApi('/api/v1/expenses')
           .then(data => this.setState({expenses: data.rows}))
           .catch(error => console.log(error))
       )
       .catch(error => console.log(error));
-  }
-  
-  getFromApi = async (url) => {
-    const response = await fetch(url);
-    const body = response.json();
-
-    if(response.status !== 200) {
-      throw Error(body.message);
-    }
-
-    return body;
-  }
-
-  postToApi = async (url,body) => {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers : {'Content-Type': 'application/json'},
-      body: JSON.stringify(body)
-    });
-
-    if(response.status !== 201) {
-      throw Error(body.message);
-    }
-    return response.json();
   }
 
   expenseForm = () => {
@@ -70,14 +49,45 @@ class App extends Component {
     }
   }
 
+  mainContainer = () => {
+    switch (this.state.mode) {
+      case 'summary':
+        return <SummaryDisplay state={this.state}/>;
+      case 'edit_categories':
+        return <EditCategories state={this.state}/>;
+      default:
+        return null;
+    }
+  }
+
+  navigationMenu = () => {
+    return (
+      <div className='navigationMenu'>
+        <button onClick={this.handleAddExpenseClick}>Add Expense</button>
+        <button onClick={this.handleEditCategoriesClick}>Edit Category</button>
+        <button onClick={this.handleSummaryClick}>Summary View</button>
+      </div>
+    );
+  }
+
   handleAddExpenseClick = (event) => {
     this.setState((state) => {
       return {showExpenseInput: true};
     });
   }
 
+  handleEditCategoriesClick = (event) => {
+    this.setState((state) => {
+      return {mode: 'edit_categories'};
+    })
+  }
+
+  handleSummaryClick = (event) => {
+    this.setState((state) => {return {mode: 'summary'}});
+  }
+
   createExpense = (newExpense) => {
-    this.postToApi('/api/v1/expenses', newExpense)
+    BackendCallout.postToApi('/api/v1/expenses', newExpense)
       .then((responseExpense) => {
         this.setState(() => {
           return {
@@ -89,36 +99,12 @@ class App extends Component {
   }
   
   render() {
-    const expenses = this.state.expenses.map((expense, index) => {
-      return <li key={index}>
-        {this.state.expenseCategoriesMap[expense.category]}, {expense.amount}, {expense.description}
-      </li>
-    });
-
-    const categories = this.state.expenseCategories.map((category, index) => {
-      return <li key={index}>
-        {category.id} - {category.name}
-      </li>
-    });
-    
     return (
       <div className="oozetracker2">
-        <div>
-          <h2>Categories</h2>
-          <ul>
-            {categories}
-          </ul>
-        </div>
-        <div>
-          <h2>Expenses</h2>
-          <ul>
-            {expenses}
-          </ul>
-        </div>
-
+        {this.mainContainer()}
         {this.expenseForm()}
 
-        <button onClick={this.handleAddExpenseClick}>Add Expense</button>
+        {this.navigationMenu()}
 
       </div>
     );

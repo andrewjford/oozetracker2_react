@@ -1,3 +1,2 @@
-- hookup expense list to pull from DB
-- setup addExpense to hit backend API
-- refresh expense list after addExpense callout
+- edit categories
+- delete expenses
