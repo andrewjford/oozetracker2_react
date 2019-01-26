@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as BrowserRouter, Route, Link } from 'react-router-dom';
+import { BrowserRouter as BrowserRouter, Route, Link, Redirect } from 'react-router-dom';
 import ExpenseInput from './Components/ExpenseInput';
 import SummaryDisplay from './Components/SummaryDisplay';
 import EditCategories from './Components/EditCategories';
@@ -64,11 +64,18 @@ class App extends Component {
   navigationMenu = () => {
     return (
       <div className='navigationMenu'>
-        <button onClick={this.handleAddExpenseClick}>Add Expense</button>
+        <Link to="/expense">Add Expense</Link>
         <Link to="/categories">Categories</Link>
         <Link to="/">Summary</Link>
       </div>
     );
+  }
+
+  redirect = () => {
+    const {redirect} = this.state;
+    if (!!redirect) {
+      return (<Redirect to={redirect}/>)
+    }
   }
 
   handleAddExpenseClick = (event) => {
@@ -93,10 +100,11 @@ class App extends Component {
         this.setState(() => {
           return {
             showExpenseInput: false,
-            expenses: [...this.state.expenses, responseExpense]
+            expenses: [...this.state.expenses, responseExpense],
+            redirect: '/'
           }
         });
-      })
+      });
   }
   
   render() {
@@ -105,18 +113,14 @@ class App extends Component {
         <div>
           <Route exact path='/' component={this.mainContainer}/>
           <Route path='/categories' render={(props) => <EditCategories {...props} state={this.state} />}/>
+          <Route path='/expense' render={(props) => <ExpenseInput 
+            expenseCategories={this.state.expenseCategories}
+            createExpense={this.createExpense}/>}/>
           {this.navigationMenu()}
+          {this.redirect()}
         </div>
       </BrowserRouter>
     );
   }
 }
-
-// <div className="oozetracker2">
-//   {this.mainContainer()}
-//   {this.expenseForm()}
-
-//   {this.navigationMenu()}
-
-// </div>
 export default App;

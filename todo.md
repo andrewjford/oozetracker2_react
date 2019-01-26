@@ -1,2 +1,4 @@
+- add expense
+- finish CRUD
 - edit categories
 - delete expenses
