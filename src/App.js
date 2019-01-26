@@ -65,13 +65,7 @@ class App extends Component {
 
   navigationMenu = () => {
     return (
-      <NavBar>
-        <div className='navigationMenu'>
-          <Link to="/expense">Add Expense</Link>
-          <Link to="/categories">Categories</Link>
-          <Link to="/">Summary</Link>
-        </div>
-      </NavBar>
+      <NavBar/>
     );
   }
 
