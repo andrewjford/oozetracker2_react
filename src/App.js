@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { BrowserRouter as BrowserRouter, Route, Link, Redirect } from 'react-router-dom';
+
+import NavBar from './Components/NavBar';
 import ExpenseInput from './Components/ExpenseInput';
 import SummaryDisplay from './Components/SummaryDisplay';
 import EditCategories from './Components/EditCategories';
 import BackendCallout from './Components/BackendCallout';
-import './App.css';
 
 class App extends Component {
 
@@ -36,6 +37,7 @@ class App extends Component {
           .catch(error => console.log(error))
       )
       .catch(error => console.log(error));
+    document.title = "Ooze Tracker"
   }
 
   expenseForm = () => {
@@ -63,11 +65,13 @@ class App extends Component {
 
   navigationMenu = () => {
     return (
-      <div className='navigationMenu'>
-        <Link to="/expense">Add Expense</Link>
-        <Link to="/categories">Categories</Link>
-        <Link to="/">Summary</Link>
-      </div>
+      <NavBar>
+        <div className='navigationMenu'>
+          <Link to="/expense">Add Expense</Link>
+          <Link to="/categories">Categories</Link>
+          <Link to="/">Summary</Link>
+        </div>
+      </NavBar>
     );
   }
 
@@ -111,12 +115,12 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div>
+          {this.navigationMenu()}
           <Route exact path='/' component={this.mainContainer}/>
           <Route path='/categories' render={(props) => <EditCategories {...props} state={this.state} />}/>
           <Route path='/expense' render={(props) => <ExpenseInput 
             expenseCategories={this.state.expenseCategories}
             createExpense={this.createExpense}/>}/>
-          {this.navigationMenu()}
           {this.redirect()}
         </div>
       </BrowserRouter>
