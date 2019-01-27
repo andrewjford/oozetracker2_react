@@ -1,8 +1,16 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import ExpenseTable from './ExpenseTable';
 
-export default class SummaryDisplay extends React.Component {
+const styles = theme => ({
+  mainHeader: {
+    padding: "1rem"
+  }
+});
+
+class SummaryDisplay extends React.Component {
 
   render() {
     const expenses = this.props.state.expenses.map((expense) => {
@@ -14,9 +22,13 @@ export default class SummaryDisplay extends React.Component {
     
     return (
       <div className="summary">
-        <h2>Expenses</h2>
+        <Typography className={this.props.classes.mainHeader} variant="h5" component="h3">
+          Recent Expenses
+        </Typography>
         <ExpenseTable expenses={expenses}/>
       </div>
     );
   }
 }
+
+export default withStyles(styles)(SummaryDisplay);
