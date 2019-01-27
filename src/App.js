@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { BrowserRouter as BrowserRouter, Route, Link, Redirect } from 'react-router-dom';
 
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import Theme from './Theme';
+
 import NavBar from './Components/NavBar';
 import ExpenseInput from './Components/ExpenseInput';
 import SummaryDisplay from './Components/SummaryDisplay';
@@ -108,6 +111,7 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
+      <MuiThemeProvider theme={Theme}>
         <div>
           {this.navigationMenu()}
           <Route exact path='/' component={this.mainContainer}/>
@@ -117,6 +121,7 @@ class App extends Component {
             createExpense={this.createExpense}/>}/>
           {this.redirect()}
         </div>
+      </MuiThemeProvider>
       </BrowserRouter>
     );
   }

@@ -21,8 +21,8 @@ const styles = {
     marginRight: 20,
   },
   link: {
-    textDecoration: 'none',
-    color: 'white'
+    textDecoration: "none",
+    color: "inherit"
   }
 };
 
