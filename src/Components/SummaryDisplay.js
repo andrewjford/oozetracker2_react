@@ -6,7 +6,7 @@ import ExpenseTable from './ExpenseTable';
 
 const styles = theme => ({
   mainHeader: {
-    padding: "1rem"
+    padding: "1rem 1rem 0"
   }
 });
 

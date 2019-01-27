@@ -1,4 +1,5 @@
-- add material ui theme https://blog.bam.tech/developper-news/get-the-best-of-your-react-app-design-by-using-material-ui-theme
+- setup expense record page
+- setup onclick to redirect to record page
 - finish CRUD
 - edit categories
 - delete expenses
