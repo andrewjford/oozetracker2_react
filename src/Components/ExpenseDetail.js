@@ -45,7 +45,7 @@ export default class ExpenseInput extends React.Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <article>
         <label>
           Description
           <input type="text" value={this.state.description} onChange={this.handleDescriptionChange}/>
@@ -62,9 +62,7 @@ export default class ExpenseInput extends React.Component {
             {this.state.category}
           </select>
         </label>
-
-        <button>Submit</button>
-      </form>
+      </article>
     )
   }
 }

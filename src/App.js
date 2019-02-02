@@ -117,11 +117,14 @@ class App extends Component {
           {this.navigationMenu()}
           <Route exact path='/' component={this.mainContainer}/>
           <Route path='/categories' render={(props) => <EditCategories {...props} state={this.state} />}/>
-          <Route path='/expense' render={(props) => <ExpenseInput 
-            expenseCategories={this.state.expenseCategories}
-            createExpense={this.createExpense}/>}/>
-          <Route path='/expenses/:id' render={(props) => <ExpenseDetail 
-            recordId={props.match.params.id}/>}/>
+          <Route path='/expenses/:id' render={(props) => {
+            if (props.match.params.id === 'new') {
+              return <ExpenseInput expenseCategories={this.state.expenseCategories}
+              createExpense={this.createExpense}/>
+            } else {
+              return <ExpenseDetail recordId={props.match.params.id}/> 
+            }
+          }}/>
           {this.redirect()}
         </div>
       </MuiThemeProvider>

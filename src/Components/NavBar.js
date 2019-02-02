@@ -40,7 +40,7 @@ function ButtonAppBar(props) {
               Ooze Tracker
             </Typography>
           </Link>
-          <Link className={classes.link} to="/expense"><Button color="inherit">Add Expense</Button></Link>
+          <Link className={classes.link} to="/expenses/new"><Button color="inherit">Add Expense</Button></Link>
           <Link className={classes.link} to="/categories"><Button color="inherit">Categories</Button></Link>
           <Button color="inherit">Login</Button>
         </Toolbar>
