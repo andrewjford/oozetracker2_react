@@ -9,6 +9,7 @@ import ExpenseInput from './Components/ExpenseInput';
 import SummaryDisplay from './Components/SummaryDisplay';
 import EditCategories from './Components/EditCategories';
 import BackendCallout from './Components/BackendCallout';
+import ExpenseDetail from './Components/ExpenseDetail';
 
 class App extends Component {
 
@@ -119,6 +120,8 @@ class App extends Component {
           <Route path='/expense' render={(props) => <ExpenseInput 
             expenseCategories={this.state.expenseCategories}
             createExpense={this.createExpense}/>}/>
+          <Route path='/expenses/:id' render={(props) => <ExpenseDetail 
+            recordId={props.match.params.id}/>}/>
           {this.redirect()}
         </div>
       </MuiThemeProvider>

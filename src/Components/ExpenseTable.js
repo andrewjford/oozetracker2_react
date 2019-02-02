@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -47,7 +48,9 @@ class ExpenseTable extends React.Component {
                   {row.categoryName}
                 </TableCell>
                 <TableCell align="right">{row.description}</TableCell>
-                <TableCell align="right" onClick={test}>{row.amount}</TableCell>
+                <TableCell align="right" onClick={test}>
+                  <Link to={"/expenses/" + row.id}>{row.amount}</Link>
+                </TableCell>
                 <TableCell align="right">{row.created_date}</TableCell>
               </HoverTableRow>
             ))}
