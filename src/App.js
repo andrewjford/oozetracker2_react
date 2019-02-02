@@ -67,6 +67,22 @@ class App extends Component {
     }
   }
 
+  expensesRoute = ({match}) => {
+    return (
+      <div>
+        <Route exact path={match.path} component={this.mainContainer} />
+        <Route path={`${match.path}/:id`} render={(props) => {
+          if (props.match.params.id === 'new') {
+            return <ExpenseInput expenseCategories={this.state.expenseCategories}
+            createExpense={this.createExpense}/>
+          } else {
+            return <ExpenseDetail recordId={props.match.params.id}/> 
+          }
+        }}/>
+      </div>
+    )
+  }
+
   navigationMenu = () => {
     return (
       <NavBar/>
@@ -117,14 +133,7 @@ class App extends Component {
           {this.navigationMenu()}
           <Route exact path='/' component={this.mainContainer}/>
           <Route path='/categories' render={(props) => <EditCategories {...props} state={this.state} />}/>
-          <Route path='/expenses/:id' render={(props) => {
-            if (props.match.params.id === 'new') {
-              return <ExpenseInput expenseCategories={this.state.expenseCategories}
-              createExpense={this.createExpense}/>
-            } else {
-              return <ExpenseDetail recordId={props.match.params.id}/> 
-            }
-          }}/>
+          <Route path='/expenses' component={this.expensesRoute}/>
           {this.redirect()}
         </div>
       </MuiThemeProvider>
