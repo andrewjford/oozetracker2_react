@@ -5,7 +5,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import Theme from './Theme';
 
 import NavBar from './Components/NavBar';
-import ExpenseInput from './Components/ExpenseInput';
+import NewExpense from './Components/NewExpense';
 import SummaryDisplay from './Components/SummaryDisplay';
 import EditCategories from './Components/EditCategories';
 import BackendCallout from './Components/BackendCallout';
@@ -15,10 +15,10 @@ class App extends Component {
 
   state = {
     mode: 'summary',
-    showExpenseInput: false,
     expenses: [],
     expenseCategories: [],
-    expenseCategoriesMap: {}
+    expenseCategoriesMap: {},
+    loading: true
   };
 
   componentDidMount() {
@@ -37,23 +37,13 @@ class App extends Component {
       })
       .then(
         BackendCallout.getFromApi('/api/v1/expenses')
-          .then(data => this.setState({expenses: data.rows}))
+          .then(data => {
+            this.setState({expenses: data.rows, loading: false});
+          })
           .catch(error => console.log(error))
       )
       .catch(error => console.log(error));
-    document.title = "Ooze Tracker"
-  }
-
-  expenseForm = () => {
-    if (this.state.showExpenseInput) {
-      return (
-        <ExpenseInput 
-          expenseCategories={this.state.expenseCategories}
-          createExpense={this.createExpense}/>
-      )
-    } else {
-      return null;
-    }
+    document.title = "Ooze Tracker";
   }
 
   mainContainer = () => {
@@ -73,7 +63,7 @@ class App extends Component {
         <Route exact path={match.path} component={this.mainContainer} />
         <Route path={`${match.path}/:id`} render={(props) => {
           if (props.match.params.id === 'new') {
-            return <ExpenseInput expenseCategories={this.state.expenseCategories}
+            return <NewExpense expenseCategories={this.state.expenseCategories} addNewExpense={this.addNewExpense}
             createExpense={this.createExpense}/>
           } else {
             return <ExpenseDetail recordId={props.match.params.id}/> 
@@ -96,9 +86,12 @@ class App extends Component {
     }
   }
 
-  handleAddExpenseClick = (event) => {
-    this.setState((state) => {
-      return {showExpenseInput: true};
+  addNewExpense = (newExpense) => {
+    this.setState(() => {
+      return {
+        expenses: [...this.state.expenses, newExpense],
+        redirect: '/'
+      }
     });
   }
 
@@ -112,23 +105,11 @@ class App extends Component {
     this.setState((state) => {return {mode: 'summary'}});
   }
 
-  createExpense = (newExpense) => {
-    BackendCallout.postToApi('/api/v1/expenses', newExpense)
-      .then((responseExpense) => {
-        this.setState(() => {
-          return {
-            showExpenseInput: false,
-            expenses: [...this.state.expenses, responseExpense],
-            redirect: '/'
-          }
-        });
-      });
-  }
-  
-  render() {
-    return (
-      <BrowserRouter>
-      <MuiThemeProvider theme={Theme}>
+  main = () => {
+    if (this.state.loading) {
+      return <div>Loading</div>
+    } else {
+      return (
         <div>
           {this.navigationMenu()}
           <Route exact path='/' component={this.mainContainer}/>
@@ -136,7 +117,16 @@ class App extends Component {
           <Route path='/expenses' component={this.expensesRoute}/>
           {this.redirect()}
         </div>
-      </MuiThemeProvider>
+      );
+    }
+  }
+
+  render() {
+    return (
+      <BrowserRouter>
+        <MuiThemeProvider theme={Theme}>
+          {this.main()}
+        </MuiThemeProvider>
       </BrowserRouter>
     );
   }

@@ -3,3 +3,4 @@
 - finish CRUD
 - edit categories
 - delete expenses
+- bug - there is an element 'Unknown' in the /expenses/new DOM
