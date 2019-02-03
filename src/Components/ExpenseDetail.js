@@ -1,8 +1,28 @@
 import React from 'react';
+import { Typography, withStyles } from '@material-ui/core';
+
 import BackendCallout from './BackendCallout';
 
-export default class ExpenseInput extends React.Component {
+const styles = theme => ({
+  table: {
+    display: 'grid',
+    gridTemplateColumns: '30% 30% auto',
+  },
+  container: {
+    padding: '2rem'
+  },
+  col1: {
+    gridColumn: '1 / 2'
+  },
+  col2: {
+    gridColumn: '2'
+  },
+  header: {
+    paddingBottom: '1rem'
+  }
+});
 
+class ExpenseDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,47 +42,24 @@ export default class ExpenseInput extends React.Component {
       .catch(error => console.log(error));
   }
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    // this.props.createExpense(this.state);
-  }
-
-  handleAmountChange = (text) => {
-    this.setState({amount: text});
-  }
-
-  handleDescriptionChange = (event) => {
-    this.setState({description: event.target.value});
-  }
-
-  handleAmountChange = (event) => {
-    this.setState({amount: event.target.value});
-  }
-
-  handleCategoryChange = (event) => {
-    this.setState({category: event.target.value});
-  }
-
   render() {
     return (
-      <article>
-        <label>
-          Description
-          <input type="text" value={this.state.description} onChange={this.handleDescriptionChange}/>
-        </label>
-
-        <label>
-          Amount
-          <input type="number" value={this.state.amount} onChange={this.handleAmountChange}/>
-        </label>
-
-        <label>
-          Category
-          <select onChange={this.handleCategoryChange}>
-            {this.state.category}
-          </select>
-        </label>
+      <article className={this.props.classes.container}>
+        <Typography variant="h5" component="h3" className={this.props.classes.header}>
+          Expense Detail
+        </Typography>
+        <article className={this.props.classes.table}>
+          <Typography variant="subtitle1" className={this.props.classes.col1}>Date</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.col2}>{new Date(this.state.created_date).toLocaleDateString()}</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.col1}>Description</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.row}>{this.state.description}</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.col1}>Amount</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.row}>{this.state.amount}</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.col1}>Category</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.row}>{this.state.category}</Typography>
+        </article>
       </article>
     )
   }
 }
+export default withStyles(styles)(ExpenseDetail);
