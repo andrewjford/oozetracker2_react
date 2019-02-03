@@ -15,28 +15,29 @@ const styles = theme => ({});
 class ExpenseTable extends React.Component {
 
   render() {
+    this.props.expenses.sort((a,b) => {
+      return new Date(b.created_date) - new Date(a.created_date);
+    });
     
     return (
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell>Date</TableCell>
+            <TableCell>Description</TableCell>
             <TableCell>Category</TableCell>
-            <TableCell align="right">Description</TableCell>
             <TableCell align="right">Amount</TableCell>
-            <TableCell align="right">Date</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {this.props.expenses.map(row => (
             <HoverTableRow key={row.id}>
-              <TableCell component="th" scope="row">
-                {row.categoryName}
-              </TableCell>
-              <TableCell align="right">{row.description}</TableCell>
+              <TableCell>{new Date(row.created_date).toLocaleDateString()}</TableCell>
+              <TableCell>{row.description}</TableCell>
+              <TableCell component="th" scope="row">{row.categoryName}</TableCell>
               <TableCell align="right">
                 <Link to={"/expenses/" + row.id}>{row.amount}</Link>
               </TableCell>
-              <TableCell align="right">{row.created_date}</TableCell>
             </HoverTableRow>
           ))}
         </TableBody>

@@ -107,7 +107,7 @@ class App extends Component {
 
   main = () => {
     if (this.state.loading) {
-      return <div>Loading</div>
+      return <div>{this.navigationMenu()}</div>
     } else {
       return (
         <div>

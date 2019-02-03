@@ -1,3 +1,4 @@
+- loading spinner
 - setup expense record page
 - setup onclick to redirect to record page
 - finish CRUD
