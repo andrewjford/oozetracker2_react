@@ -61,12 +61,18 @@ class App extends Component {
     return (
       <div>
         <Route exact path={match.path} component={this.mainContainer} />
+        <Route path={`${match.path}/:id/edit`} render={(props) => {
+          return <div>wuattat</div>
+        }}/>
         <Route path={`${match.path}/:id`} render={(props) => {
           if (props.match.params.id === 'new') {
             return <NewExpense expenseCategories={this.state.expenseCategories} addNewExpense={this.addNewExpense}
             createExpense={this.createExpense}/>
           } else {
-            return <ExpenseDetail recordId={props.match.params.id}/> 
+            return (
+              <ExpenseDetail expenseCategories={this.state.expenseCategories}
+                             recordId={props.match.params.id}/>
+            );
           }
         }}/>
       </div>

@@ -34,17 +34,31 @@ const styles = theme => ({
 class NewExpense extends React.Component {
   constructor(props) {
     super(props);
-    let theDate = new Date();
-    theDate = `${theDate.getFullYear()}-${theDate.getMonth()+1}-${theDate.getDate()}`
-    this.state = {
-      form: {
-        description: '',
-        amount: 0,
-        date: theDate,
-        category: 'wut',
-      },
-      categories: props.expenseCategories
-    };
+    if (props.expense) {
+      let theDate = !!props.expense.created_date ? new Date(props.expense.created_date) : new Date();
+      theDate = `${theDate.getFullYear()}-${theDate.getMonth()+1}-${theDate.getDate()}`
+      this.state = {
+        form: {
+          description: props.expense.description || '',
+          amount: props.expense.amount || 0,
+          date: theDate,
+          category: props.expense.category || 'choose one',
+        },
+        categories: props.expenseCategories
+      }
+    } else {
+      let theDate = new Date();
+      theDate = `${theDate.getFullYear()}-${theDate.getMonth()+1}-${theDate.getDate()}`
+      this.state = {
+        form: {
+          description: '',
+          amount: 0,
+          date: theDate,
+          category: 'choose one',
+        },
+        categories: props.expenseCategories
+      };
+    }
   }
 
   categoriesList = () => {
@@ -104,12 +118,19 @@ class NewExpense extends React.Component {
   }
 
   render() {
+    const header = () => {
+      const title = !!this.props.expense ? "Edit Expense" : "New Expense";
+      return (
+        <Typography variant="h5" component="h3">
+          {title}
+        </Typography>
+      );
+    }
+
     return (
       <Paper className={this.props.classes.container}>
         {this.redirect()}
-        <Typography variant="h5" component="h3">
-          New Expense
-        </Typography>
+        {header()}
         <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
           <TextField type="text" value={this.state.form.description}  className={this.props.classes.input}
                      onChange={this.handleDescriptionChange}

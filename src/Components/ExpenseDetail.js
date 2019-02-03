@@ -1,14 +1,16 @@
 import React from 'react';
 import { Typography, withStyles } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Fab from '@material-ui/core/Fab';
+import EditIcon from '@material-ui/icons/Edit';
 
 import BackendCallout from './BackendCallout';
+import NewExpense from './NewExpense';
 
 const styles = theme => ({
   table: {
     display: 'grid',
     gridTemplateColumns: '30% 30% auto',
-  },
-  container: {
     padding: '2rem'
   },
   col1: {
@@ -18,47 +20,83 @@ const styles = theme => ({
     gridColumn: '2'
   },
   header: {
-    paddingBottom: '1rem'
-  }
+  },
+  fab: {
+    margin: theme.spacing.unit,
+  },
 });
 
 class ExpenseDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: props.recordId,
-      description: '',
-      amount: 0,
-      date: '',
-      category: ''
+      expense: {
+        id: props.recordId,
+        description: '',
+        amount: 0,
+        date: '',
+        category: ''
+      },
+      showEdit: false,
+      expenseCategories: props.expenseCategories
     };
   }
 
   componentDidMount() {
-    BackendCallout.getFromApi('/api/v1/expenses/' + this.state.id)
+    BackendCallout.getFromApi('/api/v1/expenses/' + this.state.expense.id)
       .then(expense => {
-        this.setState({...expense});
+        this.setState({expense});
       })
       .catch(error => console.log(error));
   }
 
+  handleEditClick = () => {
+    this.setState({showEdit: true});
+  }
+
+  container = () => {
+    const expense = this.state.expense;
+    if (this.state.showEdit) {
+      return (
+        <div>
+          <NewExpense expenseCategories={this.state.expenseCategories} expense={this.state.expense}/>
+        </div>
+      );
+    } else {
+      return (
+        <article className={this.props.classes.table}>
+          <div className={this.props.classes.col1}>
+            <Typography variant="h5" component="h3" className={this.props.classes.header}>
+              Expense Detail
+            </Typography>
+          </div>
+          <div className={this.props.classes.col2}>
+            <Fab size="small" aria-label="Edit" className={this.props.classes.fab} onClick={this.handleEditClick}>
+              <EditIcon/>
+            </Fab>
+            <Fab size="small" aria-label="Delete" className={this.props.classes.fab}>
+              <DeleteIcon/>
+            </Fab>
+          </div>
+          <Typography variant="subtitle1" className={this.props.classes.col1}>Date</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.col2}>{new Date(expense.created_date).toLocaleDateString()}</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.col1}>Description</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.row}>{expense.description}</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.col1}>Amount</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.row}>{expense.amount}</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.col1}>Category</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.row}>{expense.category}</Typography>
+          
+        </article>
+      );
+    }
+  }
+
   render() {
     return (
-      <article className={this.props.classes.container}>
-        <Typography variant="h5" component="h3" className={this.props.classes.header}>
-          Expense Detail
-        </Typography>
-        <article className={this.props.classes.table}>
-          <Typography variant="subtitle1" className={this.props.classes.col1}>Date</Typography>
-          <Typography variant="subtitle1" className={this.props.classes.col2}>{new Date(this.state.created_date).toLocaleDateString()}</Typography>
-          <Typography variant="subtitle1" className={this.props.classes.col1}>Description</Typography>
-          <Typography variant="subtitle1" className={this.props.classes.row}>{this.state.description}</Typography>
-          <Typography variant="subtitle1" className={this.props.classes.col1}>Amount</Typography>
-          <Typography variant="subtitle1" className={this.props.classes.row}>{this.state.amount}</Typography>
-          <Typography variant="subtitle1" className={this.props.classes.col1}>Category</Typography>
-          <Typography variant="subtitle1" className={this.props.classes.row}>{this.state.category}</Typography>
-        </article>
-      </article>
+      <div>
+        {this.container()}
+      </div>
     )
   }
 }
