@@ -54,6 +54,17 @@ class ExpenseDetail extends React.Component {
     this.setState({showEdit: true});
   }
 
+  handleDeleteClick = () => {
+    BackendCallout.delete('/api/v1/expenses/' + this.state.expense.id)
+      .then(response => {
+        debugger
+        this.props.updateExpenseState((expenses) => {
+          return expenses.filter((expense) => expense.id !== this.state.expense.id);
+        });
+        // this.props.redirectTo('/');
+      });
+  }
+
   updateExpense = (updatedExpense) => {
     this.setState({
       expense : updatedExpense,
@@ -82,7 +93,7 @@ class ExpenseDetail extends React.Component {
             <Fab size="small" aria-label="Edit" className={this.props.classes.fab} onClick={this.handleEditClick}>
               <EditIcon/>
             </Fab>
-            <Fab size="small" aria-label="Delete" className={this.props.classes.fab}>
+            <Fab size="small" aria-label="Delete" className={this.props.classes.fab} onClick={this.handleDeleteClick}>
               <DeleteIcon/>
             </Fab>
           </div>

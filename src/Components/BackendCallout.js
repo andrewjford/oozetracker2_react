@@ -36,4 +36,17 @@ export default class BackendCallout extends React.Component {
     }
     return response.json();
   }
+
+  static delete = async (url,body) => {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers : {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+
+    if(response.status !== 204) {
+      throw Error(body.message);
+    }
+    return 'success';
+  }
 }

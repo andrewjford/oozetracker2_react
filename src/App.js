@@ -70,8 +70,8 @@ class App extends Component {
             createExpense={this.createExpense}/>
           } else {
             return (
-              <ExpenseDetail expenseCategories={this.state.expenseCategories}
-                             recordId={props.match.params.id}/>
+              <ExpenseDetail expenseCategories={this.state.expenseCategories} updateExpenseState={this.updateExpenseState}
+                             recordId={props.match.params.id} redirectTo={this.redirectTo}/>
             );
           }
         }}/>
@@ -92,10 +92,23 @@ class App extends Component {
     }
   }
 
+  redirectTo = (url) => {
+    this.setState({redirect: url});
+  }
+
   addNewExpense = (newExpense) => {
     this.setState(() => {
       return {
         expenses: [...this.state.expenses, newExpense],
+        redirect: '/'
+      }
+    });
+  }
+
+  updateExpenseState = (callback) => {
+    this.setState((state) => {
+      return {
+        expenses: callback(state.expenses),
         redirect: '/'
       }
     });

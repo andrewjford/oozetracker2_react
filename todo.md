@@ -1,7 +1,4 @@
-- loading spinner
-- setup expense record page
-- setup onclick to redirect to record page
 - finish CRUD
 - edit categories
-- delete expenses
 - bug - there is an element 'Unknown' in the /expenses/new DOM
+- bug - delete 2 items, 2nd delete does not redirect to '/'
