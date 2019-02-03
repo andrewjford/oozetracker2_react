@@ -19,8 +19,19 @@ export default class BackendCallout extends React.Component {
       headers : {'Content-Type': 'application/json'},
       body: JSON.stringify(body)
     });
-
     if(response.status !== 201) {
+      throw Error(body.message);
+    }
+    return response.json();
+  }
+
+  static putToApi = async (url,body) => {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers : {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+    if(response.status !== 200) {
       throw Error(body.message);
     }
     return response.json();

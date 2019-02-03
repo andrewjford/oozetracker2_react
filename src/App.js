@@ -66,7 +66,7 @@ class App extends Component {
         }}/>
         <Route path={`${match.path}/:id`} render={(props) => {
           if (props.match.params.id === 'new') {
-            return <NewExpense expenseCategories={this.state.expenseCategories} addNewExpense={this.addNewExpense}
+            return <NewExpense expenseCategories={this.state.expenseCategories} afterSubmit={this.addNewExpense}
             createExpense={this.createExpense}/>
           } else {
             return (

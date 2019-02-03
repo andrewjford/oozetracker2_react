@@ -54,12 +54,20 @@ class ExpenseDetail extends React.Component {
     this.setState({showEdit: true});
   }
 
+  updateExpense = (updatedExpense) => {
+    this.setState({
+      expense : updatedExpense,
+      showEdit: false
+    });
+  }
+
   container = () => {
     const expense = this.state.expense;
     if (this.state.showEdit) {
       return (
         <div>
-          <NewExpense expenseCategories={this.state.expenseCategories} expense={this.state.expense}/>
+          <NewExpense expenseCategories={this.state.expenseCategories} afterSubmit={this.updateExpense}
+                      expense={this.state.expense}/>
         </div>
       );
     } else {

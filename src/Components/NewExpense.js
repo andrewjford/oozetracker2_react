@@ -38,11 +38,9 @@ class NewExpense extends React.Component {
       let theDate = !!props.expense.created_date ? new Date(props.expense.created_date) : new Date();
       theDate = `${theDate.getFullYear()}-${theDate.getMonth()+1}-${theDate.getDate()}`
       this.state = {
+        mode: "edit",
         form: {
-          description: props.expense.description || '',
-          amount: props.expense.amount || 0,
-          date: theDate,
-          category: props.expense.category || 'choose one',
+          ...props.expense
         },
         categories: props.expenseCategories
       }
@@ -50,6 +48,7 @@ class NewExpense extends React.Component {
       let theDate = new Date();
       theDate = `${theDate.getFullYear()}-${theDate.getMonth()+1}-${theDate.getDate()}`
       this.state = {
+        mode: "new",
         form: {
           description: '',
           amount: 0,
@@ -70,8 +69,15 @@ class NewExpense extends React.Component {
   createExpense = (newExpense) => {
     BackendCallout.postToApi('/api/v1/expenses', newExpense)
       .then((responseExpense) => {
-        this.props.addNewExpense(responseExpense);
+        this.props.afterSubmit(responseExpense);
       });
+  }
+
+  updateExpense = (expense) => {
+    BackendCallout.putToApi(`/api/v1/expenses/${expense.id}`, expense)
+      .then((responseExpense) => {
+        this.props.afterSubmit(responseExpense);
+      }).catch((ex)=>{debugger})
   }
 
   redirect = () => {
@@ -83,7 +89,11 @@ class NewExpense extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.createExpense(this.state.form);
+    if (this.state.mode === "edit") {
+      this.updateExpense(this.state.form);
+    } else {
+      this.createExpense(this.state.form);
+    }
   }
 
   handleAmountChange = (text) => {
@@ -119,7 +129,7 @@ class NewExpense extends React.Component {
 
   render() {
     const header = () => {
-      const title = !!this.props.expense ? "Edit Expense" : "New Expense";
+      const title = this.state.mode === "edit" ? "Edit Expense" : "New Expense";
       return (
         <Typography variant="h5" component="h3">
           {title}
