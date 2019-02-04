@@ -47,14 +47,7 @@ class App extends Component {
   }
 
   mainContainer = () => {
-    switch (this.state.mode) {
-      case 'summary':
-        return <SummaryDisplay state={this.state}/>;
-      case 'edit_categories':
-        return <EditCategories state={this.state}/>;
-      default:
-        return null;
-    }
+    return <SummaryDisplay state={this.state}/>;
   }
 
   expensesRoute = ({match}) => {
@@ -112,12 +105,6 @@ class App extends Component {
         redirect: '/'
       }
     });
-  }
-
-  handleEditCategoriesClick = (event) => {
-    this.setState((state) => {
-      return {mode: 'edit_categories'};
-    })
   }
 
   handleSummaryClick = (event) => {

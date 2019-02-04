@@ -1,4 +1,4 @@
-- finish CRUD
+- monthly totals back and front end
 - edit categories
 - bug - there is an element 'Unknown' in the /expenses/new DOM
 - bug - delete 2 items, 2nd delete does not redirect to '/'
