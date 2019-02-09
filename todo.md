@@ -1,4 +1,5 @@
 - monthly totals back and front end
+  - cycle through months
 - edit categories
 - bug - there is an element 'Unknown' in the /expenses/new DOM
 - bug - delete 2 items, 2nd delete does not redirect to '/'

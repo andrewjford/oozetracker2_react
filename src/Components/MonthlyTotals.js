@@ -57,6 +57,10 @@ class MonthlyTotals extends React.Component {
         </TableRow>
       );
     });
+
+    const total = this.state.lineItems.reduce((accum, lineItem) => {
+      return accum + parseFloat(lineItem.sum);
+    },0);
     
     return (
       <div className={this.props.classes.summary}>
@@ -75,6 +79,10 @@ class MonthlyTotals extends React.Component {
 
             <TableBody>
               {lineItems}
+              <TableRow>
+                <TableCell><b>Total</b></TableCell>
+                <TableCell align="right"><b>{total}</b></TableCell>
+              </TableRow>
             </TableBody>
           </Table>
 
