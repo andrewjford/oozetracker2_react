@@ -7,12 +7,15 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
 
 import BackendCallout from './BackendCallout';
 
 const styles = theme => ({
   mainHeader: {
-    padding: "1rem 1rem 0"
+    gridColumn: "1 / 5",
+    height: "2rem"
   },
   summary: {
     marginTop: "1rem",
@@ -22,6 +25,10 @@ const styles = theme => ({
   paper: {
     gridColumnStart: 3,
     gridColumnEnd: 4
+  },
+  headerItem: {
+    verticalAlign: "middle",
+    display: "inline",
   }
 });
 
@@ -43,13 +50,41 @@ class MonthlyTotals extends React.Component {
       month: this.state.date.getMonth() + 1,
       year: this.state.date.getFullYear()
     };
-    BackendCallout.postToApi('/api/v1/reports/monthly', currentMonthRequest)
+    this.getMonthlyReport(currentMonthRequest);
+  }
+
+  getMonthlyReport = (requestBody) => {
+    BackendCallout.postToApi('/api/v1/reports/monthly', requestBody)
       .then(report => {
         this.setState({lineItems: report.rows});
       })
       .catch(error => {
         console.log(error)
       });
+  }
+
+  handleLeftMonthClick = () => {
+    const date = this.state.date;
+    date.setMonth(this.state.date.getMonth() - 1);
+    this.setState({date});
+
+    const currentMonthRequest = {
+      month: date.getMonth() + 1,
+      year: date.getFullYear()
+    };
+    this.getMonthlyReport(currentMonthRequest);
+  }
+
+  handleRightMonthClick = () => {
+    const date = this.state.date;
+    date.setMonth(this.state.date.getMonth() + 1);
+    this.setState({date});
+    
+    const currentMonthRequest = {
+      month: date.getMonth() + 1,
+      year: date.getFullYear()
+    };
+    this.getMonthlyReport(currentMonthRequest);
   }
 
   render() {
@@ -69,9 +104,13 @@ class MonthlyTotals extends React.Component {
     return (
       <div className={this.props.classes.summary}>
         <Paper className={this.props.classes.paper}>
-          <Typography className={this.props.classes.mainHeader} variant="h5" component="h3">
-            {this.state.date.getFullYear()} {this.state.monthNames[this.state.date.getMonth()]}
-          </Typography>
+          <div className={this.props.classes.mainHeader}>
+            <ChevronLeft className={this.props.classes.headerItem} onClick={this.handleLeftMonthClick}/>
+            <Typography className={this.props.classes.headerItem} variant="h5" component="h3">
+              {this.state.date.getFullYear()} {this.state.monthNames[this.state.date.getMonth()]}
+            </Typography>
+            <ChevronRight className={this.props.classes.headerItem} onClick={this.handleRightMonthClick}/>
+          </div>
 
           <Table>
             <TableHead>
