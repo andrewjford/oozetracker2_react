@@ -28,16 +28,20 @@ const styles = theme => ({
 class MonthlyTotals extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       categoriesMap: props.categoriesMap,
       lineItems: [],
+      date: new Date(),
+      monthNames: ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ],
     };
   }
   componentDidMount() {
-    const today = new Date();
     const currentMonthRequest = {
-      month: today.getMonth() + 1,
-      year: today.getFullYear()
+      month: this.state.date.getMonth() + 1,
+      year: this.state.date.getFullYear()
     };
     BackendCallout.postToApi('/api/v1/reports/monthly', currentMonthRequest)
       .then(report => {
@@ -51,7 +55,7 @@ class MonthlyTotals extends React.Component {
   render() {
     const lineItems = this.state.lineItems.map((lineItem) => {
       return (
-        <TableRow>
+        <TableRow key={lineItem.id}>
           <TableCell>{this.state.categoriesMap[lineItem.id]}</TableCell>
           <TableCell align="right">{lineItem.sum}</TableCell>
         </TableRow>
@@ -66,7 +70,7 @@ class MonthlyTotals extends React.Component {
       <div className={this.props.classes.summary}>
         <Paper className={this.props.classes.paper}>
           <Typography className={this.props.classes.mainHeader} variant="h5" component="h3">
-            Monthly Summary
+            {this.state.date.getFullYear()} {this.state.monthNames[this.state.date.getMonth()]}
           </Typography>
 
           <Table>
