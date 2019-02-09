@@ -2,6 +2,11 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 import BackendCallout from './BackendCallout';
 
@@ -12,11 +17,11 @@ const styles = theme => ({
   summary: {
     marginTop: "1rem",
     display: "grid",
-    gridTemplateColumns: "40px 50px auto 50px 40px"
+    gridTemplateColumns: "1rem 20% auto 20% 1rem"
   },
   paper: {
-    gridColumnStart: 2,
-    gridColumnEnd: 5
+    gridColumnStart: 3,
+    gridColumnEnd: 4
   }
 });
 
@@ -24,6 +29,7 @@ class MonthlyTotals extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      categoriesMap: props.categoriesMap,
       lineItems: [],
     };
   }
@@ -45,10 +51,10 @@ class MonthlyTotals extends React.Component {
   render() {
     const lineItems = this.state.lineItems.map((lineItem) => {
       return (
-        <li>
-          <span>{lineItem.id}</span>
-          <span>{lineItem.sum}</span>
-        </li>
+        <TableRow>
+          <TableCell>{this.state.categoriesMap[lineItem.id]}</TableCell>
+          <TableCell align="right">{lineItem.sum}</TableCell>
+        </TableRow>
       );
     });
     
@@ -58,9 +64,20 @@ class MonthlyTotals extends React.Component {
           <Typography className={this.props.classes.mainHeader} variant="h5" component="h3">
             Monthly Summary
           </Typography>
-          <ul>
-            {lineItems}
-          </ul>
+
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Category</TableCell>
+                <TableCell align="right">Amount</TableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {lineItems}
+            </TableBody>
+          </Table>
+
         </Paper>
       </div>
     );

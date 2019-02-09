@@ -122,7 +122,7 @@ class App extends Component {
           <Route exact path='/' component={this.mainContainer}/>
           <Route path='/categories' render={(props) => <EditCategories {...props} state={this.state} />}/>
           <Route path='/expenses' component={this.expensesRoute}/>
-          <Route path='/monthly' render={(props) => <MonthlyTotals/>}/>
+          <Route path='/monthly' render={(props) => <MonthlyTotals categoriesMap={this.state.expenseCategoriesMap}/>}/>
           {this.redirect()}
         </div>
       );
