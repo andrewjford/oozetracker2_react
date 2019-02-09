@@ -42,6 +42,7 @@ function ButtonAppBar(props) {
           </Link>
           <Link className={classes.link} to="/expenses/new"><Button color="inherit">Add Expense</Button></Link>
           <Link className={classes.link} to="/categories"><Button color="inherit">Categories</Button></Link>
+          <Link className={classes.link} to="/monthly"><Button color="inherit">Monthly Totals</Button></Link>
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>

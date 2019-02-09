@@ -10,6 +10,7 @@ import SummaryDisplay from './Components/SummaryDisplay';
 import EditCategories from './Components/EditCategories';
 import BackendCallout from './Components/BackendCallout';
 import ExpenseDetail from './Components/ExpenseDetail';
+import MonthlyTotals from './Components/MonthlyTotals';
 
 class App extends Component {
 
@@ -121,6 +122,7 @@ class App extends Component {
           <Route exact path='/' component={this.mainContainer}/>
           <Route path='/categories' render={(props) => <EditCategories {...props} state={this.state} />}/>
           <Route path='/expenses' component={this.expensesRoute}/>
+          <Route path='/monthly' render={(props) => <MonthlyTotals/>}/>
           {this.redirect()}
         </div>
       );
