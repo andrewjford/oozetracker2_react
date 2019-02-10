@@ -1,4 +1,5 @@
-- date of expense
 - edit categories
+- delete categories
+- reduxify
 - bug - there is an element 'Unknown' in the /expenses/new DOM
 - bug - delete 2 items, 2nd delete does not redirect to '/'

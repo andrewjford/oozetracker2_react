@@ -3,7 +3,7 @@ import { Paper, TextField, Typography, Select, InputLabel, MenuItem, Button } fr
 import { withStyles } from '@material-ui/core/styles';
 import { Redirect } from 'react-router-dom';
 
-import BackendCallout from './BackendCallout';
+import BackendCallout from '../BackendCallout';
 
 const styles = theme => ({
   form: {
@@ -36,7 +36,6 @@ class ExpenseForm extends React.Component {
   constructor(props) {
     super(props);
     if (props.expense) {
-      debugger
       this.state = {
         mode: "edit",
         form: {
@@ -83,9 +82,8 @@ class ExpenseForm extends React.Component {
   updateExpense = (expense) => {
     BackendCallout.putToApi(`/api/v1/expenses/${expense.id}`, expense)
       .then((responseExpense) => {
-        debugger
         this.props.afterSubmit(responseExpense);
-      }).catch((ex)=>{debugger})
+      }).catch((ex)=>{})
   }
 
   redirect = () => {

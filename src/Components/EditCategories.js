@@ -1,8 +1,41 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+
 import CategoryInput from './CategoryInput';
 import BackendCallout from './BackendCallout';
 
-export default class EditCategories extends React.Component {
+const styles = theme => ({
+  mainHeader: {
+    gridColumn: "1 / 5",
+    height: "2rem",
+    padding: "1rem",
+    borderBottom: "1px solid rgba(224, 224, 224, 1)",
+  },
+  summary: {
+    marginTop: "1rem",
+    display: "grid",
+    gridTemplateColumns: "1rem 20% auto 20% 1rem"
+  },
+  paper: {
+    gridColumnStart: 3,
+    gridColumnEnd: 4
+  },
+  headerItem: {
+    verticalAlign: "middle",
+    display: "inline",
+  },
+  footer: {
+    margin: "1rem",
+  }
+});
+
+class EditCategories extends React.Component {
 
   constructor(props) {
     super(props);
@@ -16,7 +49,7 @@ export default class EditCategories extends React.Component {
   createCategory = (newCategory) => {
     BackendCallout.postToApi('/api/v1/categories', newCategory)
       .then((response) => {
-        debugger;        
+        debugger
       });
   }
 
@@ -24,22 +57,44 @@ export default class EditCategories extends React.Component {
     if (this.state.displayCategoryInput) {
       return <CategoryInput createCategory={this.createCategory} />;
     } else {
-      return <button onClick={this.handleAddCategory}>Add Category</button>;
+      return (
+        <Button onClick={this.handleAddCategory} variant="contained" color="secondary">
+          Add Category
+        </Button>
+      );
     }
   }
 
   render() {
     const categories = this.props.state.expenseCategories.map((category, index) => {
-      return <li key={index}>
-        {category.id} - {category.name}
-      </li>
+      return <TableRow key={index}>
+        <TableCell>{category.name}</TableCell>
+      </TableRow>
     });
 
     return (
       <div>
-        <ul>{categories}</ul>
-        {this.categoryInput()}
+        <div className={this.props.classes.summary}>
+        <Paper className={this.props.classes.paper}>
+          <div className={this.props.classes.mainHeader}>
+            <Typography className={this.props.classes.headerItem} variant="h5" component="h3">
+              Categories
+            </Typography>
+          </div>
+
+          <Table>
+            <TableBody>
+              {categories}
+            </TableBody>
+          </Table>
+          <div className={this.props.classes.footer}>
+            {this.categoryInput()}
+          </div>
+
+        </Paper>
+      </div>
       </div>
     );
   }
 }
+export default withStyles(styles)(EditCategories);

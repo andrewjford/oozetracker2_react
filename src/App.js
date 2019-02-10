@@ -5,11 +5,11 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import Theme from './Theme';
 
 import NavBar from './Components/NavBar';
-import ExpenseForm from './Components/ExpenseForm';
+import ExpenseForm from './Components/Expenses/ExpenseForm';
 import SummaryDisplay from './Components/SummaryDisplay';
 import EditCategories from './Components/EditCategories';
 import BackendCallout from './Components/BackendCallout';
-import ExpenseDetail from './Components/ExpenseDetail';
+import ExpenseDetail from './Components/Expenses/ExpenseDetail';
 import MonthlyTotals from './Components/MonthlyTotals';
 
 class App extends Component {

@@ -8,7 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-import HoverTableRow from './HoverTableRow';
+import HoverTableRow from '../HoverTableRow';
 
 const styles = theme => ({});
 

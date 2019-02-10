@@ -1,7 +1,13 @@
 import React from 'react';
+import { TextField, Button, withStyles } from '@material-ui/core';
 
-export default class CategoryInput extends React.Component {
+const styles = theme => ({
+  item: {
+    verticalAlign: "inherit",
+  },
+});
 
+class CategoryInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,13 +25,14 @@ export default class CategoryInput extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <label>
-          Name
-          <input type="text" value={this.state.name} onChange={this.handleNameChange}/>
-        </label>
-
-        <button>Submit</button>
+        <TextField type="text" value={this.state.name} onChange={this.handleNameChange}
+                   label="Category Name" className={this.props.classes.item}/>
+        <Button onClick={this.handleSubmit} variant="flat" color="primary"
+                className={this.props.classes.item}>
+          Submit
+        </Button>
       </form>
     )
   }
 }
+export default withStyles(styles)(CategoryInput);
