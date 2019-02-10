@@ -103,7 +103,7 @@ class ExpenseDetail extends React.Component {
           <Typography variant="subtitle1" className={this.props.classes.col1}>Amount</Typography>
           <Typography variant="subtitle1" className={this.props.classes.row}>{expense.amount}</Typography>
           <Typography variant="subtitle1" className={this.props.classes.col1}>Category</Typography>
-          <Typography variant="subtitle1" className={this.props.classes.row}>{expense.category}</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.row}>{expense.category_name}</Typography>
           
         </article>
       );
