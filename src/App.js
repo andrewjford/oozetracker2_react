@@ -5,7 +5,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import Theme from './Theme';
 
 import NavBar from './Components/NavBar';
-import NewExpense from './Components/NewExpense';
+import ExpenseForm from './Components/ExpenseForm';
 import SummaryDisplay from './Components/SummaryDisplay';
 import EditCategories from './Components/EditCategories';
 import BackendCallout from './Components/BackendCallout';
@@ -60,8 +60,8 @@ class App extends Component {
         }}/>
         <Route path={`${match.path}/:id`} render={(props) => {
           if (props.match.params.id === 'new') {
-            return <NewExpense expenseCategories={this.state.expenseCategories} afterSubmit={this.addNewExpense}
-            createExpense={this.createExpense}/>
+            return <ExpenseForm expenseCategories={this.state.expenseCategories}
+              afterSubmit={this.addNewExpense}/>
           } else {
             return (
               <ExpenseDetail expenseCategories={this.state.expenseCategories} updateExpenseState={this.updateExpenseState}

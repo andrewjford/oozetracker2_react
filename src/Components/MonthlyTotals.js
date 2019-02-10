@@ -15,7 +15,9 @@ import BackendCallout from './BackendCallout';
 const styles = theme => ({
   mainHeader: {
     gridColumn: "1 / 5",
-    height: "2rem"
+    height: "2rem",
+    paddingLeft: "1rem",
+    paddingTop: "1rem",
   },
   summary: {
     marginTop: "1rem",

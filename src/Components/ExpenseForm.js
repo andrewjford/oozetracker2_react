@@ -9,7 +9,8 @@ const styles = theme => ({
   form: {
     display: 'grid',
     gridTemplateColumns: '30% 30% auto',
-    gridRowGap: '1rem'
+    gridRowGap: '1rem',
+    paddingTop: '1rem'
   },
   container: {
     padding: '2rem'
@@ -31,33 +32,39 @@ const styles = theme => ({
   }
 });
 
-class NewExpense extends React.Component {
+class ExpenseForm extends React.Component {
   constructor(props) {
     super(props);
     if (props.expense) {
-      let theDate = !!props.expense.created_date ? new Date(props.expense.created_date) : new Date();
-      theDate = `${theDate.getFullYear()}-${theDate.getMonth()+1}-${theDate.getDate()}`
+      debugger
       this.state = {
         mode: "edit",
         form: {
-          ...props.expense
+          ...props.expense,
+          date: this.convertDateToString(new Date(props.expense.date))
         },
         categories: props.expenseCategories
       }
     } else {
-      let theDate = new Date();
-      theDate = `${theDate.getFullYear()}-${theDate.getMonth()+1}-${theDate.getDate()}`
       this.state = {
         mode: "new",
         form: {
           description: '',
           amount: 0,
-          date: theDate,
+          date: this.convertDateToString(new Date()),
           category: 'choose one',
         },
         categories: props.expenseCategories
       };
     }
+  }
+
+  convertDateToString = (date) => {
+    let month = date.getMonth() + 1;
+    month = month.toString().length === 1 ? "0" + month : month;
+    let day = date.getDate();
+    day = day.toString().length === 1 ? "0" + day : day;
+    return `${date.getFullYear()}-${month}-${day}`;
   }
 
   categoriesList = () => {
@@ -76,6 +83,7 @@ class NewExpense extends React.Component {
   updateExpense = (expense) => {
     BackendCallout.putToApi(`/api/v1/expenses/${expense.id}`, expense)
       .then((responseExpense) => {
+        debugger
         this.props.afterSubmit(responseExpense);
       }).catch((ex)=>{debugger})
   }
@@ -127,6 +135,15 @@ class NewExpense extends React.Component {
     });
   }
 
+  handleDateChange = (event) => {
+    this.setState({
+      form: {
+        ...this.state.form,
+        date: event.target.value
+      }
+    });
+  }
+
   render() {
     const header = () => {
       const title = this.state.mode === "edit" ? "Edit Expense" : "New Expense";
@@ -142,6 +159,8 @@ class NewExpense extends React.Component {
         {this.redirect()}
         {header()}
         <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
+          <TextField id="wt" value={this.state.form.date} type="date" label="Date" onChange={this.handleDateChange}/>
+
           <TextField type="text" value={this.state.form.description}  className={this.props.classes.input}
                      onChange={this.handleDescriptionChange}
                      label="Description"/>
@@ -165,4 +184,4 @@ class NewExpense extends React.Component {
   }
 }
 
-export default withStyles(styles)(NewExpense);
+export default withStyles(styles)(ExpenseForm);

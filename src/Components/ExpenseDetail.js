@@ -5,7 +5,7 @@ import Fab from '@material-ui/core/Fab';
 import EditIcon from '@material-ui/icons/Edit';
 
 import BackendCallout from './BackendCallout';
-import NewExpense from './NewExpense';
+import ExpenseForm from './ExpenseForm';
 
 const styles = theme => ({
   table: {
@@ -57,7 +57,6 @@ class ExpenseDetail extends React.Component {
   handleDeleteClick = () => {
     BackendCallout.delete('/api/v1/expenses/' + this.state.expense.id)
       .then(response => {
-        debugger
         this.props.updateExpenseState((expenses) => {
           return expenses.filter((expense) => expense.id !== this.state.expense.id);
         });
@@ -77,7 +76,7 @@ class ExpenseDetail extends React.Component {
     if (this.state.showEdit) {
       return (
         <div>
-          <NewExpense expenseCategories={this.state.expenseCategories} afterSubmit={this.updateExpense}
+          <ExpenseForm expenseCategories={this.state.expenseCategories} afterSubmit={this.updateExpense}
                       expense={this.state.expense}/>
         </div>
       );
@@ -98,7 +97,7 @@ class ExpenseDetail extends React.Component {
             </Fab>
           </div>
           <Typography variant="subtitle1" className={this.props.classes.col1}>Date</Typography>
-          <Typography variant="subtitle1" className={this.props.classes.col2}>{new Date(expense.created_date).toLocaleDateString()}</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.col2}>{new Date(expense.date).toLocaleDateString()}</Typography>
           <Typography variant="subtitle1" className={this.props.classes.col1}>Description</Typography>
           <Typography variant="subtitle1" className={this.props.classes.row}>{expense.description}</Typography>
           <Typography variant="subtitle1" className={this.props.classes.col1}>Amount</Typography>

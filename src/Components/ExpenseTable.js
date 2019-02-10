@@ -16,7 +16,7 @@ class ExpenseTable extends React.Component {
 
   render() {
     this.props.expenses.sort((a,b) => {
-      return new Date(b.created_date) - new Date(a.created_date);
+      return new Date(b.date) - new Date(a.date);
     });
     
     return (
@@ -32,7 +32,7 @@ class ExpenseTable extends React.Component {
         <TableBody>
           {this.props.expenses.map(row => (
             <HoverTableRow key={row.id}>
-              <TableCell>{new Date(row.created_date).toLocaleDateString()}</TableCell>
+              <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
               <TableCell>{row.description}</TableCell>
               <TableCell component="th" scope="row">{row.categoryName}</TableCell>
               <TableCell align="right">

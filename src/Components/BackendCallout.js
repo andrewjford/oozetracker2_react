@@ -19,6 +19,7 @@ export default class BackendCallout extends React.Component {
       headers : {'Content-Type': 'application/json'},
       body: JSON.stringify(body)
     });
+    debugger
     if(response.status < 200 || response.status > 299) {
       throw Error(body.message);
     }
@@ -31,7 +32,7 @@ export default class BackendCallout extends React.Component {
       headers : {'Content-Type': 'application/json'},
       body: JSON.stringify(body)
     });
-    if(response.status !== 200) {
+    if(response.status < 200 || response.status > 299) {
       throw Error(body.message);
     }
     return response.json();
