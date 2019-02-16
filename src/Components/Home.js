@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as BrowserRouter, Route, Link } from 'react-router-dom';
 import ExpenseInput from './Components/ExpenseInput';
 import SummaryDisplay from './Components/SummaryDisplay';
-import EditCategories from './Components/EditCategories';
+import CategoriesList from './Components/Categories/CategoriesList';
 import BackendCallout from './Components/BackendCallout';
 import './App.css';
 
@@ -55,7 +55,7 @@ export default class Home extends Component {
       case 'summary':
         return <SummaryDisplay state={this.state}/>;
       case 'edit_categories':
-        return <EditCategories state={this.state}/>;
+        return <CategoriesList state={this.state}/>;
       default:
         return null;
     }
@@ -65,7 +65,7 @@ export default class Home extends Component {
     return (
       <div className='navigationMenu'>
         <button onClick={this.handleAddExpenseClick}>Add Expense</button>
-        <button onClick={this.handleEditCategoriesClick}>Edit Category</button>
+        <button onClick={this.handleCategoriesListClick}>Edit Category</button>
         <button onClick={this.handleSummaryClick}>Summary View</button>
       </div>
     );
@@ -77,7 +77,7 @@ export default class Home extends Component {
     });
   }
 
-  handleEditCategoriesClick = (event) => {
+  handleCategoriesListClick = (event) => {
     this.setState((state) => {
       return {mode: 'edit_categories'};
     })

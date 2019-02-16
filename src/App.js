@@ -7,7 +7,7 @@ import Theme from './Theme';
 import NavBar from './Components/NavBar';
 import ExpenseForm from './Components/Expenses/ExpenseForm';
 import SummaryDisplay from './Components/SummaryDisplay';
-import EditCategories from './Components/EditCategories';
+import CategoriesList from './Components/Categories/CategoriesList';
 import BackendCallout from './Components/BackendCallout';
 import ExpenseDetail from './Components/Expenses/ExpenseDetail';
 import MonthlyTotals from './Components/MonthlyTotals';
@@ -120,7 +120,7 @@ class App extends Component {
         <div>
           {this.navigationMenu()}
           <Route exact path='/' component={this.mainContainer}/>
-          <Route path='/categories' render={(props) => <EditCategories {...props} state={this.state} />}/>
+          <Route path='/categories' render={(props) => <CategoriesList {...props} state={this.state} />}/>
           <Route path='/expenses' component={this.expensesRoute}/>
           <Route path='/monthly' render={(props) => <MonthlyTotals categoriesMap={this.state.expenseCategoriesMap}/>}/>
           {this.redirect()}
