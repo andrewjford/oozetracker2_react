@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import Theme from './Theme';
+import { withStyles } from '@material-ui/core';
 
 import NavBar from './Components/NavBar';
 import ExpenseForm from './Components/Expenses/ExpenseForm';
@@ -11,6 +12,12 @@ import CategoriesList from './Components/Categories/CategoriesList';
 import BackendCallout from './Components/BackendCallout';
 import ExpenseDetail from './Components/Expenses/ExpenseDetail';
 import MonthlyTotals from './Components/MonthlyTotals';
+
+const styles = theme => ({
+  root: {
+    backgroundColor: "gainsboro",
+  },
+});
 
 class App extends Component {
 
@@ -21,6 +28,7 @@ class App extends Component {
     expenseCategoriesMap: {},
     loading: true
   };
+
 
   componentDidMount() {
     BackendCallout.getFromApi('/api/v1/categories')
@@ -117,7 +125,7 @@ class App extends Component {
       return <div>{this.navigationMenu()}</div>
     } else {
       return (
-        <div>
+        <div className={this.props.classes.root}>
           {this.navigationMenu()}
           <Route exact path='/' component={this.mainContainer}/>
           <Route path='/categories' render={(props) => <CategoriesList {...props} state={this.state} />}/>
@@ -139,4 +147,4 @@ class App extends Component {
     );
   }
 }
-export default App;
+export default withStyles(styles)(App);
