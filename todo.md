@@ -1,4 +1,3 @@
-- edit categories
 - delete categories
 - reduxify
 - bug - there is an element 'Unknown' in the /expenses/new DOM
