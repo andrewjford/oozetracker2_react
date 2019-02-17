@@ -141,7 +141,7 @@ class CategoryRows extends React.Component {
           <TableRow key={category.id} data-key={category.id}>
             <TableCell className={this.props.classes.name}>
               <TextField type="text" value={this.state.inlineEditValue} onChange={this.handleInlineEdit}
-                        autoFocus="true" onBlur={this.handleInlineEditOnBlur}/>
+                        autoFocus={true} onBlur={this.handleInlineEditOnBlur}/>
             </TableCell>
             <TableCell className={this.props.classes.rightAlignButton}>
               <Fab size="small" aria-label="Edit" className={this.props.classes.fab} onClick={this.handleEditClick}>
