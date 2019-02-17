@@ -11,7 +11,7 @@ import NavBar from './components/NavBar';
 import ExpenseForm from './components/Expenses/ExpenseForm';
 import SummaryDisplay from './components/SummaryDisplay';
 import CategoriesList from './components/Categories/CategoriesList';
-import BackendCallout from './components/BackendCallout';
+import BackendCallout from './services/BackendCallout';
 import ExpenseDetail from './components/Expenses/ExpenseDetail';
 import MonthlyTotals from './components/MonthlyTotals';
 

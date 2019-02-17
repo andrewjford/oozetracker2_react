@@ -3,7 +3,7 @@ import { Paper, TextField, Typography, Select, InputLabel, MenuItem, Button } fr
 import { withStyles } from '@material-ui/core/styles';
 import { Redirect } from 'react-router-dom';
 
-import BackendCallout from '../BackendCallout';
+import BackendCallout from '../../services/BackendCallout';
 
 const styles = theme => ({
   form: {

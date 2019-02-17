@@ -10,7 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 
-import BackendCallout from './BackendCallout';
+import BackendCallout from '../services/BackendCallout';
 
 const styles = theme => ({
   mainHeader: {

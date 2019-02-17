@@ -4,7 +4,7 @@ import Fab from '@material-ui/core/Fab';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import BackendCallout from '../BackendCallout';
+import BackendCallout from '../../services/BackendCallout';
 import ExpenseForm from './ExpenseForm';
 
 const styles = theme => ({

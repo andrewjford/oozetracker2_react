@@ -7,7 +7,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-import BackendCallout from '../BackendCallout';
+import BackendCallout from '../../services/BackendCallout';
 
 const styles = theme => ({
   mainHeader: {

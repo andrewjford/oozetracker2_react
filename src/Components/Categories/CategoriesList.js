@@ -6,7 +6,7 @@ import Table from '@material-ui/core/Table';
 
 import CategoryInput from './CategoryInput';
 import CategoryRows from './CategoryRows';
-import BackendCallout from '../BackendCallout';
+import BackendCallout from '../../services/BackendCallout';
 
 const styles = theme => ({
   mainHeader: {
