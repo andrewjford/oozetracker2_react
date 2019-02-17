@@ -31,9 +31,6 @@ const styles = theme => ({
   footer: {
     margin: "1rem",
   },
-  editButton: {
-    textAlign: "right",
-  }
 });
 
 class CategoriesList extends React.Component {

@@ -26,7 +26,7 @@ class CategoryInput extends React.Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <TextField type="text" value={this.state.name} onChange={this.handleNameChange}
-                   label="Category Name" className={this.props.classes.item}/>
+                   label="Category Name" className={this.props.classes.item} autoFocus={true}/>
         <Button onClick={this.handleSubmit} variant="flat" color="primary"
                 className={this.props.classes.item}>
           Submit

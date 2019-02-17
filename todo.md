@@ -1,7 +1,5 @@
-- delete categories
 - reduxify
 - bug - there is an element 'Unknown' in the /expenses/new DOM
 - bug - delete 2 items, 2nd delete does not redirect to '/'
 - nav buttons should select whole height
 - select from table expense should highlight table cell not row
-- bug - background color isnt full height on reports screen
