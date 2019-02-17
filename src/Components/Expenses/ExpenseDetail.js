@@ -1,8 +1,8 @@
 import React from 'react';
 import { Typography, withStyles } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Fab from '@material-ui/core/Fab';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import BackendCallout from '../BackendCallout';
 import ExpenseForm from './ExpenseForm';
