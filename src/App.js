@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import Theme from './Theme';
 import { withStyles } from '@material-ui/core';
 
-import NavBar from './Components/NavBar';
-import ExpenseForm from './Components/Expenses/ExpenseForm';
-import SummaryDisplay from './Components/SummaryDisplay';
-import CategoriesList from './Components/Categories/CategoriesList';
-import BackendCallout from './Components/BackendCallout';
-import ExpenseDetail from './Components/Expenses/ExpenseDetail';
-import MonthlyTotals from './Components/MonthlyTotals';
+import NavBar from './components/NavBar';
+import ExpenseForm from './components/Expenses/ExpenseForm';
+import SummaryDisplay from './components/SummaryDisplay';
+import CategoriesList from './components/Categories/CategoriesList';
+import BackendCallout from './components/BackendCallout';
+import ExpenseDetail from './components/Expenses/ExpenseDetail';
+import MonthlyTotals from './components/MonthlyTotals';
+
+import { fetchExpenses } from './actions/dataActions';
 
 const styles = theme => ({
   root: {
@@ -31,6 +35,8 @@ class App extends Component {
 
 
   componentDidMount() {
+    this.props.fetchExpenses();
+
     BackendCallout.getFromApi('/api/v1/categories')
       .then(categories => {
         const expenseCategoriesMap = categories.rows.reduce((accum,category) => {
@@ -147,4 +153,11 @@ class App extends Component {
     );
   }
 }
-export default withStyles(styles)(App);
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    fetchExpenses,
+  }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(App));

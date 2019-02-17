@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { BrowserRouter as BrowserRouter, Route, Link } from 'react-router-dom';
-import ExpenseInput from './Components/ExpenseInput';
-import SummaryDisplay from './Components/SummaryDisplay';
-import CategoriesList from './Components/Categories/CategoriesList';
-import BackendCallout from './Components/BackendCallout';
+import ExpenseInput from './components/ExpenseInput';
+import SummaryDisplay from './components/SummaryDisplay';
+import CategoriesList from './components/Categories/CategoriesList';
+import BackendCallout from './components/BackendCallout';
 import './App.css';
 
 export default class Home extends Component {
