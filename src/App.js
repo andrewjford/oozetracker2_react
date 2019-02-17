@@ -15,7 +15,7 @@ import MonthlyTotals from './Components/MonthlyTotals';
 
 const styles = theme => ({
   root: {
-    backgroundColor: "gainsboro",
+    height: "100%",
   },
 });
 
