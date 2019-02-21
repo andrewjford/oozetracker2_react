@@ -23,21 +23,14 @@ const styles = theme => ({
 class SummaryDisplay extends React.Component {
 
   render() {
-    const expenses = this.props.state.expenses.map((expense) => {
-      return {
-        ...expense,
-        categoryName: this.props.state.expenseCategoriesMap[expense.category]
-      }
-    });
-    
     return (
       <div className={this.props.classes.summary}>
-      <Paper className={this.props.classes.paper}>
-        <Typography className={this.props.classes.mainHeader} variant="h5" component="h3">
-          Recent Expenses
-        </Typography>
-        <ExpenseTable expenses={expenses}/>
-      </Paper>
+        <Paper className={this.props.classes.paper}>
+          <Typography className={this.props.classes.mainHeader} variant="h5" component="h3">
+            Recent Expenses
+          </Typography>
+          <ExpenseTable expenses={this.props.expenses}/>
+        </Paper>
       </div>
     );
   }

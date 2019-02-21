@@ -1,4 +1,6 @@
-const dataReducer = (state = [], action) => {
+const dataReducer = (
+  state = {},
+  action) => {
   switch (action.type) {
     case 'FETCH_EXPENSES':
       return {

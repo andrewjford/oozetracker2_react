@@ -62,7 +62,7 @@ class App extends Component {
   }
 
   mainContainer = () => {
-    return <SummaryDisplay state={this.state}/>;
+    return <SummaryDisplay expenses={this.props.expenses}/>;
   }
 
   expensesRoute = ({match}) => {
@@ -154,10 +154,16 @@ class App extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    expenses: state.data.expenses
+  }
+}
+
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     fetchExpenses,
   }, dispatch)
 }
 
-export default connect(null, mapDispatchToProps)(withStyles(styles)(App));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(App));
