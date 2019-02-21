@@ -3,10 +3,14 @@ import { withStyles } from '@material-ui/core';
 import { Typography, Button } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import CategoryInput from './CategoryInput';
 import CategoryRows from './CategoryRows';
 import BackendCallout from '../../services/BackendCallout';
+
+import { fetchCategories } from '../../actions/categoriesActions';
 
 const styles = theme => ({
   mainHeader: {
@@ -37,17 +41,11 @@ class CategoriesList extends React.Component {
 
   constructor(props) {
     super(props);
-    const categories = this.props.state.expenseCategories.map((category) => {
-      return {
-        ...category,
-        editing: false
-      }
-    });
 
     this.state = {
       displayCategoryInput: false,
       inlineEditValue: null,
-      categories,
+      categories: props.categories.categories,
     };
   }
 
@@ -58,7 +56,7 @@ class CategoriesList extends React.Component {
   createCategory = (newCategory) => {
     BackendCallout.postToApi('/api/v1/categories', newCategory)
       .then((response) => {
-        debugger
+        
       });
   }
 
@@ -98,4 +96,17 @@ class CategoriesList extends React.Component {
     );
   }
 }
-export default withStyles(styles)(CategoriesList);
+
+const mapStateToProps = (state) => {
+  return {
+    categories: state.categories,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    fetchCategories,
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CategoriesList));

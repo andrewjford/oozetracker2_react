@@ -124,7 +124,6 @@ class CategoryRows extends React.Component {
 
   handleDeleteClick = (event) => {
     const categoryKey = event.currentTarget.parentElement.parentElement.dataset.key;
-    debugger
     BackendCallout.delete(`/api/v1/categories/${categoryKey}`)
       .then((response) => {
         const newCategories = this.state.categories.filter((category) => {

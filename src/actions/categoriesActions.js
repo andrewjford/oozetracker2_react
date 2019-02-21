@@ -1,16 +1,13 @@
 import BackendCallout from '../services/BackendCallout';
 
-const API_URL = process.env.BACKEND_API_URL;
-
-export const fetchExpenses = filter => {
+export const fetchCategories = filter => {
   return (dispatch) => {
-    BackendCallout.getFromApi('/api/v1/reports/recent')
+    BackendCallout.getFromApi('/api/v1/categories')
       .then(data => {
         return dispatch({
-          type: 'FETCH_EXPENSES',
+          type: 'FETCH_CATEGORIES',
           payload: data.rows
         });
       });
-
   }
 }

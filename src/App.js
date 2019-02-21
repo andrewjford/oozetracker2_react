@@ -16,6 +16,7 @@ import ExpenseDetail from './components/Expenses/ExpenseDetail';
 import MonthlyTotals from './components/MonthlyTotals';
 
 import { fetchExpenses } from './actions/dataActions';
+import { fetchCategories } from './actions/categoriesActions';
 
 const styles = theme => ({
   root: {
@@ -36,6 +37,7 @@ class App extends Component {
 
   componentDidMount() {
     this.props.fetchExpenses();
+    this.props.fetchCategories();
 
     BackendCallout.getFromApi('/api/v1/categories')
       .then(categories => {
@@ -134,7 +136,7 @@ class App extends Component {
         <div className={this.props.classes.root}>
           {this.navigationMenu()}
           <Route exact path='/' component={this.mainContainer}/>
-          <Route path='/categories' render={(props) => <CategoriesList {...props} state={this.state} />}/>
+          <Route path='/categories' render={(props) => <CategoriesList {...props} />}/>
           <Route path='/expenses' component={this.expensesRoute}/>
           <Route path='/monthly' render={(props) => <MonthlyTotals categoriesMap={this.state.expenseCategoriesMap}/>}/>
           {this.redirect()}
@@ -156,13 +158,15 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    expenses: state.data.expenses
+    expenses: state.data.expenses,
+    categories: state.categories,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     fetchExpenses,
+    fetchCategories,
   }, dispatch)
 }
 

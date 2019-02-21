@@ -8,9 +8,11 @@ import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import dataReducer from './reducers/dataReducer';
+import categoriesPageReducer from './reducers/categoriesReducer';
 
 const rootReducer = combineReducers({
-  data: dataReducer
+  data: dataReducer,
+  categories: categoriesPageReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
