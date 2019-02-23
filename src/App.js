@@ -11,11 +11,10 @@ import NavBar from './components/NavBar';
 import ExpenseForm from './components/Expenses/ExpenseForm';
 import SummaryDisplay from './components/SummaryDisplay';
 import CategoriesList from './components/Categories/CategoriesList';
-import BackendCallout from './services/BackendCallout';
 import ExpenseDetail from './components/Expenses/ExpenseDetail';
 import MonthlyTotals from './components/MonthlyTotals';
 
-import { fetchExpenses } from './actions/dataActions';
+import { fetchRecentExpenses } from './actions/expenseActions';
 import { fetchCategories } from './actions/categoriesActions';
 
 const styles = theme => ({
@@ -36,30 +35,8 @@ class App extends Component {
 
 
   componentDidMount() {
-    this.props.fetchExpenses();
+    this.props.fetchRecentExpenses();
     this.props.fetchCategories();
-
-    BackendCallout.getFromApi('/api/v1/categories')
-      .then(categories => {
-        const expenseCategoriesMap = categories.rows.reduce((accum,category) => {
-          if(!accum[category.id]) {
-            accum[category.id] = category.name;
-          }
-          return accum;
-        },{});
-        this.setState({
-          expenseCategories: categories.rows,
-          expenseCategoriesMap
-        });
-      })
-      .then(
-        BackendCallout.getFromApi('/api/v1/expenses')
-          .then(data => {
-            this.setState({expenses: data.rows, loading: false});
-          })
-          .catch(error => console.log(error))
-      )
-      .catch(error => console.log(error));
     document.title = "Ooze Tracker";
   }
 
@@ -76,7 +53,7 @@ class App extends Component {
         }}/>
         <Route path={`${match.path}/:id`} render={(props) => {
           if (props.match.params.id === 'new') {
-            return <ExpenseForm expenseCategories={this.state.expenseCategories}
+            return <ExpenseForm expenseCategories={this.props.categories}
               afterSubmit={this.addNewExpense}/>
           } else {
             return (
@@ -106,10 +83,9 @@ class App extends Component {
     this.setState({redirect: url});
   }
 
-  addNewExpense = (newExpense) => {
+  addNewExpense = () => {
     this.setState(() => {
       return {
-        expenses: [...this.state.expenses, newExpense],
         redirect: '/'
       }
     });
@@ -129,13 +105,13 @@ class App extends Component {
   }
 
   main = () => {
-    if (this.state.loading) {
+    if (!this.props.expenses) {
       return <div>{this.navigationMenu()}</div>
     } else {
       return (
         <div className={this.props.classes.root}>
           {this.navigationMenu()}
-          <Route exact path='/' component={this.mainContainer}/>
+          <Route exact path='/' render={() => <SummaryDisplay expenses={this.props.expenses}/>} />
           <Route path='/categories' render={(props) => <CategoriesList {...props} />}/>
           <Route path='/expenses' component={this.expensesRoute}/>
           <Route path='/monthly' render={(props) => <MonthlyTotals categoriesMap={this.state.expenseCategoriesMap}/>}/>
@@ -158,14 +134,14 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    expenses: state.data.expenses,
-    categories: state.categories,
+    expenses: state.expenses.expenses,
+    categories: state.categories.categories,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
-    fetchExpenses,
+    fetchRecentExpenses,
     fetchCategories,
   }, dispatch)
 }

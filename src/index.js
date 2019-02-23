@@ -7,11 +7,11 @@ import './index.css';
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import dataReducer from './reducers/dataReducer';
 import categoriesPageReducer from './reducers/categoriesReducer';
+import expensesReducer from './reducers/expensesReducer';
 
 const rootReducer = combineReducers({
-  data: dataReducer,
+  expenses: expensesReducer,
   categories: categoriesPageReducer,
 });
 

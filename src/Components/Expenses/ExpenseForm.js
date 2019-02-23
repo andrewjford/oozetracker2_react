@@ -1,8 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Paper, TextField, Typography, Select, InputLabel, MenuItem, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Redirect } from 'react-router-dom';
 
+import { createExpense } from '../../actions/expenseActions';
 import BackendCallout from '../../services/BackendCallout';
 
 const styles = theme => ({
@@ -73,10 +76,8 @@ class ExpenseForm extends React.Component {
   }
 
   createExpense = (newExpense) => {
-    BackendCallout.postToApi('/api/v1/expenses', newExpense)
-      .then((responseExpense) => {
-        this.props.afterSubmit(responseExpense);
-      });
+    this.props.createExpense(newExpense);
+    this.props.afterSubmit();
   }
 
   updateExpense = (expense) => {
@@ -182,4 +183,10 @@ class ExpenseForm extends React.Component {
   }
 }
 
-export default withStyles(styles)(ExpenseForm);
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    createExpense,
+  }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(ExpenseForm));
