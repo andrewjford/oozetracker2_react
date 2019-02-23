@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core';
+import { withStyles, TableBody } from '@material-ui/core';
 import { Typography, Button } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -7,10 +7,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import CategoryInput from './CategoryInput';
-import CategoryRows from './CategoryRows';
-import BackendCallout from '../../services/BackendCallout';
+import CategoryRow from './CategoryRow';
 
-import { fetchCategories } from '../../actions/categoriesActions';
+import { fetchCategories, createCategory, updateCategory, deleteCategory } from '../../actions/categoriesActions';
 
 const styles = theme => ({
   mainHeader: {
@@ -45,19 +44,27 @@ class CategoriesList extends React.Component {
     this.state = {
       displayCategoryInput: false,
       inlineEditValue: null,
-      categories: props.categories.categories,
     };
   }
 
   handleAddCategory = (event) => {
     this.setState((state) => { return {displayCategoryInput: true}});
   }
-
+  
   createCategory = (newCategory) => {
-    BackendCallout.postToApi('/api/v1/categories', newCategory)
-      .then((response) => {
-        
-      });
+    this.props.createCategory(newCategory);
+    this.setState({
+      displayCategoryInput: false,
+      inlineEditValue: null,
+    });
+  }
+  
+  updateCategory = (category) => {
+    this.props.updateCategory(category);
+  }
+
+  deleteCategory = (category) => {
+    this.props.deleteCategory(category);
   }
 
   categoryInput = () => {
@@ -73,6 +80,14 @@ class CategoriesList extends React.Component {
   }
 
   render() {
+    const categories = this.props.categories.categories.map((category) => {
+      return (
+        <CategoryRow key={category.id} category={category} 
+                      updateCategory={this.updateCategory}
+                      deleteCategory={this.deleteCategory}/>
+      );
+    });
+
     return (
       <div>
         <div className={this.props.classes.summary}>
@@ -84,7 +99,9 @@ class CategoriesList extends React.Component {
             </div>
 
             <Table>
-              <CategoryRows categories={this.state.categories}/>
+              <TableBody>
+                {categories}
+              </TableBody>
             </Table>
             <div className={this.props.classes.footer}>
               {this.categoryInput()}
@@ -106,6 +123,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     fetchCategories,
+    createCategory,
+    updateCategory,
+    deleteCategory,
   }, dispatch)
 }
 
