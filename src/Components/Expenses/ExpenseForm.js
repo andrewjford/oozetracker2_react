@@ -77,7 +77,7 @@ class ExpenseForm extends React.Component {
 
   createExpense = (newExpense) => {
     this.props.createExpense(newExpense);
-    this.props.afterSubmit();
+    this.setState({redirect: "/"});
   }
 
   updateExpense = (expense) => {

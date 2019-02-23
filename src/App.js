@@ -53,8 +53,7 @@ class App extends Component {
         }}/>
         <Route path={`${match.path}/:id`} render={(props) => {
           if (props.match.params.id === 'new') {
-            return <ExpenseForm expenseCategories={this.props.categories}
-              afterSubmit={this.addNewExpense}/>
+            return <ExpenseForm expenseCategories={this.props.categories} />
           } else {
             return (
               <ExpenseDetail expenseCategories={this.state.expenseCategories} updateExpenseState={this.updateExpenseState}
@@ -75,20 +74,13 @@ class App extends Component {
   redirect = () => {
     const {redirect} = this.state;
     if (!!redirect) {
+      // this.setState({redirect: null});
       return (<Redirect to={redirect}/>)
     }
   }
 
   redirectTo = (url) => {
     this.setState({redirect: url});
-  }
-
-  addNewExpense = () => {
-    this.setState(() => {
-      return {
-        redirect: '/'
-      }
-    });
   }
 
   updateExpenseState = (callback) => {

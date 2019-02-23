@@ -1,4 +1,5 @@
 - reduxify
+- bug - trying to redirect to / repeatedly 
 - bug - there is an element 'Unknown' in the /expenses/new DOM
 - bug - delete 2 items, 2nd delete does not redirect to '/'
 - nav buttons should select whole height
