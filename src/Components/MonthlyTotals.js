@@ -26,7 +26,8 @@ const styles = theme => ({
   },
   paper: {
     gridColumnStart: 3,
-    gridColumnEnd: 4
+    gridColumnEnd: 5,
+    margin: "1rem 5rem",
   },
   headerItem: {
     verticalAlign: "middle",
@@ -93,7 +94,7 @@ class MonthlyTotals extends React.Component {
     const lineItems = this.state.lineItems.map((lineItem) => {
       return (
         <TableRow key={lineItem.id}>
-          <TableCell>{this.state.categoriesMap[lineItem.id]}</TableCell>
+          <TableCell>{lineItem.name}</TableCell>
           <TableCell align="right">{lineItem.sum}</TableCell>
         </TableRow>
       );
@@ -104,35 +105,33 @@ class MonthlyTotals extends React.Component {
     },0);
     
     return (
-      <div className={this.props.classes.summary}>
-        <Paper className={this.props.classes.paper}>
-          <div className={this.props.classes.mainHeader}>
-            <ChevronLeft className={this.props.classes.headerItem} onClick={this.handleLeftMonthClick}/>
-            <Typography className={this.props.classes.headerItem} variant="h5" component="h3">
-              {this.state.date.getFullYear()} {this.state.monthNames[this.state.date.getMonth()]}
-            </Typography>
-            <ChevronRight className={this.props.classes.headerItem} onClick={this.handleRightMonthClick}/>
-          </div>
+      <Paper className={this.props.classes.paper}>
+        <div className={this.props.classes.mainHeader}>
+          <ChevronLeft className={this.props.classes.headerItem} onClick={this.handleLeftMonthClick}/>
+          <Typography className={this.props.classes.headerItem} variant="h5" component="h3">
+            {this.state.date.getFullYear()} {this.state.monthNames[this.state.date.getMonth()]}
+          </Typography>
+          <ChevronRight className={this.props.classes.headerItem} onClick={this.handleRightMonthClick}/>
+        </div>
 
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Category</TableCell>
-                <TableCell align="right">Amount</TableCell>
-              </TableRow>
-            </TableHead>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Category</TableCell>
+              <TableCell align="right">Amount</TableCell>
+            </TableRow>
+          </TableHead>
 
-            <TableBody>
-              {lineItems}
-              <TableRow>
-                <TableCell><b>Total</b></TableCell>
-                <TableCell align="right"><b>{total}</b></TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+          <TableBody>
+            {lineItems}
+            <TableRow>
+              <TableCell><b>Total</b></TableCell>
+              <TableCell align="right"><b>{total}</b></TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
 
-        </Paper>
-      </div>
+      </Paper>
     );
   }
 }

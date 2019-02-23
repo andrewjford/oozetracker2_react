@@ -21,6 +21,14 @@ const styles = theme => ({
   root: {
     height: "100%",
   },
+  section: {
+    marginTop: "1rem",
+    display: "grid",
+    gridTemplateColumns: "5% 15% 30% 30% 15% 5%"
+  },
+  expenses: {
+    gridColumn: "1 / -1",
+  }
 });
 
 class App extends Component {
@@ -46,7 +54,7 @@ class App extends Component {
 
   expensesRoute = ({match}) => {
     return (
-      <div>
+      <>
         <Route exact path={match.path} component={this.mainContainer} />
         <Route path={`${match.path}/:id/edit`} render={(props) => {
           return <div>wuattat</div>
@@ -56,12 +64,12 @@ class App extends Component {
             return <ExpenseForm expenseCategories={this.props.categories} />
           } else {
             return (
-              <ExpenseDetail expenseCategories={this.state.expenseCategories} updateExpenseState={this.updateExpenseState}
+              <ExpenseDetail expenseCategories={this.props.categories} updateExpenseState={this.updateExpenseState}
                              recordId={props.match.params.id} redirectTo={this.redirectTo}/>
             );
           }
-        }}/>
-      </div>
+        }} />
+      </>
     )
   }
 
@@ -103,10 +111,12 @@ class App extends Component {
       return (
         <div className={this.props.classes.root}>
           {this.navigationMenu()}
-          <Route exact path='/' render={() => <SummaryDisplay expenses={this.props.expenses}/>} />
-          <Route path='/categories' render={(props) => <CategoriesList {...props} />}/>
-          <Route path='/expenses' component={this.expensesRoute}/>
-          <Route path='/monthly' render={(props) => <MonthlyTotals categoriesMap={this.state.expenseCategoriesMap}/>}/>
+          <section className={this.props.classes.section}>
+            <Route exact path='/' render={() => <SummaryDisplay expenses={this.props.expenses}/>} />
+            <Route path='/categories' render={(props) => <CategoriesList {...props} />}/>
+            <Route path='/expenses' component={this.expensesRoute}/>
+            <Route path='/monthly' render={(props) => <MonthlyTotals categoriesMap={this.state.expenseCategoriesMap}/>}/>
+          </section>
           {this.redirect()}
         </div>
       );

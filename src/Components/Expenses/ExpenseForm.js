@@ -11,15 +11,13 @@ import BackendCallout from '../../services/BackendCallout';
 const styles = theme => ({
   form: {
     display: 'grid',
-    gridTemplateColumns: '30% 30% auto',
     gridRowGap: '1rem',
     paddingTop: '1rem'
   },
-  container: {
+  paper: {
+    gridColumnStart: 2,
+    gridColumnEnd: 4,
     padding: '2rem'
-  },
-  input: {
-    gridColumn: '1 / 2'
   },
   categoryGroup: {
     gridColumn: '1 / 2',
@@ -29,9 +27,12 @@ const styles = theme => ({
   categoryChild: {
     
   },
-  button: {
+  buttons: {
     gridColumn: '1 / 2',
-    justifySelf: 'center'
+    justifySelf: 'center',
+  },
+  button: {
+    margin: '0 0.5rem'
   }
 });
 
@@ -103,6 +104,10 @@ class ExpenseForm extends React.Component {
     }
   }
 
+  handleCancel = (event) => {
+    this.setState({redirect: "/"});
+  }
+
   handleAmountChange = (text) => {
     this.setState({amount: text});
   }
@@ -154,7 +159,7 @@ class ExpenseForm extends React.Component {
     }
 
     return (
-      <Paper className={this.props.classes.container}>
+      <Paper className={this.props.classes.paper}>
         {this.redirect()}
         {header()}
         <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
@@ -174,9 +179,12 @@ class ExpenseForm extends React.Component {
               {this.categoriesList()}
             </Select>
           </div>
-
-          <Button type="submit" variant="contained" color="secondary" 
-                  onClick={this.handleSubmit} className={this.props.classes.button}>Submit</Button>
+          <div className={this.props.classes.buttons}>
+            <Button type="submit" variant="contained" color="secondary" 
+                    onClick={this.handleSubmit} className={this.props.classes.button}>Submit</Button>
+            <Button variant="contained" color="secondary" 
+                    onClick={this.handleCancel} className={this.props.classes.button}>Cancel</Button>
+          </div>
         </form>
       </Paper>
     )

@@ -13,19 +13,13 @@ import { fetchCategories, createCategory, updateCategory, deleteCategory } from 
 
 const styles = theme => ({
   mainHeader: {
-    gridColumn: "1 / 5",
     height: "2rem",
     padding: "1rem",
     borderBottom: "1px solid rgba(224, 224, 224, 1)",
   },
-  summary: {
-    marginTop: "1rem",
-    display: "grid",
-    gridTemplateColumns: "1rem 20% auto 20% 1rem"
-  },
   paper: {
     gridColumnStart: 3,
-    gridColumnEnd: 4
+    gridColumnEnd: 5
   },
   headerItem: {
     verticalAlign: "middle",
@@ -89,27 +83,23 @@ class CategoriesList extends React.Component {
     });
 
     return (
-      <div>
-        <div className={this.props.classes.summary}>
-          <Paper className={this.props.classes.paper}>
-            <div className={this.props.classes.mainHeader}>
-              <Typography className={this.props.classes.headerItem} variant="h5" component="h3">
-                Categories
-              </Typography>
-            </div>
-
-            <Table>
-              <TableBody>
-                {categories}
-              </TableBody>
-            </Table>
-            <div className={this.props.classes.footer}>
-              {this.categoryInput()}
-            </div>
-
-          </Paper>
+      <Paper className={this.props.classes.paper}>
+        <div className={this.props.classes.mainHeader}>
+          <Typography className={this.props.classes.headerItem} variant="h5" component="h3">
+            Categories
+          </Typography>
         </div>
-      </div>
+
+        <Table>
+          <TableBody>
+            {categories}
+          </TableBody>
+        </Table>
+        <div className={this.props.classes.footer}>
+          {this.categoryInput()}
+        </div>
+
+      </Paper>
     );
   }
 }
