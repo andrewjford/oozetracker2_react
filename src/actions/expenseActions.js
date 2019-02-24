@@ -25,3 +25,39 @@ export const createExpense = (newExpense) => {
       });
   }
 }
+
+export const updateExpense = (expense) => {
+  return (dispatch) => {
+    BackendCallout.putToApi(`/api/v1/expenses/${expense.id}`, expense)
+      .then((responseExpense) => {
+        return dispatch({
+          type: 'UPDATE_EXPENSE',
+          payload: responseExpense,
+        })
+      })
+  }
+}
+
+export const getExpense = (id) => {
+  return (dispatch) => {
+    BackendCallout.getFromApi('/api/v1/expenses/' + id)
+      .then(expense => {
+        return dispatch({
+          type: 'GET_EXPENSE',
+          payload: expense,
+        })
+      })
+  }
+}
+
+export const deleteExpense = (id) => {
+  return (dispatch) => {
+    BackendCallout.delete('/api/v1/expenses/' + id)
+      .then(response => {
+        return dispatch({
+          type: 'DELETE_EXPENSE',
+          payload: id,
+        })
+      });
+  }
+}

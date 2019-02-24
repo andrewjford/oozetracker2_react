@@ -32,15 +32,7 @@ const styles = theme => ({
 });
 
 class App extends Component {
-
-  state = {
-    mode: 'summary',
-    expenses: [],
-    expenseCategories: [],
-    expenseCategoriesMap: {},
-    loading: true
-  };
-
+  state = {};
 
   componentDidMount() {
     this.props.fetchRecentExpenses();
@@ -56,16 +48,16 @@ class App extends Component {
     return (
       <>
         <Route exact path={match.path} component={this.mainContainer} />
-        <Route path={`${match.path}/:id/edit`} render={(props) => {
-          return <div>wuattat</div>
+        <Route exact path={`${match.path}/:id/edit`} render={(props) => {
+          return <ExpenseForm categories={this.props.categories} expense={this.getExpense(props.match.params.id)}/>
         }}/>
-        <Route path={`${match.path}/:id`} render={(props) => {
+        <Route exact path={`${match.path}/:id`} render={(props) => {
           if (props.match.params.id === 'new') {
-            return <ExpenseForm expenseCategories={this.props.categories} />
+            return <ExpenseForm categories={this.props.categories} />
           } else {
             return (
               <ExpenseDetail expenseCategories={this.props.categories} updateExpenseState={this.updateExpenseState}
-                             recordId={props.match.params.id} redirectTo={this.redirectTo}/>
+                             expense={this.getExpense(props.match.params.id)} redirectTo={this.redirectTo}/>
             );
           }
         }} />
@@ -100,6 +92,19 @@ class App extends Component {
     });
   }
 
+  getExpense = (expenseId) => {
+    const expense = this.props.expenses.find((expense) => {
+      return expense.id === expenseId;
+    });
+    if (expense) {
+      return expense;
+    } else {
+      return {
+        id: expenseId,
+      }
+    }
+  }
+
   handleSummaryClick = (event) => {
     this.setState((state) => {return {mode: 'summary'}});
   }
@@ -115,7 +120,7 @@ class App extends Component {
             <Route exact path='/' render={() => <SummaryDisplay expenses={this.props.expenses}/>} />
             <Route path='/categories' render={(props) => <CategoriesList {...props} />}/>
             <Route path='/expenses' component={this.expensesRoute}/>
-            <Route path='/monthly' render={(props) => <MonthlyTotals categoriesMap={this.state.expenseCategoriesMap}/>}/>
+            <Route path='/monthly' render={(props) => <MonthlyTotals/>}/>
           </section>
           {this.redirect()}
         </div>

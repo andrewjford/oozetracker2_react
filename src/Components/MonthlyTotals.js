@@ -40,7 +40,6 @@ class MonthlyTotals extends React.Component {
     super(props);
 
     this.state = {
-      categoriesMap: props.categoriesMap,
       lineItems: [],
       date: new Date(),
       monthNames: ["January", "February", "March", "April", "May", "June",

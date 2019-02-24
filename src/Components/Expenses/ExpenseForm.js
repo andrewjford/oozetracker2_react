@@ -3,10 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Paper, TextField, Typography, Select, InputLabel, MenuItem, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 
-import { createExpense } from '../../actions/expenseActions';
-import BackendCallout from '../../services/BackendCallout';
+import { createExpense, updateExpense } from '../../actions/expenseActions';
 
 const styles = theme => ({
   form: {
@@ -46,7 +45,7 @@ class ExpenseForm extends React.Component {
           ...props.expense,
           date: this.convertDateToString(new Date(props.expense.date))
         },
-        categories: props.expenseCategories
+        history: props.history,
       }
     } else {
       this.state = {
@@ -57,7 +56,7 @@ class ExpenseForm extends React.Component {
           date: this.convertDateToString(new Date()),
           category: 'choose one',
         },
-        categories: props.expenseCategories
+        history: props.history,
       };
     }
   }
@@ -71,7 +70,7 @@ class ExpenseForm extends React.Component {
   }
 
   categoriesList = () => {
-    return this.state.categories.map((category, index) => {
+    return this.props.categories.map((category, index) => {
       return (<MenuItem key={index} value={category.id}>{category.name}</MenuItem>);
     });
   }
@@ -82,10 +81,8 @@ class ExpenseForm extends React.Component {
   }
 
   updateExpense = (expense) => {
-    BackendCallout.putToApi(`/api/v1/expenses/${expense.id}`, expense)
-      .then((responseExpense) => {
-        this.props.afterSubmit(responseExpense);
-      }).catch((ex)=>{})
+    this.props.updateExpense(expense);
+    this.setState({redirect: `/expenses/${expense.id}`})
   }
 
   redirect = () => {
@@ -105,7 +102,7 @@ class ExpenseForm extends React.Component {
   }
 
   handleCancel = (event) => {
-    this.setState({redirect: "/"});
+    this.state.history.goBack();
   }
 
   handleAmountChange = (text) => {
@@ -194,7 +191,8 @@ class ExpenseForm extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     createExpense,
+    updateExpense,
   }, dispatch)
 }
 
-export default connect(null, mapDispatchToProps)(withStyles(styles)(ExpenseForm));
+export default connect(null, mapDispatchToProps)(withRouter(withStyles(styles)(ExpenseForm)));

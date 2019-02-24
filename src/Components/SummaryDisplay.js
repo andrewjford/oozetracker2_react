@@ -16,14 +16,14 @@ const styles = theme => ({
 });
 
 class SummaryDisplay extends React.Component {
-
   render() {
+    const recentExpenses = this.props.expenses.slice(0,9);
     return (
       <Paper className={this.props.classes.paper}>
         <Typography className={this.props.classes.mainHeader} variant="h5" component="h3">
           Recent Expenses
         </Typography>
-        <ExpenseTable expenses={this.props.expenses}/>
+        <ExpenseTable expenses={recentExpenses}/>
       </Paper>
     );
   }
