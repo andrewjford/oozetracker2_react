@@ -61,3 +61,27 @@ export const deleteExpense = (id) => {
       });
   }
 }
+
+export const getMonthly = (monthObject) => {
+  return (dispatch) => {
+    BackendCallout.postToApi('/api/v1/reports/monthly', monthObject)
+    .then(report => {
+        return dispatch({
+          type: 'GET_MONTHLY',
+          payload: report,
+        });
+      })
+      .catch(error => {
+        console.log(error)
+      });
+  }
+}
+
+export const changeMonthlyView = (monthly) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'CHANGE_MONTHLY_VIEW',
+      payload: monthly,
+    })
+  }
+}

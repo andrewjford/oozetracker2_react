@@ -1,4 +1,8 @@
-const expensesReducer = (state = {}, action) => {
+const expensesReducer = (state = {
+  monthlies: {
+    monthlies: [],
+  },
+}, action) => {
   switch (action.type) {
     case 'FETCH_RECENT_EXPENSES':
       return {
@@ -36,6 +40,22 @@ const expensesReducer = (state = {}, action) => {
       return {
         ...state,
         expenses: afterDelete
+      }
+    case 'GET_MONTHLY':
+      return {
+        ...state,
+        monthlies: {
+          currentView: action.payload,
+          monthlies: [...state.monthlies.monthlies, action.payload]
+        },
+      }
+    case 'CHANGE_MONTHLY_VIEW':
+      return {
+        ...state,
+        monthlies: {
+          ...state.monthlies,
+          currentView: action.payload,
+        }
       }
     default:
       return state

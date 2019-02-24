@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -10,7 +13,7 @@ import TableRow from '@material-ui/core/TableRow';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 
-import BackendCallout from '../services/BackendCallout';
+import { getMonthly, changeMonthlyView } from '../actions/expenseActions';
 
 const styles = theme => ({
   mainHeader: {
@@ -40,7 +43,6 @@ class MonthlyTotals extends React.Component {
     super(props);
 
     this.state = {
-      lineItems: [],
       date: new Date(),
       monthNames: ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
@@ -49,20 +51,22 @@ class MonthlyTotals extends React.Component {
   }
   componentDidMount() {
     const currentMonthRequest = {
-      month: this.state.date.getMonth() + 1,
+      month: this.state.date.getMonth(),
       year: this.state.date.getFullYear()
     };
-    this.getMonthlyReport(currentMonthRequest);
+    this.props.getMonthly(currentMonthRequest);
   }
 
-  getMonthlyReport = (requestBody) => {
-    BackendCallout.postToApi('/api/v1/reports/monthly', requestBody)
-      .then(report => {
-        this.setState({lineItems: report.rows});
-      })
-      .catch(error => {
-        console.log(error)
-      });
+  changeMonthlyView = (monthlyObject) => {
+    const cachedView = this.props.monthlies.find((monthly) => {
+      return monthly.month === monthlyObject.month && monthly.year === monthlyObject.year;
+    });
+
+    if (cachedView) {
+      this.props.changeMonthlyView(cachedView);
+    } else {
+      this.props.getMonthly(monthlyObject);
+    }
   }
 
   handleLeftMonthClick = () => {
@@ -71,10 +75,10 @@ class MonthlyTotals extends React.Component {
     this.setState({date});
 
     const currentMonthRequest = {
-      month: date.getMonth() + 1,
+      month: date.getMonth(),
       year: date.getFullYear()
     };
-    this.getMonthlyReport(currentMonthRequest);
+    this.changeMonthlyView(currentMonthRequest);
   }
 
   handleRightMonthClick = () => {
@@ -83,14 +87,15 @@ class MonthlyTotals extends React.Component {
     this.setState({date});
     
     const currentMonthRequest = {
-      month: date.getMonth() + 1,
+      month: date.getMonth(),
       year: date.getFullYear()
     };
-    this.getMonthlyReport(currentMonthRequest);
+    this.changeMonthlyView(currentMonthRequest);
   }
 
-  render() {
-    const lineItems = this.state.lineItems.map((lineItem) => {
+  renderLineItems = () => {
+    if (!this.props.monthlyView) {return <></>};
+    return this.props.monthlyView.rows.map((lineItem) => {
       return (
         <TableRow key={lineItem.id}>
           <TableCell>{lineItem.name}</TableCell>
@@ -98,8 +103,10 @@ class MonthlyTotals extends React.Component {
         </TableRow>
       );
     });
+  }
 
-    const total = this.state.lineItems.reduce((accum, lineItem) => {
+  render() {
+    const total = !this.props.monthlyView ? 0 : this.props.monthlyView.rows.reduce((accum, lineItem) => {
       return accum + parseFloat(lineItem.sum);
     },0);
     
@@ -122,7 +129,7 @@ class MonthlyTotals extends React.Component {
           </TableHead>
 
           <TableBody>
-            {lineItems}
+            {this.renderLineItems()}
             <TableRow>
               <TableCell><b>Total</b></TableCell>
               <TableCell align="right"><b>{total}</b></TableCell>
@@ -135,4 +142,18 @@ class MonthlyTotals extends React.Component {
   }
 }
 
-export default withStyles(styles)(MonthlyTotals);
+const mapStateToProps = (state) => {
+  return {
+    monthlyView: state.expenses.monthlies.currentView,
+    monthlies: state.expenses.monthlies.monthlies,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    getMonthly,
+    changeMonthlyView,
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(MonthlyTotals));

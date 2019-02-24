@@ -1,6 +1,7 @@
+- was working in monthly totals
+  - check to see if it needs further refactor
+  - add a refresh button to manually hit backend
 - reduxify
-- bug - trying to redirect to / repeatedly 
 - bug - there is an element 'Unknown' in the /expenses/new DOM
-- bug - delete 2 items, 2nd delete does not redirect to '/'
 - nav buttons should select whole height
 - select from table expense should highlight table cell not row
