@@ -1,6 +1,3 @@
-- was working in monthly totals
-  - add a refresh button to manually hit backend
-- recent expenses should sort by actual date not created_date
 - bug - there is an element 'Unknown' in the /expenses/new DOM
 - nav buttons should select whole height
 - select from table expense should highlight table cell not row
