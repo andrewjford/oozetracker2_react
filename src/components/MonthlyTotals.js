@@ -12,6 +12,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
+import Refresh from '@material-ui/icons/Refresh';
 
 import { getMonthly, changeMonthlyView } from '../actions/expenseActions';
 
@@ -19,8 +20,7 @@ const styles = theme => ({
   mainHeader: {
     gridColumn: "1 / 5",
     height: "2rem",
-    paddingLeft: "1rem",
-    paddingTop: "1rem",
+    padding: "1rem 1rem 0",
   },
   summary: {
     marginTop: "1rem",
@@ -35,7 +35,20 @@ const styles = theme => ({
   headerItem: {
     verticalAlign: "middle",
     display: "inline",
-  }
+  },
+  headerItemRight: {
+    verticalAlign: "middle",
+    display: "inline",
+    float: "right",
+    color: theme.palette.primary.main,
+  },
+  rotate: {
+    animation: `spin 1s`,
+  },
+  "@keyframes spin": {
+    "0%": {transform: "rotate(0deg)"},
+    "100%": {transform: "rotate(360deg)"}
+  },
 });
 
 class MonthlyTotals extends React.Component {
@@ -47,6 +60,7 @@ class MonthlyTotals extends React.Component {
       monthNames: ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
       ],
+      rotate: false,
     };
   }
   componentDidMount() {
@@ -93,6 +107,14 @@ class MonthlyTotals extends React.Component {
     this.changeMonthlyView(currentMonthRequest);
   }
 
+  handleRefreshClick = (event) => {
+    this.setState({rotate: true});
+    this.props.getMonthly({
+      month: this.state.date.getMonth(),
+      year: this.state.date.getFullYear()
+    });
+  }
+
   renderLineItems = () => {
     if (!this.props.monthlyView) {return <></>};
     return this.props.monthlyView.rows.map((lineItem) => {
@@ -118,6 +140,9 @@ class MonthlyTotals extends React.Component {
             {this.state.date.getFullYear()} {this.state.monthNames[this.state.date.getMonth()]}
           </Typography>
           <ChevronRight className={this.props.classes.headerItem} onClick={this.handleRightMonthClick}/>
+          <Refresh className={ `${this.props.classes.headerItemRight} ${this.state.rotate ? this.props.classes.rotate : ""}`}
+            onAnimationEnd={event => this.setState({rotate: false})}
+            onClick={this.handleRefreshClick}/>
         </div>
 
         <Table>
