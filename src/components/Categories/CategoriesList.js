@@ -37,7 +37,6 @@ class CategoriesList extends React.Component {
 
     this.state = {
       displayCategoryInput: false,
-      inlineEditValue: null,
     };
   }
 
@@ -49,7 +48,6 @@ class CategoriesList extends React.Component {
     this.props.createCategory(newCategory);
     this.setState({
       displayCategoryInput: false,
-      inlineEditValue: null,
     });
   }
   

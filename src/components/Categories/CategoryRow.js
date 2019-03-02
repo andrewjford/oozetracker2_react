@@ -44,7 +44,6 @@ class CategoryRow extends React.Component {
 
     this.state = {
       inlineEditValue: null,
-      category: this.props.category,
       editing: false,
     };
   }
@@ -64,7 +63,7 @@ class CategoryRow extends React.Component {
   }
 
   handleInlineEditOnBlur = (event) => {
-    const updatedCategory = this.state.category;
+    const updatedCategory = this.props.category;
     updatedCategory.name = this.state.inlineEditValue;
     this.props.updateCategory(updatedCategory);
 
@@ -77,7 +76,7 @@ class CategoryRow extends React.Component {
   }
 
   handleDeleteClick = (event) => {
-    this.props.deleteCategory(this.state.category);
+    this.props.deleteCategory(this.props.category);
   }
 
   categoryName = () => {
@@ -88,14 +87,14 @@ class CategoryRow extends React.Component {
       );
     } else {
       return (
-        this.state.category.name
+        this.props.category.name
       );
     }
   }
 
   render() {
     return (
-      <TableRow key={this.state.category.id} data-key={this.state.category.id}>
+      <TableRow key={this.props.category.id} data-key={this.props.category.id}>
         <TableCell className={this.props.classes.name}>
           {this.categoryName()}
         </TableCell>
