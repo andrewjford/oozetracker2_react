@@ -13,8 +13,8 @@ export const fetchCategories = () => {
 }
 
 export const createCategory = (newCategory) => {
-  return (dispatch) => {
-    BackendCallout.postToApi('/api/v1/categories', newCategory)
+  return (dispatch, getState) => {
+    BackendCallout.postToApi('/api/v1/categories', newCategory, getState().account.token)
       .then((response) => {
         return dispatch({
           type: 'NEW_CATEGORY',
@@ -25,8 +25,8 @@ export const createCategory = (newCategory) => {
 }
 
 export const updateCategory = (categoryToUpdate) => {
-  return (dispatch) => {
-    BackendCallout.putToApi(`/api/v1/categories/${categoryToUpdate.id}`, categoryToUpdate)
+  return (dispatch, getState) => {
+    BackendCallout.putToApi(`/api/v1/categories/${categoryToUpdate.id}`, categoryToUpdate, getState().account.token)
       .then((responseCategory) => {
         return dispatch({
           type: 'UPDATE_CATEGORY',
@@ -37,8 +37,8 @@ export const updateCategory = (categoryToUpdate) => {
 }
 
 export const deleteCategory = (categoryToDelete) => {
-  return (dispatch) => {
-    BackendCallout.delete(`/api/v1/categories/${categoryToDelete.id}`)
+  return (dispatch, getState) => {
+    BackendCallout.delete(`/api/v1/categories/${categoryToDelete.id}`, getState().account.token)
       .then((response) => {
         return dispatch({
           type: 'DELETE_CATEGORY',

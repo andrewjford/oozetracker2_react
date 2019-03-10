@@ -11,7 +11,7 @@ const expensesReducer = (state = {
 
       }
     case 'NEW_EXPENSE':
-      const sortedExpenses = [action.payload, ...state.expenses].sort((a,b) => new Date(a.date) - new Date(b.date));
+      const sortedExpenses = [action.payload, ...state.expenses].sort((a,b) => new Date(b.date) - new Date(a.date));
       return {
         ...state,
         expenses: sortedExpenses,

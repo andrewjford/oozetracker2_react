@@ -1,5 +1,6 @@
 - use token on all callouts
 - register/login page
 - bug - there is an element 'Unknown' in the /expenses/new DOM
+- bug - category rename doesnt update recent list
 - nav buttons should select whole height
 - select from table expense should highlight table cell not row

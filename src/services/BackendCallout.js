@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 export default class BackendCallout extends React.Component {
 
@@ -19,10 +18,13 @@ export default class BackendCallout extends React.Component {
     return body;
   }
 
-  static postToApi = async (url,body) => {
+  static postToApi = async (url, body, token) => {
     const response = await fetch(url, {
       method: 'POST',
-      headers : {'Content-Type': 'application/json'},
+      headers : {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(body)
     });
     if(response.status < 200 || response.status > 299) {
@@ -31,10 +33,13 @@ export default class BackendCallout extends React.Component {
     return response.json();
   }
 
-  static putToApi = async (url,body) => {
+  static putToApi = async (url, body, token) => {
     const response = await fetch(url, {
       method: 'PUT',
-      headers : {'Content-Type': 'application/json'},
+      headers : {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(body)
     });
     if(response.status < 200 || response.status > 299) {
@@ -43,10 +48,13 @@ export default class BackendCallout extends React.Component {
     return response.json();
   }
 
-  static delete = async (url) => {
+  static delete = async (url, token) => {
     const response = await fetch(url, {
       method: 'DELETE',
-      headers : {'Content-Type': 'application/json'}
+      headers : {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }
     });
 
     if(response.status !== 204) {
