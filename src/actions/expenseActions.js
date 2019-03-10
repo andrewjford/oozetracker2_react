@@ -2,8 +2,9 @@ import BackendCallout from '../services/BackendCallout';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export const fetchRecentExpenses = (token) => {
-  return (dispatch) => {
+export const fetchRecentExpenses = () => {
+  return (dispatch, getState) => {
+    const token = getState().account.token;
     BackendCallout.getFromApi('/api/v1/reports/recent', token)
       .then(data => {
         return dispatch({

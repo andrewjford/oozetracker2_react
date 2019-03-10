@@ -1,12 +1,10 @@
 const accountReducer = (state = {
-  id: null,
   token: null,
 }, action) => {
   switch (action.type) {
-    case 'ACCOUNT_LOGIN':
+    case 'SET_TOKEN':
       return {
         ...state,
-        id: action.payload.id,
         token: action.payload.token,
       }
     default:

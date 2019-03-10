@@ -14,10 +14,11 @@ import CategoriesList from './components/Categories/CategoriesList';
 import ExpenseDetail from './components/Expenses/ExpenseDetail';
 import MonthlyTotals from './components/MonthlyTotals';
 import Login from './components/Login';
+import Loading from './components/Loading';
 
+import { login, setTokenFromLocalStorage } from './actions/accountActions';
 import { fetchRecentExpenses } from './actions/expenseActions';
 import { fetchCategories } from './actions/categoriesActions';
-import { login } from './actions/accountActions';
 
 const styles = theme => ({
   root: {
@@ -37,8 +38,13 @@ class App extends Component {
   state = {};
 
   componentDidMount() {
-    // this.props.fetchRecentExpenses();
-    // this.props.fetchCategories();
+    const tokenExpiryDate = localStorage.getItem('expiryDate');
+    if (tokenExpiryDate && Date.now() < new Date(tokenExpiryDate)) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        this.props.setTokenFromLocalStorage(token);
+      }
+    }
     document.title = "Ooze Tracker";
   }
 
@@ -65,6 +71,11 @@ class App extends Component {
         }} />
       </>
     )
+  }
+
+  getBaseData = () => {
+    this.props.fetchRecentExpenses();
+    this.props.fetchCategories();
   }
 
   navigationMenu = () => {
@@ -120,7 +131,11 @@ class App extends Component {
         </div>
       );
     } else if (!this.props.expenses) {
-      return <div>{this.navigationMenu()}</div>;
+      {this.getBaseData()}
+      return <div>
+        {this.navigationMenu()}
+        <Loading />
+      </div>;
     } else {
       return (
         <div className={this.props.classes.root}>
@@ -159,6 +174,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     login,
+    setTokenFromLocalStorage,
     fetchRecentExpenses,
     fetchCategories,
   }, dispatch)
