@@ -9,10 +9,12 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import categoriesPageReducer from './reducers/categoriesReducer';
 import expensesReducer from './reducers/expensesReducer';
+import accountReducer from './reducers/accountReducer';
 
 const rootReducer = combineReducers({
   expenses: expensesReducer,
   categories: categoriesPageReducer,
+  account: accountReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -1,9 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 export default class BackendCallout extends React.Component {
 
-  static getFromApi = async (url) => {
-    const response = await fetch(url);
+  static getFromApi = async (url, token) => {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
     const body = response.json();
 
     if(response.status !== 200) {

@@ -1,8 +1,8 @@
 import BackendCallout from '../services/BackendCallout';
 
-export const fetchCategories = filter => {
+export const fetchCategories = (token) => {
   return (dispatch) => {
-    BackendCallout.getFromApi('/api/v1/categories')
+    BackendCallout.getFromApi('/api/v1/categories', token)
       .then(data => {
         return dispatch({
           type: 'FETCH_CATEGORIES',

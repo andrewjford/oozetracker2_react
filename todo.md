@@ -1,3 +1,5 @@
+- use token on all callouts
+- register/login page
 - bug - there is an element 'Unknown' in the /expenses/new DOM
 - nav buttons should select whole height
 - select from table expense should highlight table cell not row

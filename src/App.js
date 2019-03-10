@@ -13,9 +13,11 @@ import SummaryDisplay from './components/SummaryDisplay';
 import CategoriesList from './components/Categories/CategoriesList';
 import ExpenseDetail from './components/Expenses/ExpenseDetail';
 import MonthlyTotals from './components/MonthlyTotals';
+import Login from './components/Login';
 
 import { fetchRecentExpenses } from './actions/expenseActions';
 import { fetchCategories } from './actions/categoriesActions';
+import { login } from './actions/accountActions';
 
 const styles = theme => ({
   root: {
@@ -35,8 +37,8 @@ class App extends Component {
   state = {};
 
   componentDidMount() {
-    this.props.fetchRecentExpenses();
-    this.props.fetchCategories();
+    // this.props.fetchRecentExpenses();
+    // this.props.fetchCategories();
     document.title = "Ooze Tracker";
   }
 
@@ -74,7 +76,6 @@ class App extends Component {
   redirect = () => {
     const {redirect} = this.state;
     if (!!redirect) {
-      // this.setState({redirect: null});
       return (<Redirect to={redirect}/>)
     }
   }
@@ -110,8 +111,16 @@ class App extends Component {
   }
 
   main = () => {
-    if (!this.props.expenses) {
-      return <div>{this.navigationMenu()}</div>
+    if (!this.props.account.token && !this.props.expenses) {
+      return (
+        <div>
+          <div>{this.navigationMenu()}</div>
+          <Route exact path='/' render={() => <Login login={this.props.login}/>} />
+          <Route path='/login' render={() => <Login login={this.props.login}/>} />
+        </div>
+      );
+    } else if (!this.props.expenses) {
+      return <div>{this.navigationMenu()}</div>;
     } else {
       return (
         <div className={this.props.classes.root}>
@@ -143,11 +152,13 @@ const mapStateToProps = (state) => {
   return {
     expenses: state.expenses.expenses,
     categories: state.categories.categories,
+    account: state.account,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
+    login,
     fetchRecentExpenses,
     fetchCategories,
   }, dispatch)
