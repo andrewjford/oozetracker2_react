@@ -105,10 +105,6 @@ class ExpenseForm extends React.Component {
     this.state.history.goBack();
   }
 
-  handleAmountChange = (text) => {
-    this.setState({amount: text});
-  }
-
   handleDescriptionChange = (event) => {
     this.setState({
       form: {
