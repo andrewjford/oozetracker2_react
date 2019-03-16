@@ -15,9 +15,8 @@ import ExpenseDetail from './components/Expenses/ExpenseDetail';
 import MonthlyTotals from './components/MonthlyTotals';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
-import Loading from './components/Loading';
 
-import { login, setTokenFromLocalStorage } from './actions/accountActions';
+import { login, logout, setTokenFromLocalStorage } from './actions/accountActions';
 import { fetchRecentExpenses } from './actions/expenseActions';
 import { fetchCategories } from './actions/categoriesActions';
 
@@ -35,28 +34,25 @@ const styles = theme => ({
   }
 });
 
+function PrivateRoute({ render, component: Component, isLoggedIn, ...rest }) {
+  if (!isLoggedIn) {
+    return <Redirect to={'/login'} />
+  } else if (render) {
+    return (<Route {...rest} render={render} />);
+  } else {
+    return (<Route {...rest} render={props => (<Component {...props}/>)} />);
+  }
+}
+
 class App extends Component {
   state = {};
-
-  componentDidMount() {
-    const tokenExpiryDate = localStorage.getItem('expiryDate');
-    if (tokenExpiryDate && Date.now() < new Date(tokenExpiryDate)) {
-      const token = localStorage.getItem('token');
-      if (token) {
-        this.props.setTokenFromLocalStorage(token);
-      }
-    }
-    document.title = "Ooze Tracker";
-  }
-
-  mainContainer = () => {
-    return <SummaryDisplay expenses={this.props.expenses}/>;
-  }
 
   expensesRoute = ({match}) => {
     return (
       <>
-        <Route exact path={match.path} component={this.mainContainer} />
+        <Route exact path={match.path} render={() => (
+          <SummaryDisplay expenses={this.props.expenses} getBaseData={this.getBaseData} />
+        )} />
         <Route exact path={`${match.path}/:id/edit`} render={(props) => {
           return <ExpenseForm categories={this.props.categories} expense={this.getExpense(props.match.params.id)}/>
         }}/>
@@ -65,8 +61,8 @@ class App extends Component {
             return <ExpenseForm categories={this.props.categories} />
           } else {
             return (
-              <ExpenseDetail expenseCategories={this.props.categories} updateExpenseState={this.updateExpenseState}
-                             expense={this.getExpense(props.match.params.id)} redirectTo={this.redirectTo}/>
+              <ExpenseDetail expenseCategories={this.props.categories} 
+                expense={this.getExpense(props.match.params.id)} />
             );
           }
         }} />
@@ -77,26 +73,6 @@ class App extends Component {
   getBaseData = () => {
     this.props.fetchRecentExpenses();
     this.props.fetchCategories();
-  }
-
-  redirect = () => {
-    const {redirect} = this.state;
-    if (!!redirect) {
-      return (<Redirect to={redirect}/>)
-    }
-  }
-
-  redirectTo = (url) => {
-    this.setState({redirect: url});
-  }
-
-  updateExpenseState = (callback) => {
-    this.setState((state) => {
-      return {
-        expenses: callback(state.expenses),
-        redirect: '/'
-      }
-    });
   }
 
   getExpense = (expenseId) => {
@@ -112,54 +88,28 @@ class App extends Component {
     }
   }
 
-  handleSummaryClick = (event) => {
-    this.setState((state) => {return {mode: 'summary'}});
-  }
-
-  main = () => {
-    if (!this.props.account.token && !this.props.expenses) {
-      return (
-        <div>
-          <NavBar isLoggedIn={this.props.account.token} />
-          <section className={this.props.classes.section}>
-            <Switch>
-              <Route path='/login' render={() => <Login login={this.props.login}/>} />
-              <Route path='/register' render={() => <Register register={this.props.register}/>} />
-              <Route render={() => <Redirect to={'/login'}/>} />
-            </Switch>
-          </section>
-        </div>
-      );
-    } else if (!this.props.expenses) {
-      {this.getBaseData()}
-      return <div>
-        <NavBar isLoggedIn={this.props.account.token} />
-        <Loading />
-      </div>;
-    } else {
-      return (
-        <div className={this.props.classes.root}>
-          <NavBar isLoggedIn={this.props.account.token} />
-          <section className={this.props.classes.section}>
-            <Switch>
-              <Route exact path='/' render={() => <SummaryDisplay expenses={this.props.expenses}/>} />
-              <Route path='/categories' render={(props) => <CategoriesList {...props} />}/>
-              <Route path='/expenses' component={this.expensesRoute}/>
-              <Route path='/monthly' render={(props) => <MonthlyTotals/>}/>
-              <Route render={() => <Redirect to={'/'}/>} />
-            </Switch>
-          </section>
-          {this.redirect()}
-        </div>
-      );
-    }
+  logout = () => {
+    this.props.logout();
   }
 
   render() {
+    const isLoggedIn = !!this.props.account.token;
     return (
       <BrowserRouter>
         <MuiThemeProvider theme={Theme}>
-          {this.main()}
+          <NavBar isLoggedIn={this.props.account.token} logout={this.props.logout} />
+          <section className={this.props.classes.section}>
+            <Switch>
+              <Route path='/login' render={() => <Login login={this.props.login} isLoggedIn={this.props.account.token} />} />
+              <Route path='/register' render={() => <Register register={this.props.register}/>} />
+              <PrivateRoute exact path='/' isLoggedIn={isLoggedIn} render={() => (
+                <SummaryDisplay expenses={this.props.expenses} getBaseData={this.getBaseData} />)} />
+              <PrivateRoute path='/categories' isLoggedIn={isLoggedIn} render={(props) => <CategoriesList {...props} />}/>
+              <PrivateRoute path='/expenses' isLoggedIn={isLoggedIn} component={this.expensesRoute}/>
+              <PrivateRoute path='/monthly' isLoggedIn={isLoggedIn} render={(props) => <MonthlyTotals/>}/>
+              <Route render={() => <Redirect to={'/'} />} />
+            </Switch>
+          </section>
         </MuiThemeProvider>
       </BrowserRouter>
     );
@@ -177,6 +127,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     login,
+    logout,
     setTokenFromLocalStorage,
     fetchRecentExpenses,
     fetchCategories,

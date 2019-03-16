@@ -7,6 +7,11 @@ const accountReducer = (state = {
         ...state,
         token: action.payload.token,
       }
+    case 'REMOVE_TOKEN':
+      const { token, ...rest } = state;
+      return {
+        ...rest
+      }
     default:
       return state
   }

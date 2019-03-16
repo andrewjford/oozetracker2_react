@@ -96,33 +96,37 @@ class Login extends React.Component {
   }
 
   render() {
-    return (
-      <Paper className={this.props.classes.paper}>
-        {this.redirect()}
-        <Typography variant="h5" component="h3">Login</Typography>
-        <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
-          <TextField type="text" value={this.state.form.email}  className={this.props.classes.input}
-                     onChange={this.handleEmailChange}
-                     label="Email"/>
-          
-          <TextField type="password" value={this.state.form.password} onChange={this.handlePasswordChange}
-                     label="Password" className={this.props.classes.input}/>
-
-          <div className={this.props.classes.buttons}>
-            <Button type="submit" variant="contained" color="secondary" 
-                    onClick={this.handleSubmit} className={this.props.classes.button}>Submit</Button>
-            <Button variant="contained" color="secondary" 
-                    onClick={this.handleCancel} className={this.props.classes.button}>Cancel</Button>
-          </div>
-          <Typography variant="body2" className={this.props.classes.justifyCenter}>
-            <span>Not a member? Register </span>
-            <Link to="/register">
-              here
-            </Link>
-          </Typography>
-        </form>
-      </Paper>
-    )
+    if (this.props.isLoggedIn) {
+      return <Redirect to={'/'} />
+    } else {
+      return (
+        <Paper className={this.props.classes.paper}>
+          {this.redirect()}
+          <Typography variant="h5" component="h3">Login</Typography>
+          <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
+            <TextField type="text" value={this.state.form.email}  className={this.props.classes.input}
+                       onChange={this.handleEmailChange}
+                       label="Email"/>
+            
+            <TextField type="password" value={this.state.form.password} onChange={this.handlePasswordChange}
+                       label="Password" className={this.props.classes.input}/>
+  
+            <div className={this.props.classes.buttons}>
+              <Button type="submit" variant="contained" color="secondary" 
+                      onClick={this.handleSubmit} className={this.props.classes.button}>Submit</Button>
+              <Button variant="contained" color="secondary" 
+                      onClick={this.handleCancel} className={this.props.classes.button}>Cancel</Button>
+            </div>
+            <Typography variant="body2" className={this.props.classes.justifyCenter}>
+              <span>Not a member? Register </span>
+              <Link to="/register">
+                here
+              </Link>
+            </Typography>
+          </form>
+        </Paper>
+      )
+    }
   }
 }
 

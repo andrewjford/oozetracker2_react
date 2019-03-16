@@ -10,6 +10,7 @@ import thunk from 'redux-thunk';
 import categoriesPageReducer from './reducers/categoriesReducer';
 import expensesReducer from './reducers/expensesReducer';
 import accountReducer from './reducers/accountReducer';
+import { setTokenFromLocalStorage } from './actions/accountActions';
 
 const rootReducer = combineReducers({
   expenses: expensesReducer,
@@ -19,6 +20,15 @@ const rootReducer = combineReducers({
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
+
+const tokenExpiryDate = localStorage.getItem('expiryDate');
+if (tokenExpiryDate && Date.now() < new Date(tokenExpiryDate)) {
+  const token = localStorage.getItem('token');
+  if (token) {
+    store.dispatch(setTokenFromLocalStorage(token));
+  }
+}
+document.title = "Ooze Tracker";
 
 ReactDOM.render(
   <Provider store={store}>

@@ -26,11 +26,13 @@ const styles = {
   }
 };
 
-const loginLogoutButton = (isLoggedIn) => {
-  if (isLoggedIn) {
-    return <Button color="inherit">Login</Button>
+const loginLogoutButton = (props) => {
+  if (!props.isLoggedIn) {
+    return <Link className={props.classes.link} to="/monthly">
+      <Button color="inherit">Login</Button>
+      </Link>
   } else {
-    return <Button color="inherit">Logout</Button>
+    return <Button color="inherit" onClick={props.logout}>Logout</Button>
   }
 }
 
@@ -51,7 +53,7 @@ function ButtonAppBar(props) {
           <Link className={classes.link} to="/expenses/new"><Button color="inherit">Add Expense</Button></Link>
           <Link className={classes.link} to="/categories"><Button color="inherit">Categories</Button></Link>
           <Link className={classes.link} to="/monthly"><Button color="inherit">Monthly Totals</Button></Link>
-          {loginLogoutButton()}
+          {loginLogoutButton(props)}
         </Toolbar>
       </AppBar>
     </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
+import Loading from './Loading';
 
 import ExpenseTable from './Expenses/ExpenseTable';
 
@@ -17,6 +18,10 @@ const styles = theme => ({
 
 class SummaryDisplay extends React.Component {
   render() {
+    if (!this.props.expenses) {
+      this.props.getBaseData();
+      return (<Loading/>);
+    }
     const recentExpenses = this.props.expenses.slice(0,9);
     return (
       <Paper className={this.props.classes.paper}>
