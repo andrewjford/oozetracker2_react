@@ -1,5 +1,5 @@
-- use token on all callouts
 - register/login page
+- logout
 - bug - there is an element 'Unknown' in the /expenses/new DOM
 - bug - category rename doesnt update recent list
 - nav buttons should select whole height

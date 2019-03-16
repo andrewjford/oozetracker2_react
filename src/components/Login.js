@@ -7,12 +7,13 @@ const styles = theme => ({
   form: {
     display: 'grid',
     gridRowGap: '1rem',
-    paddingTop: '1rem'
+    paddingTop: '1rem',
   },
   paper: {
-    gridColumnStart: 2,
-    gridColumnEnd: 4,
-    padding: '2rem'
+    gridColumnStart: 3,
+    gridColumnEnd: 5,
+    padding: '2rem',
+    margin: '0 7rem',
   },
   categoryGroup: {
     gridColumn: '1 / 2',

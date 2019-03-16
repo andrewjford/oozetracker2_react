@@ -126,8 +126,10 @@ class App extends Component {
       return (
         <div>
           <div>{this.navigationMenu()}</div>
-          <Route exact path='/' render={() => <Login login={this.props.login}/>} />
-          <Route path='/login' render={() => <Login login={this.props.login}/>} />
+          <section className={this.props.classes.section}>
+            <Route exact path='/' render={() => <Login login={this.props.login}/>} />
+            <Route path='/login' render={() => <Login login={this.props.login}/>} />
+          </section>
         </div>
       );
     } else if (!this.props.expenses) {
