@@ -2,6 +2,7 @@ import React from 'react';
 import { Paper, TextField, Typography, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Redirect, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   form: {
@@ -29,6 +30,9 @@ const styles = theme => ({
   },
   button: {
     margin: '0 0.5rem'
+  },
+  justifyCenter: {
+    justifySelf: 'center',
   }
 });
 
@@ -110,6 +114,12 @@ class Login extends React.Component {
             <Button variant="contained" color="secondary" 
                     onClick={this.handleCancel} className={this.props.classes.button}>Cancel</Button>
           </div>
+          <Typography variant="body2" className={this.props.classes.justifyCenter}>
+            <span>Not a member? Register </span>
+            <Link to="/register">
+              here
+            </Link>
+          </Typography>
         </form>
       </Paper>
     )

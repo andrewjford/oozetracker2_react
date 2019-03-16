@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -13,7 +13,8 @@ import SummaryDisplay from './components/SummaryDisplay';
 import CategoriesList from './components/Categories/CategoriesList';
 import ExpenseDetail from './components/Expenses/ExpenseDetail';
 import MonthlyTotals from './components/MonthlyTotals';
-import Login from './components/Login';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
 import Loading from './components/Loading';
 
 import { login, setTokenFromLocalStorage } from './actions/accountActions';
@@ -78,12 +79,6 @@ class App extends Component {
     this.props.fetchCategories();
   }
 
-  navigationMenu = () => {
-    return (
-      <NavBar/>
-    );
-  }
-
   redirect = () => {
     const {redirect} = this.state;
     if (!!redirect) {
@@ -125,28 +120,34 @@ class App extends Component {
     if (!this.props.account.token && !this.props.expenses) {
       return (
         <div>
-          <div>{this.navigationMenu()}</div>
+          <NavBar isLoggedIn={this.props.account.token} />
           <section className={this.props.classes.section}>
-            <Route exact path='/' render={() => <Login login={this.props.login}/>} />
-            <Route path='/login' render={() => <Login login={this.props.login}/>} />
+            <Switch>
+              <Route path='/login' render={() => <Login login={this.props.login}/>} />
+              <Route path='/register' render={() => <Register register={this.props.register}/>} />
+              <Route render={() => <Redirect to={'/login'}/>} />
+            </Switch>
           </section>
         </div>
       );
     } else if (!this.props.expenses) {
       {this.getBaseData()}
       return <div>
-        {this.navigationMenu()}
+        <NavBar isLoggedIn={this.props.account.token} />
         <Loading />
       </div>;
     } else {
       return (
         <div className={this.props.classes.root}>
-          {this.navigationMenu()}
+          <NavBar isLoggedIn={this.props.account.token} />
           <section className={this.props.classes.section}>
-            <Route exact path='/' render={() => <SummaryDisplay expenses={this.props.expenses}/>} />
-            <Route path='/categories' render={(props) => <CategoriesList {...props} />}/>
-            <Route path='/expenses' component={this.expensesRoute}/>
-            <Route path='/monthly' render={(props) => <MonthlyTotals/>}/>
+            <Switch>
+              <Route exact path='/' render={() => <SummaryDisplay expenses={this.props.expenses}/>} />
+              <Route path='/categories' render={(props) => <CategoriesList {...props} />}/>
+              <Route path='/expenses' component={this.expensesRoute}/>
+              <Route path='/monthly' render={(props) => <MonthlyTotals/>}/>
+              <Route render={() => <Redirect to={'/'}/>} />
+            </Switch>
           </section>
           {this.redirect()}
         </div>
