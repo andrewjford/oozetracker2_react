@@ -41,6 +41,7 @@ class Register extends React.Component {
     super(props);
     this.state = {
       form: {
+        name: '',
         email: '',
         password: '',
       },
@@ -95,12 +96,25 @@ class Register extends React.Component {
     });
   }
 
+  handleNameChange = (event) => {
+    this.setState({
+      form: {
+        ...this.state.form,
+        name: event.target.value,
+      }
+    })
+  }
+
   render() {
     return (
       <Paper className={this.props.classes.paper}>
         {this.redirect()}
         <Typography variant="h5" component="h3">Register</Typography>
         <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
+          <TextField type="text" value={this.state.form.name} className={this.props.classes.input}
+                      onChange={this.handleNameChange}
+                      label="Name"/>
+
           <TextField type="text" value={this.state.form.email}  className={this.props.classes.input}
                      onChange={this.handleEmailChange}
                      label="Email"/>
@@ -110,13 +124,11 @@ class Register extends React.Component {
 
           <div className={this.props.classes.buttons}>
             <Button type="submit" variant="contained" color="secondary" 
-                    onClick={this.handleSubmit} className={this.props.classes.button}>Submit</Button>
-            <Button variant="contained" color="secondary" 
-                    onClick={this.handleCancel} className={this.props.classes.button}>Cancel</Button>
+                    onClick={this.handleSubmit} className={this.props.classes.button}>Register</Button>
           </div>
           <Typography variant="body2" className={this.props.classes.justifyCenter}>
-            <span>Not a member? Register </span>
-            <Link to="/expenses/new">
+            <span>Already a member? Login </span>
+            <Link to="/login">
               here
             </Link>
           </Typography>

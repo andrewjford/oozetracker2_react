@@ -73,10 +73,6 @@ class Login extends React.Component {
     this.login(this.state.form);
   }
 
-  handleCancel = (event) => {
-    this.state.history.goBack();
-  }
-
   handleEmailChange = (event) => {
     this.setState({
       form: {
@@ -113,9 +109,7 @@ class Login extends React.Component {
   
             <div className={this.props.classes.buttons}>
               <Button type="submit" variant="contained" color="secondary" 
-                      onClick={this.handleSubmit} className={this.props.classes.button}>Submit</Button>
-              <Button variant="contained" color="secondary" 
-                      onClick={this.handleCancel} className={this.props.classes.button}>Cancel</Button>
+                      onClick={this.handleSubmit} className={this.props.classes.button}>Login</Button>
             </div>
             <Typography variant="body2" className={this.props.classes.justifyCenter}>
               <span>Not a member? Register </span>
