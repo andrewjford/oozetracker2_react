@@ -56,6 +56,19 @@ export const setTokenFromLocalStorage = (token) => {
 }
 
 export const register = (form) => {
+  return (dispatch) => {
+    dispatch(registerCallout(form))
+      .then(() => {
+        dispatch(fetchRecentExpenses());
+      })
+      .then(() => {
+        dispatch(fetchCategories());
+      })
+      .catch(error => console.log('register failed'));
+  }
+}
+
+export const registerCallout = (form) => {
   return (dispatch, getState) => {
     return BackendCallout.postToApi('/api/v1/register', form, getState().account.token)
       .then((response) => {

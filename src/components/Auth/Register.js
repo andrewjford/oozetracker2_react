@@ -85,7 +85,6 @@ class Register extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const formIsComplete = this.validateInput(this.state.form);
-    debugger
     if (formIsComplete) {
       this.register(this.state.form);
     }
