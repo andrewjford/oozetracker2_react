@@ -54,3 +54,20 @@ export const setTokenFromLocalStorage = (token) => {
     });
   }
 }
+
+export const register = (form) => {
+  return (dispatch, getState) => {
+    return BackendCallout.postToApi('/api/v1/register', form, getState().account.token)
+      .then((response) => {
+        const expiryDate = new Date();
+        expiryDate.setSeconds(response.tokenExpiration);
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('expiryDate', expiryDate);
+
+        return dispatch({
+          type: 'SET_TOKEN',
+          payload: {token: response.token},
+        });
+      });
+  }
+}

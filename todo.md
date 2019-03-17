@@ -1,5 +1,5 @@
-- register/login page
-- logout
+- make sure after register, data is loaded
+- add category does not work
 - bug - there is an element 'Unknown' in the /expenses/new DOM
 - bug - category rename doesnt update recent list
 - nav buttons should select whole height

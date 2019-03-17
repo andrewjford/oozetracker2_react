@@ -21,8 +21,8 @@ const styles = theme => ({
     display: 'grid',
     gridTemplateColumns: '30% 70%'
   },
-  categoryChild: {
-    
+  hidden: {
+    visibility: 'hidden',
   },
   buttons: {
     gridColumn: '1 / 2',
@@ -57,8 +57,8 @@ class Register extends React.Component {
     return `${date.getFullYear()}-${month}-${day}`;
   }
 
-  login = (input) => {
-    this.props.login(input);
+  register = (input) => {
+    this.props.register(input);
     this.setState({redirect: "/"});
   }
 
@@ -69,9 +69,26 @@ class Register extends React.Component {
     }
   }
 
+  showError = (errorMessage) => {
+    this.setState({error: errorMessage});
+  }
+
+  validateInput = (form) => {
+    if (form.name === "" || form.email === "" || form.pasword === "") {
+      this.showError('Please complete all fields.');
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   handleSubmit = (event) => {
     event.preventDefault();
-    this.login(this.state.form);
+    const formIsComplete = this.validateInput(this.state.form);
+    debugger
+    if (formIsComplete) {
+      this.register(this.state.form);
+    }
   }
 
   handleCancel = (event) => {
@@ -105,11 +122,20 @@ class Register extends React.Component {
     })
   }
 
+  error = () => {
+    if (this.state.error) {
+      return (<Typography variant="body1" color="error">{this.state.error}</Typography>);
+    } else {
+      return (<Typography variant="body1" className={this.props.classes.hidden}>asdf</Typography>);
+    }
+  }
+
   render() {
     return (
       <Paper className={this.props.classes.paper}>
         {this.redirect()}
         <Typography variant="h5" component="h3">Register</Typography>
+        {this.error()}
         <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
           <TextField type="text" value={this.state.form.name} className={this.props.classes.input}
                       onChange={this.handleNameChange}

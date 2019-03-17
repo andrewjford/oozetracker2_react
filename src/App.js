@@ -16,7 +16,7 @@ import MonthlyTotals from './components/MonthlyTotals';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 
-import { login, logout, setTokenFromLocalStorage } from './actions/accountActions';
+import { login, logout, setTokenFromLocalStorage, register } from './actions/accountActions';
 import { fetchRecentExpenses } from './actions/expenseActions';
 import { fetchCategories } from './actions/categoriesActions';
 
@@ -129,6 +129,7 @@ const mapDispatchToProps = (dispatch) => {
     login,
     logout,
     setTokenFromLocalStorage,
+    register,
     fetchRecentExpenses,
     fetchCategories,
   }, dispatch)
