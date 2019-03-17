@@ -30,7 +30,8 @@ export const loginCallout = (account) => {
           type: 'SET_TOKEN',
           payload: {token: response.token},
         });
-      });
+      })
+      .catch(error => console.log('login callout failed' + error.message));
   }
 }
 
