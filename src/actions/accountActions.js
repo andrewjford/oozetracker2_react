@@ -13,7 +13,7 @@ export const login = (account) => {
       .then(() => {
         dispatch(fetchCategories());
       })
-      .catch(error => console.log('login failed'))
+      .catch(error => console.log('login failed' + process.env.REACT_APP_API_URL))
   }
 }
 
