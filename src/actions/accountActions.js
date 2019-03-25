@@ -13,7 +13,7 @@ export const login = (account) => {
       .then(() => {
         dispatch(fetchCategories());
       })
-      .catch(error => console.log('login failed' + process.env.REACT_APP_API_URL))
+      .catch(error => console.log('login failed'))
   }
 }
 
@@ -31,7 +31,7 @@ export const loginCallout = (account) => {
           payload: {token: response.token},
         });
       })
-      .catch(error => console.log('login callout failed' + error.message));
+      .catch(error => console.log('login callout failed' +process.env.REACT_APP_API_URL + error.message));
   }
 }
 
