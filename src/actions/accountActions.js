@@ -18,6 +18,7 @@ export const login = (account) => {
 }
 
 export const loginCallout = (account) => {
+  console.log('here     '+process.env.REACT_APP_API_URL);
   return (dispatch) => {
     return BackendCallout.postToApi(`${API_URL}/api/v1/login`, account)
       .then(response => {
@@ -31,7 +32,7 @@ export const loginCallout = (account) => {
           payload: {token: response.token},
         });
       })
-      .catch(error => console.log('login callout failed' +process.env.REACT_APP_API_URL + error.message));
+      .catch(error => console.log('login callout failed' + error.message));
   }
 }
 
