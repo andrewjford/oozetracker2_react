@@ -1,8 +1,9 @@
 import BackendCallout from '../services/BackendCallout';
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const fetchCategories = () => {
   return (dispatch, getState) => {
-    BackendCallout.getFromApi('/api/v1/categories', getState().account.token)
+    BackendCallout.getFromApi(`${API_URL}/api/v1/categories`, getState().account.token)
       .then(data => {
         return dispatch({
           type: 'FETCH_CATEGORIES',
@@ -14,7 +15,7 @@ export const fetchCategories = () => {
 
 export const createCategory = (newCategory) => {
   return (dispatch, getState) => {
-    BackendCallout.postToApi('/api/v1/categories', newCategory, getState().account.token)
+    BackendCallout.postToApi(`${API_URL}/api/v1/categories`, newCategory, getState().account.token)
       .then((response) => {
         return dispatch({
           type: 'NEW_CATEGORY',
@@ -26,7 +27,7 @@ export const createCategory = (newCategory) => {
 
 export const updateCategory = (categoryToUpdate) => {
   return (dispatch, getState) => {
-    BackendCallout.putToApi(`/api/v1/categories/${categoryToUpdate.id}`, categoryToUpdate, getState().account.token)
+    BackendCallout.putToApi(`${API_URL}/api/v1/categories/${categoryToUpdate.id}`, categoryToUpdate, getState().account.token)
       .then((responseCategory) => {
         return dispatch({
           type: 'UPDATE_CATEGORY',
@@ -38,7 +39,7 @@ export const updateCategory = (categoryToUpdate) => {
 
 export const deleteCategory = (categoryToDelete) => {
   return (dispatch, getState) => {
-    BackendCallout.delete(`/api/v1/categories/${categoryToDelete.id}`, getState().account.token)
+    BackendCallout.delete(`${API_URL}/api/v1/categories/${categoryToDelete.id}`, getState().account.token)
       .then((response) => {
         return dispatch({
           type: 'DELETE_CATEGORY',

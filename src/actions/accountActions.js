@@ -72,7 +72,7 @@ export const register = (form) => {
 
 export const registerCallout = (form) => {
   return (dispatch, getState) => {
-    return BackendCallout.postToApi('/api/v1/register', form, getState().account.token)
+    return BackendCallout.postToApi(`${API_URL}/api/v1/register`, form, getState().account.token)
       .then((response) => {
         const expiryDate = new Date();
         expiryDate.setSeconds(response.tokenExpiration);
