@@ -64,7 +64,7 @@ class Register extends React.Component {
         this.setState({redirect: "/"});
       })
       .catch(error => {
-        this.setState({errors: JSON.parse(error.message)})
+        this.setState({errors: JSON.parse(error.message)});
       });
   }
 
