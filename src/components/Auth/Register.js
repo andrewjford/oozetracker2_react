@@ -46,6 +46,7 @@ class Register extends React.Component {
         password: '',
       },
       history: props.history,
+      errors: [],
     };
   }
 
@@ -58,8 +59,13 @@ class Register extends React.Component {
   }
 
   register = (input) => {
-    this.props.register(input);
-    this.setState({redirect: "/"});
+    this.props.register(input)
+      .then(() => {
+        this.setState({redirect: "/"});
+      })
+      .catch(error => {
+        this.setState({errors: JSON.parse(error.message)})
+      });
   }
 
   redirect = () => {
@@ -70,7 +76,7 @@ class Register extends React.Component {
   }
 
   showError = (errorMessage) => {
-    this.setState({error: errorMessage});
+    this.setState({errors: [errorMessage]});
   }
 
   validateInput = (form) => {
@@ -121,11 +127,13 @@ class Register extends React.Component {
     })
   }
 
-  error = () => {
-    if (this.state.error) {
-      return (<Typography variant="body1" color="error">{this.state.error}</Typography>);
+  displayError = () => {
+    if (this.state.errors.length > 0) {
+      return this.state.errors.map((error) => {
+        return (<Typography key={error} variant="body1" color="error">{error}</Typography>);
+      });
     } else {
-      return (<Typography variant="body1" className={this.props.classes.hidden}>asdf</Typography>);
+      return null;
     }
   }
 
@@ -134,7 +142,9 @@ class Register extends React.Component {
       <Paper className={this.props.classes.paper}>
         {this.redirect()}
         <Typography variant="h5" component="h3">Register</Typography>
-        {this.error()}
+        <div>
+          {this.displayError()}
+        </div>
         <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
           <TextField type="text" value={this.state.form.name} className={this.props.classes.input}
                       onChange={this.handleNameChange}
