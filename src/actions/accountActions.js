@@ -6,19 +6,6 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 export const login = (account) => {
   return (dispatch) => {
-    dispatch(loginCallout(account))
-      .then(() => {
-        dispatch(fetchRecentExpenses());
-      })
-      .then(() => {
-        dispatch(fetchCategories());
-      })
-      .catch(error => console.log('login failed'))
-  }
-}
-
-export const loginCallout = (account) => {
-  return (dispatch) => {
     return BackendCallout.postToApi(`${API_URL}/api/v1/login`, account)
       .then(response => {
         const expiryDate = new Date();
@@ -31,7 +18,12 @@ export const loginCallout = (account) => {
           payload: {token: response.token},
         });
       })
-      .catch(error => console.log('login callout failed' + error.message));
+      .then(() => {
+        dispatch(fetchRecentExpenses());
+      })
+      .then(() => {
+        dispatch(fetchCategories());
+      });
   }
 }
 
