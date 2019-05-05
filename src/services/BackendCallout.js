@@ -27,7 +27,7 @@ export default class BackendCallout extends React.Component {
       },
       body: JSON.stringify(body)
     });
-    if(response.status < 200 || response.status > 299) {
+    if (response.status < 200 || response.status > 299) {
       const responseBody = await response.json();
       throw Error(JSON.stringify(responseBody.message));
     }

@@ -6,20 +6,6 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 export const login = (account) => {
   return (dispatch) => {
-    dispatch(loginCallout(account))
-      .then(() => {
-        dispatch(fetchRecentExpenses());
-      })
-      .then(() => {
-        dispatch(fetchCategories());
-      })
-      .catch(error => console.log('login failed'))
-  }
-}
-
-export const loginCallout = (account) => {
-  console.log('here     '+process.env.REACT_APP_API_URL);
-  return (dispatch) => {
     return BackendCallout.postToApi(`${API_URL}/api/v1/login`, account)
       .then(response => {
         const expiryDate = new Date();
@@ -32,7 +18,12 @@ export const loginCallout = (account) => {
           payload: {token: response.token},
         });
       })
-      .catch(error => console.log('login callout failed' + error.message));
+      .then(() => {
+        dispatch(fetchRecentExpenses());
+      })
+      .then(() => {
+        dispatch(fetchCategories());
+      });
   }
 }
 
@@ -76,23 +67,6 @@ export const register = (form) => {
       })
       .then(() => {
         dispatch(fetchCategories());
-      });
-  }
-}
-
-export const registerCallout = (form) => {
-  return (dispatch, getState) => {
-    return BackendCallout.postToApi(`${API_URL}/api/v1/register`, form, getState().account.token)
-      .then((response) => {
-        const expiryDate = new Date();
-        expiryDate.setSeconds(response.tokenExpiration);
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('expiryDate', expiryDate);
-
-        return dispatch({
-          type: 'SET_TOKEN',
-          payload: {token: response.token},
-        });
       });
   }
 }
