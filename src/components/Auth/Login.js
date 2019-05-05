@@ -3,38 +3,7 @@ import { Paper, TextField, Typography, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Redirect, withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-
-const styles = theme => ({
-  form: {
-    display: 'grid',
-    gridRowGap: '1rem',
-    paddingTop: '1rem',
-  },
-  paper: {
-    gridColumnStart: 3,
-    gridColumnEnd: 5,
-    padding: '2rem',
-    margin: '0 7rem',
-  },
-  categoryGroup: {
-    gridColumn: '1 / 2',
-    display: 'grid',
-    gridTemplateColumns: '30% 70%'
-  },
-  categoryChild: {
-    
-  },
-  buttons: {
-    gridColumn: '1 / 2',
-    justifySelf: 'center',
-  },
-  button: {
-    margin: '0 0.5rem'
-  },
-  justifyCenter: {
-    justifySelf: 'center',
-  }
-});
+import ErrorDisplay from '../ErrorDisplay';
 
 class Login extends React.Component {
   constructor(props) {
@@ -45,6 +14,7 @@ class Login extends React.Component {
         password: '',
       },
       history: props.history,
+      errors: [],
     };
   }
 
@@ -57,8 +27,16 @@ class Login extends React.Component {
   }
 
   login = (input) => {
-    this.props.login(input);
-    this.setState({redirect: "/"});
+    this.props.login(input)
+      .then(() => {
+        this.setState({redirect: "/"});
+      })
+      .catch(error => {
+        const parsedError = JSON.parse(error.message);
+        this.setState({
+          errors: parsedError.constructor === Array ? parsedError : [parsedError]
+        });
+      });
   }
 
   redirect = () => {
@@ -99,6 +77,8 @@ class Login extends React.Component {
         <Paper className={this.props.classes.paper}>
           {this.redirect()}
           <Typography variant="h5" component="h3">Login</Typography>
+          <ErrorDisplay errors={this.state.errors} />
+
           <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
             <TextField type="text" value={this.state.form.email}  className={this.props.classes.input}
                        onChange={this.handleEmailChange}
@@ -123,5 +103,37 @@ class Login extends React.Component {
     }
   }
 }
+
+const styles = theme => ({
+  form: {
+    display: 'grid',
+    gridRowGap: '1rem',
+    paddingTop: '1rem',
+  },
+  paper: {
+    gridColumnStart: 3,
+    gridColumnEnd: 5,
+    padding: '2rem',
+    margin: '0 7rem',
+  },
+  categoryGroup: {
+    gridColumn: '1 / 2',
+    display: 'grid',
+    gridTemplateColumns: '30% 70%'
+  },
+  categoryChild: {
+    
+  },
+  buttons: {
+    gridColumn: '1 / 2',
+    justifySelf: 'center',
+  },
+  button: {
+    margin: '0 0.5rem'
+  },
+  justifyCenter: {
+    justifySelf: 'center',
+  }
+});
 
 export default withRouter(withStyles(styles)(Login));

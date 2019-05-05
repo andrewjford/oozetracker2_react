@@ -3,6 +3,7 @@ import { Paper, TextField, Typography, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Redirect, withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import ErrorDisplay from '../ErrorDisplay';
 
 const styles = theme => ({
   form: {
@@ -64,7 +65,10 @@ class Register extends React.Component {
         this.setState({redirect: "/"});
       })
       .catch(error => {
-        this.setState({errors: JSON.parse(error.message)});
+        const parsedError = JSON.parse(error.message);
+        this.setState({
+          errors: parsedError.constructor === Array ? parsedError : [parsedError]
+        });
       });
   }
 
@@ -127,24 +131,13 @@ class Register extends React.Component {
     })
   }
 
-  displayError = () => {
-    if (this.state.errors.length > 0) {
-      return this.state.errors.map((error) => {
-        return (<Typography key={error} variant="body1" color="error">{error}</Typography>);
-      });
-    } else {
-      return null;
-    }
-  }
-
   render() {
     return (
       <Paper className={this.props.classes.paper}>
         {this.redirect()}
         <Typography variant="h5" component="h3">Register</Typography>
-        <div>
-          {this.displayError()}
-        </div>
+        <ErrorDisplay errors={this.state.errors}/>
+
         <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
           <TextField type="text" value={this.state.form.name} className={this.props.classes.input}
                       onChange={this.handleNameChange}
