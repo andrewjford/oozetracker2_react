@@ -33,6 +33,9 @@ class Login extends React.Component {
       })
       .catch(error => {
         const parsedError = JSON.parse(error.message);
+        if (!parsedError) {
+          this.setState({errors: [error.message]});
+        }
         this.setState({
           errors: parsedError.constructor === Array ? parsedError : [parsedError]
         });
