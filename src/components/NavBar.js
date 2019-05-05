@@ -42,9 +42,6 @@ function ButtonAppBar(props) {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-            <MenuIcon />
-          </IconButton>
           <Link to="/" className={`${classes.grow} ${classes.link}`}>
             <Typography variant="h6" color="inherit">
               Ooze Tracker
