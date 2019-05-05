@@ -18,7 +18,6 @@ export const login = (account) => {
 }
 
 export const loginCallout = (account) => {
-  console.log('here     '+process.env.REACT_APP_API_URL);
   return (dispatch) => {
     return BackendCallout.postToApi(`${API_URL}/api/v1/login`, account)
       .then(response => {
@@ -76,23 +75,6 @@ export const register = (form) => {
       })
       .then(() => {
         dispatch(fetchCategories());
-      });
-  }
-}
-
-export const registerCallout = (form) => {
-  return (dispatch, getState) => {
-    return BackendCallout.postToApi(`${API_URL}/api/v1/register`, form, getState().account.token)
-      .then((response) => {
-        const expiryDate = new Date();
-        expiryDate.setSeconds(response.tokenExpiration);
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('expiryDate', expiryDate);
-
-        return dispatch({
-          type: 'SET_TOKEN',
-          payload: {token: response.token},
-        });
       });
   }
 }
