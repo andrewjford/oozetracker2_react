@@ -28,7 +28,7 @@ if (tokenExpiryDate && Date.now() < new Date(tokenExpiryDate)) {
     store.dispatch(setTokenFromLocalStorage(token));
   }
 }
-document.title = "Ooze Tracker";
+document.title = "Cash Tracker";
 
 ReactDOM.render(
   <Provider store={store}>
