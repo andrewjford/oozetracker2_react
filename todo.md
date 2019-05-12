@@ -2,3 +2,4 @@
 - bug - category rename doesnt update recent list
 - nav buttons should select whole height
 - select from table expense should highlight table cell not row
+- edit button inner color is blue instead of black

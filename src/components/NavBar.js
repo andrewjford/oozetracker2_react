@@ -44,7 +44,7 @@ function ButtonAppBar(props) {
         <Toolbar>
           <Link to="/" className={`${classes.grow} ${classes.link}`}>
             <Typography variant="h6" color="inherit">
-              Ooze Tracker
+              Cash Tracker
             </Typography>
           </Link>
           <Link className={classes.link} to="/expenses/new"><Button color="inherit">Add Expense</Button></Link>
