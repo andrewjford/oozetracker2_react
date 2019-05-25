@@ -48,13 +48,6 @@ class Login extends React.Component {
       });
   }
 
-  redirect = () => {
-    const {redirect} = this.state;
-    if (!!redirect) {
-      return (<Redirect to={redirect}/>)
-    }
-  }
-
   handleSubmit = (event) => {
     event.preventDefault();
     this.login(this.state.form);
@@ -81,43 +74,50 @@ class Login extends React.Component {
   loadingSpinner = () => {
     if (this.state.loading) {
       return (
-        <Loading/>
+        <Loading />
       )
     }
   }
 
+  loginForm = () => {
+    if (this.state.loading) {
+      return <Loading />;
+    } else {
+      return (
+        <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
+          <TextField type="text" value={this.state.form.email}  className={this.props.classes.input}
+                      onChange={this.handleEmailChange}
+                      label="Email"/>
+          
+          <TextField type="password" value={this.state.form.password} onChange={this.handlePasswordChange}
+                      label="Password" className={this.props.classes.input}/>
+
+          <div className={this.props.classes.buttons}>
+            <Button type="submit" variant="contained" color="secondary" 
+                    onClick={this.handleSubmit} className={this.props.classes.button}>Login</Button>
+          </div>
+          <Typography variant="body2" className={this.props.classes.justifyCenter}>
+            <span>Not a member? Register </span>
+            <Link to="/register">
+              here
+            </Link>
+          </Typography>
+        </form>
+      );
+    }
+  };
+
   render() {
-    if (this.props.isLoggedIn) {
-      return <Redirect to={'/'} />
+    if (this.props.isLoggedIn || this.state.redirect) {
+      return <Redirect to={'/'} />;
     } else {
       return (
         <Paper className={this.props.classes.paper}>
-          {this.loadingSpinner()}
-          {this.redirect()}
           <Typography variant="h5" component="h3">Login</Typography>
           <ErrorDisplay errors={this.state.errors} />
-
-          <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
-            <TextField type="text" value={this.state.form.email}  className={this.props.classes.input}
-                       onChange={this.handleEmailChange}
-                       label="Email"/>
-            
-            <TextField type="password" value={this.state.form.password} onChange={this.handlePasswordChange}
-                       label="Password" className={this.props.classes.input}/>
-  
-            <div className={this.props.classes.buttons}>
-              <Button type="submit" variant="contained" color="secondary" 
-                      onClick={this.handleSubmit} className={this.props.classes.button}>Login</Button>
-            </div>
-            <Typography variant="body2" className={this.props.classes.justifyCenter}>
-              <span>Not a member? Register </span>
-              <Link to="/register">
-                here
-              </Link>
-            </Typography>
-          </form>
+          {this.loginForm()}
         </Paper>
-      )
+      );
     }
   }
 }
@@ -133,6 +133,7 @@ const styles = theme => ({
     gridColumnEnd: 5,
     padding: '2rem',
     margin: '0 7rem',
+    minHeight: '15rem',
   },
   categoryGroup: {
     gridColumn: '1 / 2',

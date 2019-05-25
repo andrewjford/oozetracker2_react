@@ -8,14 +8,12 @@ const styles = theme => ({
     gridRowGap: '1rem',
     paddingTop: '1rem',
     justifyContent: 'center',
+    alignContent: 'center',
+    height: '-webkit-fill-available',
   },
 });
 
 class Loading extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className={this.props.classes.container}>
