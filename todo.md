@@ -4,4 +4,6 @@
 - select from table expense should highlight table cell not row
 - edit button inner color is blue instead of black
 - need to restrict user until isVerified
-- after hitting login - should show spinner
+- loading spinner
+  - after hitting register - should show spinner
+  - show spinner everywhere
