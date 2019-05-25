@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Redirect, withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import ErrorDisplay from '../ErrorDisplay';
+import Loading from '../Loading';
 
 class Login extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class Login extends React.Component {
       },
       history: props.history,
       errors: [],
+      loading: false,
     };
   }
 
@@ -27,6 +29,7 @@ class Login extends React.Component {
   }
 
   login = (input) => {
+    this.setState({loading: true});
     this.props.login(input)
       .then(() => {
         this.setState({redirect: "/"});
@@ -39,6 +42,9 @@ class Login extends React.Component {
         this.setState({
           errors: parsedError.constructor === Array ? parsedError : [parsedError]
         });
+      })
+      .finally(() => {
+        this.setState({loading: false});
       });
   }
 
@@ -72,12 +78,21 @@ class Login extends React.Component {
     });
   }
 
+  loadingSpinner = () => {
+    if (this.state.loading) {
+      return (
+        <Loading/>
+      )
+    }
+  }
+
   render() {
     if (this.props.isLoggedIn) {
       return <Redirect to={'/'} />
     } else {
       return (
         <Paper className={this.props.classes.paper}>
+          {this.loadingSpinner()}
           {this.redirect()}
           <Typography variant="h5" component="h3">Login</Typography>
           <ErrorDisplay errors={this.state.errors} />
