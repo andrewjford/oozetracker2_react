@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Redirect, withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import ErrorDisplay from '../ErrorDisplay';
+import Loading from '../Loading';
 
 class Login extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class Login extends React.Component {
       },
       history: props.history,
       errors: [],
+      loading: false,
     };
   }
 
@@ -27,6 +29,7 @@ class Login extends React.Component {
   }
 
   login = (input) => {
+    this.setState({loading: true});
     this.props.login(input)
       .then(() => {
         this.setState({redirect: "/"});
@@ -39,14 +42,10 @@ class Login extends React.Component {
         this.setState({
           errors: parsedError.constructor === Array ? parsedError : [parsedError]
         });
+      })
+      .finally(() => {
+        this.setState({loading: false});
       });
-  }
-
-  redirect = () => {
-    const {redirect} = this.state;
-    if (!!redirect) {
-      return (<Redirect to={redirect}/>)
-    }
   }
 
   handleSubmit = (event) => {
@@ -72,37 +71,53 @@ class Login extends React.Component {
     });
   }
 
+  loadingSpinner = () => {
+    if (this.state.loading) {
+      return (
+        <Loading />
+      )
+    }
+  }
+
+  loginForm = () => {
+    if (this.state.loading) {
+      return <Loading />;
+    } else {
+      return (
+        <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
+          <TextField type="text" value={this.state.form.email}  className={this.props.classes.input}
+                      onChange={this.handleEmailChange}
+                      label="Email"/>
+          
+          <TextField type="password" value={this.state.form.password} onChange={this.handlePasswordChange}
+                      label="Password" className={this.props.classes.input}/>
+
+          <div className={this.props.classes.buttons}>
+            <Button type="submit" variant="contained" color="secondary" 
+                    onClick={this.handleSubmit} className={this.props.classes.button}>Login</Button>
+          </div>
+          <Typography variant="body2" className={this.props.classes.justifyCenter}>
+            <span>Not a member? Register </span>
+            <Link to="/register">
+              here
+            </Link>
+          </Typography>
+        </form>
+      );
+    }
+  };
+
   render() {
-    if (this.props.isLoggedIn) {
-      return <Redirect to={'/'} />
+    if (this.props.isLoggedIn || this.state.redirect) {
+      return <Redirect to={'/'} />;
     } else {
       return (
         <Paper className={this.props.classes.paper}>
-          {this.redirect()}
           <Typography variant="h5" component="h3">Login</Typography>
           <ErrorDisplay errors={this.state.errors} />
-
-          <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
-            <TextField type="text" value={this.state.form.email}  className={this.props.classes.input}
-                       onChange={this.handleEmailChange}
-                       label="Email"/>
-            
-            <TextField type="password" value={this.state.form.password} onChange={this.handlePasswordChange}
-                       label="Password" className={this.props.classes.input}/>
-  
-            <div className={this.props.classes.buttons}>
-              <Button type="submit" variant="contained" color="secondary" 
-                      onClick={this.handleSubmit} className={this.props.classes.button}>Login</Button>
-            </div>
-            <Typography variant="body2" className={this.props.classes.justifyCenter}>
-              <span>Not a member? Register </span>
-              <Link to="/register">
-                here
-              </Link>
-            </Typography>
-          </form>
+          {this.loginForm()}
         </Paper>
-      )
+      );
     }
   }
 }
@@ -118,6 +133,7 @@ const styles = theme => ({
     gridColumnEnd: 5,
     padding: '2rem',
     margin: '0 7rem',
+    minHeight: '15rem',
   },
   categoryGroup: {
     gridColumn: '1 / 2',
