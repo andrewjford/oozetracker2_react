@@ -4,6 +4,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 This is a react web app for personal expense recordkeeping. It consumes the express API [here](https://github.com/andrewjford/oozetracker2_express).
 
+Dev build active at https://cashtracker.netlify.com.
+
 ## For dev use `npm start`
 
 Runs the app in the development mode.<br>
