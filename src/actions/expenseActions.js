@@ -4,7 +4,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 export const fetchRecentExpenses = () => {
   return (dispatch, getState) => {
-    BackendCallout.getFromApi(`${API_URL}/api/v1/reports/recent`, getState().account.token)
+    return BackendCallout.getFromApi(`${API_URL}/api/v1/reports/recent`, getState().account.token)
       .then(data => {
         return dispatch({
           type: 'FETCH_RECENT_EXPENSES',

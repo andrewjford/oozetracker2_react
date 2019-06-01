@@ -72,8 +72,8 @@ class App extends Component {
   }
 
   getBaseData = () => {
-    this.props.fetchRecentExpenses();
-    this.props.fetchCategories();
+    return this.props.fetchRecentExpenses()
+      .then(() => this.props.fetchCategories());
   }
 
   getExpense = (expenseId) => {
@@ -106,7 +106,7 @@ class App extends Component {
               <Route path='/pleaseverify' component={UnverifiedEmail} />
               <PrivateRoute exact path='/' isLoggedIn={isLoggedIn} render={() => (
                 <SummaryDisplay expenses={this.props.expenses} getBaseData={this.getBaseData} />)} />
-              <PrivateRoute path='/categories' isLoggedIn={isLoggedIn} render={(props) => <CategoriesList {...props} />}/>
+              <PrivateRoute path='/categories' isLoggedIn={isLoggedIn} render={(props) => <CategoriesList {...props} getBaseData={this.getBaseData}/>}/>
               <PrivateRoute path='/expenses' isLoggedIn={isLoggedIn} component={this.expensesRoute}/>
               <PrivateRoute path='/monthly' isLoggedIn={isLoggedIn} render={(props) => <MonthlyTotals/>}/>
               <Route render={() => <Redirect to={'/'} />} />

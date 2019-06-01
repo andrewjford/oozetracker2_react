@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 
 import CategoryInput from './CategoryInput';
 import CategoryRow from './CategoryRow';
+import Loading from '../Loading';
 
 import { fetchCategories, createCategory, updateCategory, deleteCategory } from '../../actions/categoriesActions';
 
@@ -28,6 +29,11 @@ const styles = theme => ({
   footer: {
     margin: "1rem",
   },
+  loadingSpinner: {
+    gridColumnStart: 3,
+    gridColumnEnd: 5,
+    height: "20rem",
+  }
 });
 
 class CategoriesList extends React.Component {
@@ -37,6 +43,7 @@ class CategoriesList extends React.Component {
 
     this.state = {
       displayCategoryInput: false,
+      dataFetched: false,
     };
   }
 
@@ -79,6 +86,18 @@ class CategoriesList extends React.Component {
                       deleteCategory={this.deleteCategory}/>
       );
     });
+
+    if (this.props.categories.categories.length === 0 && !this.state.dataFetched) {
+      this.props.getBaseData()
+        .then(() => {
+          this.setState({dataFetched: true})
+        });
+      return (
+        <div className={this.props.classes.loadingSpinner}>
+          <Loading/>
+        </div>
+      );
+    }
 
     return (
       <Paper className={this.props.classes.paper}>
