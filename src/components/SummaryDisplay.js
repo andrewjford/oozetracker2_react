@@ -13,6 +13,11 @@ const styles = theme => ({
   paper: {
     gridColumnStart: 2,
     gridColumnEnd: 6
+  },
+  loadingSpinner: {
+    gridColumnStart: 2,
+    gridColumnEnd: 6,
+    height: "20rem",
   }
 });
 
@@ -20,7 +25,11 @@ class SummaryDisplay extends React.Component {
   render() {
     if (!this.props.expenses) {
       this.props.getBaseData();
-      return (<Loading/>);
+      return (
+        <div className={this.props.classes.loadingSpinner}>
+          <Loading/>
+        </div>
+      );
     }
     const recentExpenses = this.props.expenses.slice(0,9);
     return (
