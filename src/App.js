@@ -15,6 +15,7 @@ import ExpenseDetail from './components/Expenses/ExpenseDetail';
 import MonthlyTotals from './components/MonthlyTotals';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import UnverifiedEmail from './components/Auth/UnverifiedEmail';
 
 import { login, logout, setTokenFromLocalStorage, register } from './actions/accountActions';
 import { fetchRecentExpenses } from './actions/expenseActions';
@@ -102,6 +103,7 @@ class App extends Component {
             <Switch>
               <Route path='/login' render={() => <Login login={this.props.login} isLoggedIn={this.props.account.token} />} />
               <Route path='/register' render={() => <Register register={this.props.register}/>} />
+              <Route path='/pleaseverify' component={UnverifiedEmail} />
               <PrivateRoute exact path='/' isLoggedIn={isLoggedIn} render={() => (
                 <SummaryDisplay expenses={this.props.expenses} getBaseData={this.getBaseData} />)} />
               <PrivateRoute path='/categories' isLoggedIn={isLoggedIn} render={(props) => <CategoriesList {...props} />}/>

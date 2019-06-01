@@ -62,7 +62,7 @@ class Register extends React.Component {
   register = (input) => {
     this.props.register(input)
       .then(() => {
-        this.setState({redirect: "/"});
+        this.setState({redirect: "/pleaseverify"});
       })
       .catch(error => {
         const parsedError = JSON.parse(error.message);
