@@ -100,12 +100,12 @@ class CategoryRow extends React.Component {
         </TableCell>
         <TableCell className={this.props.classes.rightAlignButton}>
           <Fab size="small" aria-label="Edit" className={this.props.classes.fab} onClick={this.handleEditClick}>
-            <EditIcon/>
+            <EditIcon fontSize="small"/>
           </Fab>
         </TableCell>
         <TableCell className={this.props.classes.rightAlignButton}>
           <Fab size="small" aria-label="Delete" className={this.props.classes.fab} onClick={this.handleDeleteClick}>
-            <DeleteIcon/>
+            <DeleteIcon fontSize="small"/>
           </Fab>
         </TableCell>
         

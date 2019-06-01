@@ -3,7 +3,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 export const fetchCategories = () => {
   return (dispatch, getState) => {
-    BackendCallout.getFromApi(`${API_URL}/api/v1/categories`, getState().account.token)
+    return BackendCallout.getFromApi(`${API_URL}/api/v1/categories`, getState().account.token)
       .then(data => {
         return dispatch({
           type: 'FETCH_CATEGORIES',

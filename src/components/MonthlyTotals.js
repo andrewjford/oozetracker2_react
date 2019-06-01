@@ -130,7 +130,7 @@ class MonthlyTotals extends React.Component {
   render() {
     const total = !this.props.monthlyView ? 0 : this.props.monthlyView.rows.reduce((accum, lineItem) => {
       return accum + parseFloat(lineItem.sum);
-    },0);
+    },0).toFixed(2);
     
     return (
       <Paper className={this.props.classes.paper}>
