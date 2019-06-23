@@ -43,6 +43,7 @@ class ExpenseForm extends React.Component {
         mode: "edit",
         form: {
           ...props.expense,
+          category: props.expense.category_id,
           date: this.convertDateToString(new Date(props.expense.date))
         },
         history: props.history,
