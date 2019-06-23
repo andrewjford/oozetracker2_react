@@ -28,7 +28,7 @@ class ExpenseTable extends React.Component {
         <TableBody>
           {this.props.expenses.map(row => (
             <HoverTableRow key={row.id}>
-              <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
+              <TableCell>{new Date(row.date).toLocaleDateString('en-US', {timeZone: 'UTC'})}</TableCell>
               <TableCell>{row.description}</TableCell>
               <TableCell component="th" scope="row">{row.name}</TableCell>
               <TableCell align="right">
