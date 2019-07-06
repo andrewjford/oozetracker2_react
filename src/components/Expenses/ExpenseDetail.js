@@ -95,7 +95,7 @@ class ExpenseDetail extends React.Component {
             </Fab>
           </div>
           <Typography variant="subtitle1" className={this.props.classes.col1}>Date</Typography>
-          <Typography variant="subtitle1" className={this.props.classes.col2}>{new Date(expense.date).toLocaleDateString()}</Typography>
+          <Typography variant="subtitle1" className={this.props.classes.col2}>{new Date(expense.date).toLocaleDateString('en-US', {timeZone: 'UTC'})}</Typography>
           <Typography variant="subtitle1" className={this.props.classes.col1}>Description</Typography>
           <Typography variant="subtitle1" className={this.props.classes.col2}>{expense.description}</Typography>
           <Typography variant="subtitle1" className={this.props.classes.col1}>Amount</Typography>
