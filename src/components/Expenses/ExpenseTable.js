@@ -26,13 +26,13 @@ class ExpenseTable extends React.Component {
           </TableRow>
         </TableHead>
         <TableBody>
-          {this.props.expenses.map(row => (
-            <HoverTableRow key={row.id}>
-              <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
-              <TableCell>{row.description}</TableCell>
-              <TableCell component="th" scope="row">{row.name}</TableCell>
+          {this.props.expenses.map(expense => (
+            <HoverTableRow key={expense.id}>
+              <TableCell>{new Date(expense.date).toLocaleDateString()}</TableCell>
+              <TableCell>{expense.description}</TableCell>
+              <TableCell component="th" scope="row">{expense.category.name}</TableCell>
               <TableCell align="right">
-                <Link to={"/expenses/" + row.id}>{row.amount}</Link>
+                <Link to={"/expenses/" + expense.id}>{expense.amount}</Link>
               </TableCell>
             </HoverTableRow>
           ))}
