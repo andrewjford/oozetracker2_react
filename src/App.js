@@ -52,7 +52,7 @@ class App extends Component {
     return (
       <>
         <Route exact path={match.path} render={() => (
-          <SummaryDisplay expenses={this.props.expenses} getBaseData={this.getBaseData} />
+          <SummaryDisplay getBaseData={this.getBaseData} />
         )} />
         <Route exact path={`${match.path}/:id/edit`} render={(props) => {
           return <ExpenseForm categories={this.props.categories} expense={this.getExpense(props.match.params.id)}/>
@@ -73,7 +73,10 @@ class App extends Component {
 
   getBaseData = () => {
     return this.props.fetchRecentExpenses()
-      .then(() => this.props.fetchCategories());
+      .then(() => {
+        debugger
+        return this.props.fetchCategories()
+      });
   }
 
   getExpense = (expenseId) => {
@@ -105,7 +108,7 @@ class App extends Component {
               <Route path='/register' render={() => <Register register={this.props.register}/>} />
               <Route path='/pleaseverify' component={UnverifiedEmail} />
               <PrivateRoute exact path='/' isLoggedIn={isLoggedIn} render={() => (
-                <SummaryDisplay expenses={this.props.expenses} getBaseData={this.getBaseData} />)} />
+                <SummaryDisplay getBaseData={this.getBaseData} />)} />
               <PrivateRoute path='/categories' isLoggedIn={isLoggedIn} render={(props) => <CategoriesList {...props} getBaseData={this.getBaseData}/>}/>
               <PrivateRoute path='/expenses' isLoggedIn={isLoggedIn} component={this.expensesRoute}/>
               <PrivateRoute path='/monthly' isLoggedIn={isLoggedIn} render={(props) => <MonthlyTotals/>}/>

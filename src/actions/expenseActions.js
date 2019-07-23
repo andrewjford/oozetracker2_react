@@ -16,7 +16,7 @@ export const fetchRecentExpenses = () => {
 
 export const createExpense = (newExpense) => {
   return (dispatch, getState) => {
-    BackendCallout.postToApi(`${API_URL}/api/v1/expenses`, newExpense, getState().account.token)
+    return BackendCallout.postToApi(`${API_URL}/api/v1/expenses`, newExpense, getState().account.token)
       .then((responseExpense) => {
         return dispatch({
           type: 'NEW_EXPENSE',
