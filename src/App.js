@@ -62,7 +62,7 @@ class App extends Component {
             return <ExpenseForm categories={this.props.categories} />
           } else {
             return (
-              <ExpenseDetail expenseCategories={this.props.categories} 
+              <ExpenseDetail categoriesMap={this.props.categoriesMap}
                 expense={this.getExpense(props.match.params.id)} />
             );
           }
@@ -125,6 +125,7 @@ const mapStateToProps = (state) => {
   return {
     expenses: state.expenses.expenses,
     categories: state.categories.categories,
+    categoriesMap: state.categories.categoriesMap,
     account: state.account,
   }
 }
