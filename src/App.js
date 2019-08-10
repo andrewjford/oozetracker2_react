@@ -16,7 +16,7 @@ import MonthlyTotals from './components/MonthlyTotals';
 import Login from './components/Account/Login';
 import Register from './components/Account/Register';
 import UnverifiedEmail from './components/Account/UnverifiedEmail';
-import MyAccount from './components/MyAccount';
+import MyAccount from './components/Account/MyAccount';
 
 import { login, logout, setTokenFromLocalStorage, register } from './actions/accountActions';
 import { fetchRecentExpenses } from './actions/expenseActions';
