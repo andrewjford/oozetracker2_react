@@ -43,7 +43,7 @@ const AccountMenu = props => {
   const logout = () => {
     setAnchorEl(null);
     props.logout();
-  }
+  };
 
   const menus = props => {
     if (!props.isLoggedIn) {
@@ -71,7 +71,11 @@ const AccountMenu = props => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose}>My account</MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link className={props.classes.link} to="/myaccount">
+              My account
+            </Link>
+          </MenuItem>
           <MenuItem onClick={logout}>Logout</MenuItem>
         </Menu>
       );

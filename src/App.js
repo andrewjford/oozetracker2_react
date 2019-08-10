@@ -16,6 +16,7 @@ import MonthlyTotals from './components/MonthlyTotals';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import UnverifiedEmail from './components/Auth/UnverifiedEmail';
+import MyAccount from './components/MyAccount';
 
 import { login, logout, setTokenFromLocalStorage, register } from './actions/accountActions';
 import { fetchRecentExpenses } from './actions/expenseActions';
@@ -103,6 +104,7 @@ class App extends Component {
               <Route path='/login' render={() => <Login login={this.props.login} isLoggedIn={this.props.account.token} />} />
               <Route path='/register' render={() => <Register register={this.props.register}/>} />
               <Route path='/pleaseverify' component={UnverifiedEmail} />
+              <Route path='/myaccount' component={MyAccount} />
               <PrivateRoute exact path='/' isLoggedIn={isLoggedIn} render={() => (
                 <SummaryDisplay getBaseData={this.getBaseData} />)} />
               <PrivateRoute path='/categories' isLoggedIn={isLoggedIn} render={(props) => <CategoriesList {...props} getBaseData={this.getBaseData}/>}/>
