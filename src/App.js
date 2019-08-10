@@ -13,9 +13,9 @@ import SummaryDisplay from './components/SummaryDisplay';
 import CategoriesList from './components/Categories/CategoriesList';
 import ExpenseDetail from './components/Expenses/ExpenseDetail';
 import MonthlyTotals from './components/MonthlyTotals';
-import Login from './components/Auth/Login';
-import Register from './components/Auth/Register';
-import UnverifiedEmail from './components/Auth/UnverifiedEmail';
+import Login from './components/Account/Login';
+import Register from './components/Account/Register';
+import UnverifiedEmail from './components/Account/UnverifiedEmail';
 import MyAccount from './components/MyAccount';
 
 import { login, logout, setTokenFromLocalStorage, register } from './actions/accountActions';

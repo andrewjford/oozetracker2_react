@@ -32,7 +32,11 @@ class Login extends React.Component {
     this.setState({loading: true});
     this.props.login(input)
       .then(() => {
-        this.setState({redirect: "/"});
+        debugger
+        this.setState({
+          loading: false,
+          redirect: "/",
+        });
       })
       .catch(error => {
         const parsedError = JSON.parse(error.message);
@@ -40,11 +44,9 @@ class Login extends React.Component {
           this.setState({errors: [error.message]});
         }
         this.setState({
-          errors: parsedError.constructor === Array ? parsedError : [parsedError]
+          errors: parsedError.constructor === Array ? parsedError : [parsedError],
+          loading: false,
         });
-      })
-      .finally(() => {
-        this.setState({loading: false});
       });
   }
 
