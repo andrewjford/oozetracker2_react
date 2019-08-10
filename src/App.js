@@ -92,10 +92,6 @@ class App extends Component {
     }
   }
 
-  logout = () => {
-    this.props.logout();
-  }
-
   render() {
     const isLoggedIn = !!this.props.account.token;
     return (
