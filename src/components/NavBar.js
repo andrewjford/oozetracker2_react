@@ -9,7 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import AccountIcon from "@material-ui/icons/AccountCircle";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 const styles = {
   root: {
@@ -43,6 +43,7 @@ const AccountMenu = props => {
   const logout = () => {
     setAnchorEl(null);
     props.logout();
+    props.history.push("/");
   };
 
   const menus = props => {
@@ -128,4 +129,4 @@ ButtonAppBar.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(ButtonAppBar);
+export default withRouter(withStyles(styles)(ButtonAppBar));
