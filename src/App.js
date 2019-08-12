@@ -75,7 +75,6 @@ class App extends Component {
   getBaseData = () => {
     return this.props.fetchRecentExpenses()
       .then(() => {
-        debugger
         return this.props.fetchCategories()
       });
   }

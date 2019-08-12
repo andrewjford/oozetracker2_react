@@ -32,7 +32,6 @@ class Login extends React.Component {
     this.setState({loading: true});
     this.props.login(input)
       .then(() => {
-        debugger
         this.setState({
           loading: false,
           redirect: "/",

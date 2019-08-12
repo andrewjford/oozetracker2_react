@@ -31,6 +31,12 @@ const styles = theme => ({
     gridColumnStart: 3,
     gridColumnEnd: 5,
     margin: "1rem 5rem",
+    [theme.breakpoints.down('sm')]: {
+      gridColumn: "2 / 6",
+    },
+    [theme.breakpoints.down('xs')]: {
+      gridColumn: "1 / -1",
+    },
   },
   headerItem: {
     verticalAlign: "middle",

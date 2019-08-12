@@ -41,7 +41,13 @@ const styles = theme => ({
   },
   paper: {
     gridColumnStart: 2,
-    gridColumnEnd: 4
+    gridColumnEnd: 4,
+    [theme.breakpoints.down('sm')]: {
+      gridColumn: "2 / 5",
+    },
+    [theme.breakpoints.down('xs')]: {
+      gridColumn: "1 / -1",
+    },
   },
 });
 

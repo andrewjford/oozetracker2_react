@@ -16,7 +16,13 @@ const styles = theme => ({
   paper: {
     gridColumnStart: 2,
     gridColumnEnd: 4,
-    padding: '2rem'
+    padding: '2rem',
+    [theme.breakpoints.down('sm')]: {
+      gridColumn: "2 / 5",
+    },
+    [theme.breakpoints.down('xs')]: {
+      gridColumn: "1 / -1",
+    },
   },
   categoryGroup: {
     gridColumn: '1 / 2',
