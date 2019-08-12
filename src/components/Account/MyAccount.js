@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 
-import { getMonthly, changeMonthlyView } from "../../actions/expenseActions";
+import { getDetails } from "../../actions/accountActions";
 
 const styles = theme => ({
   mainHeader: {
@@ -65,7 +65,7 @@ const styles = theme => ({
 
 class MyAccount extends React.Component {
   componentDidMount() {
-    // fetch account.name
+    this.props.getDetails();
   }
 
   handleChangePassword = (event) => {
@@ -89,13 +89,13 @@ class MyAccount extends React.Component {
             Email
           </Typography>
           <Typography variant="subtitle1" className={this.props.classes.col2}>
-            Your Email Here
+            {this.props.account.email}
           </Typography>
           <Typography variant="subtitle1" className={this.props.classes.col1}>
             Name
           </Typography>
           <Typography variant="subtitle1" className={this.props.classes.col2}>
-            Your Name Here
+          {this.props.account.name}
           </Typography>
           <div className={this.props.classes.buttons}>
             <Button
@@ -114,16 +114,14 @@ class MyAccount extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    monthlyView: state.expenses.monthlies.currentView,
-    monthlies: state.expenses.monthlies.monthlies
+    account: state.account
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      getMonthly,
-      changeMonthlyView
+      getDetails
     },
     dispatch
   );

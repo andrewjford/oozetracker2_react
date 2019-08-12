@@ -56,7 +56,7 @@ const AccountMenu = props => {
           onClose={handleClose}
         >
           <MenuItem onClick={handleClose}>
-            <Link className={props.classes.link} to="/monthly">
+            <Link className={props.classes.link} to="/login">
               Login
             </Link>
           </MenuItem>

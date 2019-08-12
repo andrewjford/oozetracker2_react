@@ -70,3 +70,15 @@ export const register = (form) => {
       });
   }
 }
+
+export const getDetails = () => {
+  return (dispatch, getState) => {
+    return BackendCallout.getFromApi(`${API_URL}/api/v1/account`, getState().account.token)
+      .then(response => {
+        return dispatch({
+          type: "ADD_DETAILS",
+          payload: response,
+        })
+      })
+  }
+}
