@@ -136,6 +136,12 @@ const styles = theme => ({
     padding: '2rem',
     margin: '0 7rem',
     minHeight: '15rem',
+    [theme.breakpoints.down('sm')]: {
+      gridColumn: "2 / 6",
+    },
+    [theme.breakpoints.down('xs')]: {
+      gridColumn: "1 / -1",
+    },
   },
   categoryGroup: {
     gridColumn: '1 / 2',
