@@ -8,6 +8,7 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 
 import { getDetails } from "../../actions/accountActions";
+import ChangePasswordForm from "./ChangePasswordForm";
 
 const styles = theme => ({
   mainHeader: {
@@ -24,12 +25,12 @@ const styles = theme => ({
     gridColumnStart: 3,
     gridColumnEnd: 5,
     margin: "1rem 5rem",
-    [theme.breakpoints.down('sm')]: {
-      gridColumn: "2 / 6",
+    [theme.breakpoints.down("sm")]: {
+      gridColumn: "2 / 6"
     },
-    [theme.breakpoints.down('xs')]: {
-      gridColumn: "1 / -1",
-    },
+    [theme.breakpoints.down("xs")]: {
+      gridColumn: "1 / -1"
+    }
   },
   headerItem: {
     verticalAlign: "middle",
@@ -60,17 +61,54 @@ const styles = theme => ({
   buttons: {
     gridColumn: "1 / 5",
     justifySelf: "center"
+  },
+  passwordForm: {
+    paddingTop: "1rem",
+    gridColumnStart: 1,
+    gridColumnEnd: -1,
   }
 });
 
 class MyAccount extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      changePassword: false
+    };
+  }
+
   componentDidMount() {
     this.props.getDetails();
   }
 
-  handleChangePassword = (event) => {
-    //load password change form
+  openChangePassword = event => {
+    this.setState({ changePassword: true });
+  };
+
+  closeChangePassword = () => {
+    this.setState({ changePassword: false });
   }
+
+  changePasswordSection = () => {
+    if (this.state.changePassword) {
+      return <div className={this.props.classes.passwordForm}>
+        <ChangePasswordForm closeForm={this.closeChangePassword}/>
+      </div>
+    } else {
+      return (
+        <div className={this.props.classes.buttons}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={this.openChangePassword}
+          >
+            Change Password
+          </Button>
+        </div>
+      );
+    }
+  };
 
   render() {
     return (
@@ -95,17 +133,9 @@ class MyAccount extends React.Component {
             Name
           </Typography>
           <Typography variant="subtitle1" className={this.props.classes.col2}>
-          {this.props.account.name}
+            {this.props.account.name}
           </Typography>
-          <div className={this.props.classes.buttons}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={this.handleChangePassword}
-            >
-              Change Password
-            </Button>
-          </div>
+          {this.changePasswordSection()}
         </article>
       </Paper>
     );

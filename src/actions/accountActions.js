@@ -82,3 +82,9 @@ export const getDetails = () => {
       })
   }
 }
+
+export const updateAccount = () => {
+  return (dispatch, getState) => {
+    // asdfasdf
+  }
+}
