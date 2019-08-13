@@ -1,4 +1,5 @@
 - bug - routing - onLogin react state update attempted which throws error warning to console
+- bug - login with different account seems to cause error on initial load
 - bug - there is an element 'Unknown' in the /expenses/new DOM
 - bug - category rename doesnt update recent list
 - bug - date creates wrong!

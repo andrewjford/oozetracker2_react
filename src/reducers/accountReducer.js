@@ -3,6 +3,7 @@ const accountReducer = (
     token: null,
     email: null,
     name: null,
+    id: null
   },
   action
 ) => {
@@ -22,7 +23,18 @@ const accountReducer = (
         ...state,
         email: action.payload.email,
         name: action.payload.name,
+        id: action.payload.id
+      };
+    case "UPDATE_ACCOUNT":
+      if (action.payload.name) {
+        return {
+          ...state,
+          name: action.payload.name
+        };
       }
+      return {
+        ...state
+      };
     default:
       return state;
   }
