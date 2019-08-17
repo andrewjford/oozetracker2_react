@@ -61,11 +61,46 @@ class ChangePasswordForm extends React.Component {
     }
   };
 
+  formIsComplete = () => {
+    const errors = [];
+
+    if (this.state.form.oldPassword === "") {
+      errors.push("Old Password must be completed");
+    }
+
+    if (this.state.form.newPassword === "") {
+      errors.push("New Password must be completed");
+    }
+
+    if (this.state.form.confirmPassword === "") {
+      errors.push("Confirm Password must be completed");
+    }
+
+    if (this.state.form.newPassword !== this.state.form.confirmPassword) {
+      errors.push("Confirmed password and new password must be equal");
+    }
+
+    if (errors.length > 0) {
+      this.setState({
+        errors
+      });
+      return false;
+    }
+
+    return true;
+  };
+
   handleSubmit = event => {
     event.preventDefault();
+
+    if (!this.formIsComplete()) {
+      return;
+    }
+
     this.props
       .updateAccount(this.state.form)
       .then(result => {
+        debugger
         this.setState({ errors: [] });
       })
       .catch(error => {
