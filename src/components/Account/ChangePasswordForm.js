@@ -100,6 +100,7 @@ class ChangePasswordForm extends React.Component {
     this.props
       .updateAccount(this.state.form)
       .then(result => {
+        // show successful update message
         this.setState({ errors: [] });
       })
       .catch(error => {
