@@ -1,9 +1,11 @@
-const categoriesPageReducer = (state = {
+const defaultState = {
   displayCategoryInput: false,
   inlineEditValue: null,
   categories: [],
   categoriesMap: {},
-}, action) => {
+}
+
+const categoriesPageReducer = (state = defaultState, action) => {
   switch (action.type) {
     case 'FETCH_CATEGORIES':
       return {
@@ -56,6 +58,8 @@ const categoriesPageReducer = (state = {
         categories: filteredCategories,
         categoriesMap: filteredCategoryMap,
       }
+    case "PURGE_CATEGORIES":
+      return defaultState;
     default:
       return state
   }

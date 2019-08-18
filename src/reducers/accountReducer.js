@@ -1,10 +1,12 @@
+const defaultState = {
+  token: null,
+  email: null,
+  name: null,
+  id: null
+}
+
 const accountReducer = (
-  state = {
-    token: null,
-    email: null,
-    name: null,
-    id: null
-  },
+  state = defaultState,
   action
 ) => {
   switch (action.type) {
@@ -12,11 +14,6 @@ const accountReducer = (
       return {
         ...state,
         token: action.payload.token
-      };
-    case "REMOVE_TOKEN":
-      const { token, ...rest } = state;
-      return {
-        ...rest
       };
     case "ADD_DETAILS":
       return {
@@ -35,6 +32,8 @@ const accountReducer = (
       return {
         ...state
       };
+    case "PURGE_ACCOUNT_STATE":
+        return defaultState;
     default:
       return state;
   }

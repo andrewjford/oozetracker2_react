@@ -31,10 +31,18 @@ export const logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("expiryDate");
 
+  
   return dispatch => {
+    dispatch({
+      type: "PURGE_EXPENSES"
+    });
+  
+    dispatch({
+      type: "PURGE_CATEGORIES"
+    });
+    
     return dispatch({
-      type: "REMOVE_TOKEN",
-      payload: null
+      type: "PURGE_ACCOUNT_STATE"
     });
   };
 };

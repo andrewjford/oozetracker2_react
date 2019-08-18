@@ -1,8 +1,10 @@
-const expensesReducer = (state = {
+const defaultState = {
   monthlies: {
     monthlies: [],
   },
-}, action) => {
+}
+
+const expensesReducer = (state = defaultState, action) => {
   switch (action.type) {
     case 'FETCH_RECENT_EXPENSES':
       return {
@@ -58,6 +60,8 @@ const expensesReducer = (state = {
           currentView: action.payload,
         }
       }
+    case "PURGE_EXPENSES":
+      return defaultState;
     default:
       return state
   }
