@@ -51,7 +51,7 @@ class ChangePasswordForm extends React.Component {
       },
       history: props.history,
       errors: [],
-      updated: false,
+      updated: false
     };
   }
 
@@ -74,11 +74,15 @@ class ChangePasswordForm extends React.Component {
     }
 
     if (this.state.form.confirmPassword === "") {
-      errors.push("Confirm Password must be completed");
+      errors.push("Confirmed Password must be completed");
     }
 
     if (this.state.form.newPassword !== this.state.form.confirmPassword) {
       errors.push("Confirmed password and new password must be equal");
+    }
+
+    if (this.state.form.newPassword === this.state.form.oldPassword) {
+      errors.push("New password must be different from old password");
     }
 
     if (errors.length > 0) {
@@ -101,9 +105,9 @@ class ChangePasswordForm extends React.Component {
     this.props
       .updateAccount(this.state.form)
       .then(result => {
-        this.setState({ 
+        this.setState({
           errors: [],
-          updated: true,
+          updated: true
         });
       })
       .catch(error => {
@@ -161,9 +165,7 @@ class ChangePasswordForm extends React.Component {
       return (
         <Paper className={this.props.classes.paper}>
           {header}
-          <Typography>
-            Password Updated Successfully.
-          </Typography>
+          <Typography>Password Updated Successfully.</Typography>
         </Paper>
       );
     }
