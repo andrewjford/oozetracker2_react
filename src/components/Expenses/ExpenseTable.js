@@ -1,20 +1,24 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import React from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 
-import HoverTableRow from '../HoverTableRow';
+import HoverTableRow from "../HoverTableRow";
 
-const styles = theme => ({});
+const styles = theme => ({
+  link: {
+    textDecoration: "none",
+    color: "black"
+  }
+});
 
 class ExpenseTable extends React.Component {
-
-  render() {    
+  render() {
     return (
       <Table>
         <TableHead>
@@ -28,11 +32,22 @@ class ExpenseTable extends React.Component {
         <TableBody>
           {this.props.expenses.map(expense => (
             <HoverTableRow key={expense.id}>
-              <TableCell>{new Date(expense.date).toLocaleDateString('en-US', {timeZone: 'UTC'})}</TableCell>
+              <TableCell>
+                {new Date(expense.date).toLocaleDateString("en-US", {
+                  timeZone: "UTC"
+                })}
+              </TableCell>
               <TableCell>{expense.description}</TableCell>
-              <TableCell component="th" scope="row">{expense.category.name}</TableCell>
+              <TableCell component="th" scope="row">
+                {expense.category.name}
+              </TableCell>
               <TableCell align="right">
-                <Link to={"/expenses/" + expense.id}>{expense.amount}</Link>
+                <Link
+                  to={"/expenses/" + expense.id}
+                  className={this.props.classes.link}
+                >
+                  {expense.amount}
+                </Link>
               </TableCell>
             </HoverTableRow>
           ))}
@@ -43,7 +58,7 @@ class ExpenseTable extends React.Component {
 }
 
 ExpenseTable.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(ExpenseTable);
