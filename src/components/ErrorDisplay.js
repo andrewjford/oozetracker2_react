@@ -41,7 +41,7 @@ const ErrorDisplay = props => {
     return null;
   };
 
-  if (lines.length > 0 || notifications.length > 0) {
+  if (lines.length > 0 || props.notifications.length > 0) {
     return (
       <div className={props.classes.errorBox}>
         {notifications()}
