@@ -50,7 +50,8 @@ class ChangePasswordForm extends React.Component {
         confirmPassword: ""
       },
       history: props.history,
-      errors: []
+      errors: [],
+      updated: false,
     };
   }
 
@@ -100,8 +101,10 @@ class ChangePasswordForm extends React.Component {
     this.props
       .updateAccount(this.state.form)
       .then(result => {
-        // show successful update message
-        this.setState({ errors: [] });
+        this.setState({ 
+          errors: [],
+          updated: true,
+        });
       })
       .catch(error => {
         const parsedError = JSON.parse(error.message);
@@ -153,9 +156,20 @@ class ChangePasswordForm extends React.Component {
       </Typography>
     );
 
+    if (this.state.updated) {
+      setTimeout(this.handleCancel, 3000);
+      return (
+        <Paper className={this.props.classes.paper}>
+          {header}
+          <Typography>
+            Password Updated Successfully.
+          </Typography>
+        </Paper>
+      );
+    }
+
     return (
       <Paper className={this.props.classes.paper}>
-        {this.redirect()}
         {header}
         <ErrorDisplay errors={this.state.errors} />
         <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
