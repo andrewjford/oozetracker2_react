@@ -92,9 +92,7 @@ class ExpenseDetail extends React.Component {
           </div>
           <div className={this.props.classes.row1col2}>
             <Fab size="small" aria-label="Edit" className={this.props.classes.fab} onClick={this.handleEditClick}>
-              <Link to={`/expenses/${expense.id}/edit`}>
-                <EditIcon/>
-              </Link>
+              <EditIcon/>
             </Fab>
             <Fab size="small" aria-label="Delete" className={this.props.classes.fab} onClick={this.handleDeleteClick}>
               <DeleteIcon/>

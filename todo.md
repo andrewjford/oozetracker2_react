@@ -2,7 +2,6 @@
 - bug - there is an element 'Unknown' in the /expenses/new DOM
 - nav buttons should select whole height
 - select from table expense should highlight table cell not row
-- edit button inner color is blue instead of black
 - need to restrict user until isVerified
 - loading spinner
   - after hitting register - should show spinner
