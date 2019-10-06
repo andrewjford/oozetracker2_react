@@ -1,4 +1,4 @@
-- bug - routing - onLogin react state update attempted which throws error warning to console
+- bug - routing - onLogin react state update attempted which throws error warning to console ?
 - bug - there is an element 'Unknown' in the /expenses/new DOM
 - loading spinner
   - after hitting register - should show spinner
