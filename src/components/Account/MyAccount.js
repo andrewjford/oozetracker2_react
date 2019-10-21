@@ -11,16 +11,6 @@ import { getDetails } from "../../actions/accountActions";
 import ChangePasswordForm from "./ChangePasswordForm";
 
 const styles = theme => ({
-  mainHeader: {
-    gridColumn: "1 / 5",
-    height: "2rem",
-    padding: "1rem 1rem 0"
-  },
-  summary: {
-    marginTop: "1rem",
-    display: "grid",
-    gridTemplateColumns: "1rem 20% auto 20% 1rem"
-  },
   paper: {
     gridColumnStart: 3,
     gridColumnEnd: 5,
@@ -32,10 +22,6 @@ const styles = theme => ({
       gridColumn: "1 / -1"
     }
   },
-  headerItem: {
-    verticalAlign: "middle",
-    display: "inline"
-  },
   table: {
     display: "grid",
     gridTemplateColumns: "30% 70%",
@@ -44,11 +30,6 @@ const styles = theme => ({
   row1col1: {
     alignSelf: "center",
     gridColumn: "1 / 2",
-    paddingBottom: "1rem"
-  },
-  row1col2: {
-    justifySelf: "right",
-    gridColumn: "2",
     paddingBottom: "1rem"
   },
   col1: {

@@ -66,15 +66,15 @@ class ChangePasswordForm extends React.Component {
     const errors = [];
 
     if (this.state.form.oldPassword === "") {
-      errors.push("Old Password must be completed");
+      errors.push("Old password must be completed");
     }
 
     if (this.state.form.newPassword === "") {
-      errors.push("New Password must be completed");
+      errors.push("New password must be completed");
     }
 
     if (this.state.form.confirmPassword === "") {
-      errors.push("Confirmed Password must be completed");
+      errors.push("Confirmed password must be completed");
     }
 
     if (this.state.form.newPassword !== this.state.form.confirmPassword) {
@@ -126,29 +126,11 @@ class ChangePasswordForm extends React.Component {
     this.props.closeForm();
   };
 
-  handleOldPasswordChange = event => {
+  handleInputChange = event => {
     this.setState({
       form: {
         ...this.state.form,
-        oldPassword: event.target.value
-      }
-    });
-  };
-
-  handleNewPasswordChange = event => {
-    this.setState({
-      form: {
-        ...this.state.form,
-        newPassword: event.target.value
-      }
-    });
-  };
-
-  handleConfirmChange = event => {
-    this.setState({
-      form: {
-        ...this.state.form,
-        confirmPassword: event.target.value
+        [event.target.name]: event.target.value
       }
     });
   };
@@ -176,26 +158,29 @@ class ChangePasswordForm extends React.Component {
         <ErrorDisplay errors={this.state.errors} />
         <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
           <TextField
+            name="oldPassword"
             type="password"
             value={this.state.form.oldPassword}
             className={this.props.classes.input}
-            onChange={this.handleOldPasswordChange}
+            onChange={this.handleInputChange}
             label="Old Password"
           />
 
           <TextField
+            name="newPassword"
             type="password"
             value={this.state.form.newPassword}
             className={this.props.classes.input}
-            onChange={this.handleNewPasswordChange}
+            onChange={this.handleInputChange}
             label="New Password"
           />
 
           <TextField
+            name="confirmNewPassword"
             type="password"
             value={this.state.form.confirmNewPassword}
             className={this.props.classes.input}
-            onChange={this.handleConfirmChange}
+            onChange={this.handleInputChange}
             label="Confirm New Password"
           />
 
