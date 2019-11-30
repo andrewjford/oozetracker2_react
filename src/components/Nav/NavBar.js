@@ -10,8 +10,10 @@ import AccountIcon from "@material-ui/icons/AccountCircle";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Link, withRouter } from "react-router-dom";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import MenuIcon from "@material-ui/icons/Menu";
 
-const styles = {
+const styles = theme => ({
   root: {
     flexGrow: 1
   },
@@ -26,7 +28,7 @@ const styles = {
     textDecoration: "none",
     color: "inherit"
   }
-};
+});
 
 const AccountMenu = props => {
   const { classes } = props;
@@ -98,26 +100,50 @@ const AccountMenu = props => {
 };
 
 function ButtonAppBar(props) {
+  // const matches = useMediaQuery("(min-width:600px)");
+
+  // return <span>{`(min-width:600px) matches: ${matches}`}</span>;
+  const notSmallScreen = true;
   const { classes } = props;
+
+  if (notSmallScreen) {
+    return (
+      <div className={classes.root}>
+        <AppBar position="static">
+          <Toolbar>
+            <Link to="/" className={`${classes.grow} ${classes.link}`}>
+              <Typography variant="h6" color="inherit">
+                Cash Tracker
+              </Typography>
+            </Link>
+            <Link className={classes.link} to="/expenses/new">
+              <Button color="inherit">Add Expense</Button>
+            </Link>
+            <Link className={classes.link} to="/categories">
+              <Button color="inherit">Categories</Button>
+            </Link>
+            <Link className={classes.link} to="/monthly">
+              <Button color="inherit">Monthly Totals</Button>
+            </Link>
+            <AccountMenu {...props} />
+          </Toolbar>
+        </AppBar>
+      </div>
+    );
+  }
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Link to="/" className={`${classes.grow} ${classes.link}`}>
-            <Typography variant="h6" color="inherit">
-              Cash Tracker
-            </Typography>
-          </Link>
-          <Link className={classes.link} to="/expenses/new">
-            <Button color="inherit">Add Expense</Button>
-          </Link>
-          <Link className={classes.link} to="/categories">
-            <Button color="inherit">Categories</Button>
-          </Link>
-          <Link className={classes.link} to="/monthly">
-            <Button color="inherit">Monthly Totals</Button>
-          </Link>
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
+            <MenuIcon />
+          </IconButton>
           <AccountMenu {...props} />
         </Toolbar>
       </AppBar>
@@ -129,4 +155,6 @@ ButtonAppBar.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withRouter(withStyles(styles)(ButtonAppBar));
+export default withRouter(
+  withStyles(styles, { withTheme: true })(ButtonAppBar)
+);
