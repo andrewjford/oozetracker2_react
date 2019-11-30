@@ -1,14 +1,14 @@
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Loading from './Loading';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React from "react";
+import { withStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
+import Loading from "./Loading";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
-import { fetchRecentExpenses } from '../actions/expenseActions';
-import { fetchCategories } from '../actions/categoriesActions';
-import ExpenseTable from './Expenses/ExpenseTable';
+import { fetchRecentExpenses } from "../actions/expenseActions";
+import { fetchCategories } from "../actions/categoriesActions";
+import ExpenseTable from "./Expenses/ExpenseTable";
 
 const styles = theme => ({
   mainHeader: {
@@ -16,12 +16,18 @@ const styles = theme => ({
   },
   paper: {
     gridColumnStart: 2,
-    gridColumnEnd: 6
+    gridColumnEnd: 6,
+    [theme.breakpoints.down("xs")]: {
+      gridColumn: "1 / -1"
+    }
   },
   loadingSpinner: {
     gridColumnStart: 2,
     gridColumnEnd: 6,
-    height: "20rem",
+    height: "20rem"
+  },
+  tableWrapper: {
+    overflowX: "auto"
   }
 });
 
@@ -35,14 +41,14 @@ class SummaryDisplay extends React.Component {
   }
 
   hasCategories = () => {
-    return Object.keys(this.props.categoriesMap).length === 0 && this.props.categoriesMap.constructor === Object;
-  }
+    return (
+      Object.keys(this.props.categoriesMap).length === 0 &&
+      this.props.categoriesMap.constructor === Object
+    );
+  };
 
   componentDidMount() {
-    if (
-      !this.hasCategories ||
-      !this.props.expenses
-    ) {
+    if (!this.hasCategories || !this.props.expenses) {
       Promise.all([
         this.props.fetchCategories(),
         this.props.fetchRecentExpenses()
@@ -58,41 +64,55 @@ class SummaryDisplay extends React.Component {
     if (this.state.isLoading) {
       return (
         <div className={this.props.classes.loadingSpinner}>
-          <Loading/>
+          <Loading />
         </div>
       );
     }
 
-    const recentExpenses = this.props.expenses.map(expense => {
-      return {
-        ...expense,
-        category: this.props.categoriesMap[expense.category_id],
-      }
-    }).slice(0,9);
+    const recentExpenses = this.props.expenses
+      .map(expense => {
+        return {
+          ...expense,
+          category: this.props.categoriesMap[expense.category_id]
+        };
+      })
+      .slice(0, 9);
 
     return (
       <Paper className={this.props.classes.paper}>
-        <Typography className={this.props.classes.mainHeader} variant="h5" component="h3">
+        <Typography
+          className={this.props.classes.mainHeader}
+          variant="h5"
+          component="h3"
+        >
           Recent Expenses
         </Typography>
-        <ExpenseTable expenses={recentExpenses}/>
+        <section className={this.props.classes.tableWrapper}>
+          <ExpenseTable expenses={recentExpenses} />
+        </section>
       </Paper>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     expenses: state.expenses.expenses,
     categoriesMap: state.categories.categoriesMap
-  }
-}
+  };
+};
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({
-    fetchRecentExpenses,
-    fetchCategories,
-  }, dispatch)
-}
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    {
+      fetchRecentExpenses,
+      fetchCategories
+    },
+    dispatch
+  );
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SummaryDisplay));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(SummaryDisplay));

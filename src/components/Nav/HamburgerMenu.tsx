@@ -36,7 +36,7 @@ const HamburgerMenu = (props: any) => {
 
   const menuItemsDisplay = menuItems.map(menuItem => {
     return (
-      <MenuItem onClick={handleClose}>
+      <MenuItem onClick={handleClose} key={menuItem.label}>
         <Link to={menuItem.href} className={classes.link}>
           {menuItem.label}
         </Link>

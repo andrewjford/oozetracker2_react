@@ -14,7 +14,6 @@ const styles = theme => ({
   paper: {
     gridColumnStart: 3,
     gridColumnEnd: 5,
-    margin: "1rem 5rem",
     [theme.breakpoints.down("sm")]: {
       gridColumn: "2 / 6"
     },
@@ -46,7 +45,7 @@ const styles = theme => ({
   passwordForm: {
     paddingTop: "1rem",
     gridColumnStart: 1,
-    gridColumnEnd: -1,
+    gridColumnEnd: -1
   }
 });
 
@@ -69,13 +68,15 @@ class MyAccount extends React.Component {
 
   closeChangePassword = () => {
     this.setState({ changePassword: false });
-  }
+  };
 
   changePasswordSection = () => {
     if (this.state.changePassword) {
-      return <div className={this.props.classes.passwordForm}>
-        <ChangePasswordForm closeForm={this.closeChangePassword}/>
-      </div>
+      return (
+        <div className={this.props.classes.passwordForm}>
+          <ChangePasswordForm closeForm={this.closeChangePassword} />
+        </div>
+      );
     } else {
       return (
         <div className={this.props.classes.buttons}>

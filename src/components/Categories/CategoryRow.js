@@ -1,17 +1,17 @@
-import React from 'react';
-import { withStyles, TextField } from '@material-ui/core';
-import Fab from '@material-ui/core/Fab';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import React from "react";
+import { withStyles, TextField } from "@material-ui/core";
+import Fab from "@material-ui/core/Fab";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
 
 const styles = theme => ({
   mainHeader: {
     gridColumn: "1 / 5",
     height: "2rem",
     padding: "1rem",
-    borderBottom: "1px solid rgba(224, 224, 224, 1)",
+    borderBottom: "1px solid rgba(224, 224, 224, 1)"
   },
   summary: {
     marginTop: "1rem",
@@ -24,17 +24,16 @@ const styles = theme => ({
   },
   headerItem: {
     verticalAlign: "middle",
-    display: "inline",
+    display: "inline"
   },
   footer: {
-    margin: "1rem",
+    margin: "1rem"
   },
   rightAlignButton: {
-    textAlign: "right",
-    padding: "0",
+    textAlign: "right"
   },
   name: {
-    width: "85%",
+    width: "85%"
   }
 });
 
@@ -44,53 +43,56 @@ class CategoryRow extends React.Component {
 
     this.state = {
       inlineEditValue: null,
-      editing: false,
+      editing: false
     };
   }
 
-  handleEditClick = (event) => {
+  handleEditClick = event => {
     this.setState({
       ...this.state,
       inlineEditValue: this.props.category.name,
-      editing: true,
+      editing: true
     });
-  }
+  };
 
-  handleInlineEdit = (event) => {
+  handleInlineEdit = event => {
     this.setState({
       inlineEditValue: event.target.value
     });
-  }
+  };
 
-  handleInlineEditOnBlur = (event) => {
+  handleInlineEditOnBlur = event => {
     const updatedCategory = this.props.category;
     updatedCategory.name = this.state.inlineEditValue;
     this.props.updateCategory(updatedCategory);
 
-    this.setState((state) => {
+    this.setState(state => {
       return {
         ...this.state,
-        editing: false,
-      }
-    })
-  }
+        editing: false
+      };
+    });
+  };
 
-  handleDeleteClick = (event) => {
+  handleDeleteClick = event => {
     this.props.deleteCategory(this.props.category);
-  }
+  };
 
   categoryName = () => {
     if (this.state.editing) {
       return (
-        <TextField type="text" value={this.state.inlineEditValue} onChange={this.handleInlineEdit}
-                    autoFocus={true} onBlur={this.handleInlineEditOnBlur}/>
+        <TextField
+          type="text"
+          value={this.state.inlineEditValue}
+          onChange={this.handleInlineEdit}
+          autoFocus={true}
+          onBlur={this.handleInlineEditOnBlur}
+        />
       );
     } else {
-      return (
-        this.props.category.name
-      );
+      return this.props.category.name;
     }
-  }
+  };
 
   render() {
     return (
@@ -98,17 +100,29 @@ class CategoryRow extends React.Component {
         <TableCell className={this.props.classes.name}>
           {this.categoryName()}
         </TableCell>
-        <TableCell className={this.props.classes.rightAlignButton}>
-          <Fab size="small" aria-label="Edit" className={this.props.classes.fab} onClick={this.handleEditClick}>
-            <EditIcon fontSize="small"/>
+        <TableCell
+          className={this.props.classes.rightAlignButton}
+          padding="none"
+        >
+          <Fab
+            size="small"
+            aria-label="Edit"
+            className={this.props.classes.fab}
+            onClick={this.handleEditClick}
+          >
+            <EditIcon fontSize="small" />
           </Fab>
         </TableCell>
-        <TableCell className={this.props.classes.rightAlignButton}>
-          <Fab size="small" aria-label="Delete" className={this.props.classes.fab} onClick={this.handleDeleteClick}>
-            <DeleteIcon fontSize="small"/>
+        <TableCell padding="none" align="center">
+          <Fab
+            size="small"
+            aria-label="Delete"
+            className={this.props.classes.fab}
+            onClick={this.handleDeleteClick}
+          >
+            <DeleteIcon fontSize="small" />
           </Fab>
         </TableCell>
-        
       </TableRow>
     );
   }
