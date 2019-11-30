@@ -63,6 +63,7 @@ function ButtonAppBar(props) {
       <AppBar position="static">
         <Toolbar>
           <HamburgerMenu {...props} />
+          <div className={classes.grow} />
           <AccountMenu {...props} />
         </Toolbar>
       </AppBar>
