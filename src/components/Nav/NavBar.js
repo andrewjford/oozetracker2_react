@@ -100,10 +100,7 @@ const AccountMenu = props => {
 };
 
 function ButtonAppBar(props) {
-  // const matches = useMediaQuery("(min-width:600px)");
-
-  // return <span>{`(min-width:600px) matches: ${matches}`}</span>;
-  const notSmallScreen = true;
+  const notSmallScreen = useMediaQuery(props.theme.breakpoints.up("sm"));
   const { classes } = props;
 
   if (notSmallScreen) {
