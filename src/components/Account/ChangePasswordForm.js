@@ -176,9 +176,9 @@ class ChangePasswordForm extends React.Component {
           />
 
           <TextField
-            name="confirmNewPassword"
+            name="confirmPassword"
             type="password"
-            value={this.state.form.confirmNewPassword}
+            value={this.state.form.confirmPassword}
             className={this.props.classes.input}
             onChange={this.handleInputChange}
             label="Confirm New Password"

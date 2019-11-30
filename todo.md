@@ -1,3 +1,4 @@
+- change password validation errors seem to be broken
 - bug - routing - onLogin react state update attempted which throws error warning to console ?
 - bug - there is an element 'Unknown' in the /expenses/new DOM
 - loading spinner
