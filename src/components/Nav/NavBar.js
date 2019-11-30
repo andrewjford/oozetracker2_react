@@ -11,7 +11,8 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Link, withRouter } from "react-router-dom";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import MenuIcon from "@material-ui/icons/Menu";
+
+import { HamburgerMenu } from "./HamburgerMenu";
 
 const styles = theme => ({
   root: {
@@ -29,71 +30,6 @@ const styles = theme => ({
     color: "inherit"
   }
 });
-
-const HamburgerMenu = props => {
-  const { classes } = props;
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const openMenu = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const menuItems = [
-    {
-      label: "Home",
-      href: "/"
-    },
-    {
-      label: "Add Expense",
-      href: "/expenses/new"
-    },
-    {
-      label: "Categories",
-      href: "/categories"
-    },
-    {
-      label: "Monthly Totals",
-      href: "/monthly"
-    }
-  ];
-
-  const menuItemsDisplay = menuItems.map(menuItem => {
-    return (
-      <MenuItem onClick={handleClose}>
-        <Link to={menuItem.href} className={classes.link}>
-          {menuItem.label}
-        </Link>
-      </MenuItem>
-    );
-  });
-
-  return (
-    <div>
-      <IconButton
-        edge="start"
-        className={classes.link}
-        color="inherit"
-        aria-label="menu"
-        onClick={openMenu}
-      >
-        <MenuIcon />
-      </IconButton>
-      <Menu
-        id="hamburger-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        {menuItemsDisplay}
-      </Menu>
-    </div>
-  );
-};
 
 const AccountMenu = props => {
   const { classes } = props;
