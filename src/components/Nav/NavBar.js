@@ -1,20 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import AccountIcon from "@material-ui/icons/AccountCircle";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import { Link, withRouter } from "react-router-dom";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import { HamburgerMenu } from "./HamburgerMenu";
+import { AccountMenu } from "./AccountMenu";
 
-const styles = theme => ({
+const styles = () => ({
   root: {
     flexGrow: 1
   },
@@ -30,75 +27,6 @@ const styles = theme => ({
     color: "inherit"
   }
 });
-
-const AccountMenu = props => {
-  const { classes } = props;
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const openAccountMenu = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  function handleClose() {
-    setAnchorEl(null);
-  }
-
-  const logout = () => {
-    setAnchorEl(null);
-    props.logout();
-    props.history.push("/");
-  };
-
-  const menus = props => {
-    if (!props.isLoggedIn) {
-      return (
-        <Menu
-          id="account-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={handleClose}>
-            <Link className={props.classes.link} to="/login">
-              Login
-            </Link>
-          </MenuItem>
-        </Menu>
-      );
-    } else {
-      return (
-        <Menu
-          id="account-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={handleClose}>
-            <Link className={props.classes.link} to="/myaccount">
-              My account
-            </Link>
-          </MenuItem>
-          <MenuItem onClick={logout}>Logout</MenuItem>
-        </Menu>
-      );
-    }
-  };
-
-  return (
-    <div>
-      <IconButton
-        className={classes.link}
-        aria-label="account"
-        onClick={openAccountMenu}
-      >
-        <AccountIcon />
-      </IconButton>
-      {menus(props)}
-    </div>
-  );
-};
 
 function ButtonAppBar(props) {
   const notSmallScreen = useMediaQuery(props.theme.breakpoints.up("sm"));
