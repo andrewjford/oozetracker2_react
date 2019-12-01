@@ -36,7 +36,7 @@ const styles = theme => ({
   },
   header: {},
   fab: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1)
   },
   paper: {
     gridColumnStart: 2,
