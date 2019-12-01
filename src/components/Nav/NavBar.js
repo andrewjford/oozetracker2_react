@@ -25,6 +25,10 @@ const styles = () => ({
   link: {
     textDecoration: "none",
     color: "inherit"
+  },
+  appBar: {
+    top: "auto",
+    bottom: 0
   }
 });
 
@@ -60,7 +64,7 @@ function ButtonAppBar(props) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" className={classes.appBar}>
         <Toolbar>
           <HamburgerMenu {...props} />
           <div className={classes.grow} />
