@@ -8,7 +8,6 @@ import Button from "@material-ui/core/Button";
 import { Link, withRouter } from "react-router-dom";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-import { HamburgerMenu } from "./HamburgerMenu";
 import { AccountMenu } from "./AccountMenu";
 
 const styles = () => ({
@@ -62,17 +61,7 @@ function ButtonAppBar(props) {
     );
   }
 
-  return (
-    <div className={classes.root}>
-      <AppBar position="static" className={classes.appBar}>
-        <Toolbar>
-          <HamburgerMenu {...props} />
-          <div className={classes.grow} />
-          <AccountMenu {...props} />
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+  return <div />;
 }
 
 ButtonAppBar.propTypes = {

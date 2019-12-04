@@ -17,6 +17,7 @@ import Login from "./components/Account/Login";
 import Register from "./components/Account/Register";
 import UnverifiedEmail from "./components/Account/UnverifiedEmail";
 import MyAccount from "./components/Account/MyAccount";
+import BottomNavBar from "./components/Nav/BottomNavBar";
 
 import {
   login,
@@ -101,6 +102,7 @@ class App extends Component {
 
   render() {
     const isLoggedIn = !!this.props.account.token;
+
     return (
       <BrowserRouter>
         <MuiThemeProvider theme={Theme}>
@@ -151,6 +153,10 @@ class App extends Component {
               <Route render={() => <Redirect to={"/"} />} />
             </Switch>
           </section>
+          <BottomNavBar
+            isLoggedIn={this.props.account.token}
+            logout={this.props.logout}
+          />
         </MuiThemeProvider>
       </BrowserRouter>
     );
