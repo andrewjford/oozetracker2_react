@@ -1,8 +1,12 @@
 - mobile screen size
   - recent expenses should cutoff category column
   - move navbar to bottom
+  - make navbar icon buttons
+  - add new expense button on home page
 - get routing correct
 - stay logged in checkbox
+- monthly by category list view
+- categories page - add button needs to stay on top when out of vertical room
 - bug - routing - onLogin react state update attempted which throws error warning to console ?
 - bug - there is an element 'Unknown' in the /expenses/new DOM
 - loading spinner

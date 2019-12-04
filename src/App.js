@@ -27,6 +27,7 @@ import {
 } from "./actions/accountActions";
 import { fetchRecentExpenses } from "./actions/expenseActions";
 import { fetchCategories } from "./actions/categoriesActions";
+import ProfilePage from "./components/Account/ProfilePage";
 
 function PrivateRoute({ render, component: Component, isLoggedIn, ...rest }) {
   if (!isLoggedIn) {
@@ -149,6 +150,16 @@ class App extends Component {
                 path="/monthly"
                 isLoggedIn={isLoggedIn}
                 render={props => <MonthlyTotals />}
+              />
+              <PrivateRoute
+                path="/profile"
+                isLoggedIn={isLoggedIn}
+                render={props => (
+                  <ProfilePage
+                    isLoggedIn={isLoggedIn}
+                    logout={this.props.logout}
+                  />
+                )}
               />
               <Route render={() => <Redirect to={"/"} />} />
             </Switch>
