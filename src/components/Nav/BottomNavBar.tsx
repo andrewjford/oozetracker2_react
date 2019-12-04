@@ -9,75 +9,132 @@ import TocIcon from "@material-ui/icons/Toc";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { Link } from "react-router-dom";
 
-import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Toolbar,
+  AppBar,
+  Button,
+  Theme
+} from "@material-ui/core";
+import { HamburgerMenu } from "./HamburgerMenu";
+import { AccountMenu } from "./AccountMenu";
 
-const styles = createStyles({
-  root: {
-    flexGrow: 1,
-    width: "100%",
-    position: "fixed",
-    bottom: 0
-  },
-  grow: {
-    flexGrow: 1
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
-  },
-  link: {
-    textDecoration: "none",
-    color: "inherit"
-  },
-  appBar: {
-    top: "auto",
-    bottom: 0
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      width: "100%",
+      position: "fixed",
+      bottom: 0
+    },
+    grow: {
+      flexGrow: 1
+    },
+    menuButton: {
+      marginLeft: -12,
+      marginRight: 20
+    },
+    link: {
+      textDecoration: "none",
+      color: "inherit"
+    },
+    appBar: {
+      top: "auto",
+      bottom: 0
+    },
+    newExpense: {
+      padding: "0.5rem 0",
+      textAlign: "center",
+      borderBottom: "1px solid " + theme.palette.primary.main,
+      borderTop: "1px solid " + theme.palette.primary.main,
+      backgroundColor: "white"
+    },
+    button: {
+      borderRadius: "0.1rem"
+    }
+  });
+
+const NewExpenseBar = (props: any) => {
+  const onHomePage = props.location.pathname === "/";
+
+  if (onHomePage) {
+    return (
+      <div className={props.classes.newExpense}>
+        <Link className={props.classes.link} to="/expenses/new">
+          <Button
+            variant="contained"
+            color="primary"
+            className={props.classes.button}
+          >
+            New Expense
+          </Button>
+        </Link>
+      </div>
+    );
   }
-});
+};
 
 const BottomNavBar = (props: any) => {
   const [value, setValue] = React.useState(0);
-  const notSmallScreen = useMediaQuery(props.theme.breakpoints.up("sm"));
+  const biggerScreen = useMediaQuery(props.theme.breakpoints.up("sm"));
+  const smallerScreen = useMediaQuery(props.theme.breakpoints.up("xs"));
   const { classes } = props;
 
-  if (notSmallScreen) {
+  if (biggerScreen) {
     return null;
   }
 
+  if (smallerScreen) {
+    return (
+      <div className={classes.root}>
+        {NewExpenseBar(props)}
+        <BottomNavigation
+          value={value}
+          onChange={(event, newValue) => {
+            setValue(newValue);
+          }}
+          showLabels
+        >
+          <BottomNavigationAction
+            label="Home"
+            icon={<HomeIcon />}
+            component={Link}
+            to="/"
+          />
+          <BottomNavigationAction
+            label="Summary"
+            icon={<MenuBookIcon />}
+            component={Link}
+            to="/monthly"
+          />
+          <BottomNavigationAction
+            label="Categories"
+            icon={<TocIcon />}
+            component={Link}
+            to="/categories"
+          />
+          <BottomNavigationAction
+            label="Profile"
+            icon={<AccountCircleIcon />}
+            component={Link}
+            to="/profile"
+          />
+        </BottomNavigation>
+      </div>
+    );
+  }
+
   return (
-    <BottomNavigation
-      value={value}
-      onChange={(event, newValue) => {
-        setValue(newValue);
-      }}
-      showLabels
-      className={classes.root}
-    >
-      <BottomNavigationAction
-        label="Home"
-        icon={<HomeIcon />}
-        component={Link}
-        to="/"
-      />
-      <BottomNavigationAction
-        label="Summary"
-        icon={<MenuBookIcon />}
-        component={Link}
-        to="/monthly"
-      />
-      <BottomNavigationAction
-        label="Categories"
-        icon={<TocIcon />}
-        component={Link}
-        to="/categories"
-      />
-      <BottomNavigationAction
-        label="Profile"
-        icon={<AccountCircleIcon />}
-        component={Link}
-        to="/profile"
-      />
-    </BottomNavigation>
+    <div className={classes.root}>
+      <AppBar position="static" className={classes.appBar}>
+        <Toolbar>
+          <HamburgerMenu {...props} />
+          <div className={classes.grow} />
+          <AccountMenu {...props} />
+        </Toolbar>
+      </AppBar>
+    </div>
   );
 };
 
