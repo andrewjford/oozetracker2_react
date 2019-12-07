@@ -1,13 +1,42 @@
-import React from "react";
-import { Paper, TextField, Typography, Button } from "@material-ui/core";
+import React, { FormEvent, ChangeEvent } from "react";
+import {
+  Paper,
+  TextField,
+  Typography,
+  Button,
+  Theme,
+  createStyles,
+  WithStyles
+} from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import { Redirect, withRouter } from "react-router-dom";
+import { Redirect, withRouter, RouteComponentProps } from "react-router-dom";
 import { Link } from "react-router-dom";
 import ErrorDisplay from "../ErrorDisplay";
 import Loading from "../Loading";
 
-class Login extends React.Component {
-  constructor(props) {
+interface PassedProps extends WithStyles<typeof styles> {
+  login: (formState: LoginFormState) => any;
+  isLoggedIn: boolean;
+}
+
+interface LoginFormState {
+  email: string;
+  password: string;
+}
+
+interface LoginState {
+  form: LoginFormState;
+  history: any;
+  errors: Array<any>;
+  loading: boolean;
+  redirect?: string;
+}
+
+class Login extends React.Component<
+  PassedProps & RouteComponentProps,
+  LoginState
+> {
+  constructor(props: PassedProps & RouteComponentProps) {
     super(props);
     this.state = {
       form: {
@@ -20,15 +49,7 @@ class Login extends React.Component {
     };
   }
 
-  convertDateToString = date => {
-    let month = date.getMonth() + 1;
-    month = month.toString().length === 1 ? "0" + month : month;
-    let day = date.getDate();
-    day = day.toString().length === 1 ? "0" + day : day;
-    return `${date.getFullYear()}-${month}-${day}`;
-  };
-
-  login = input => {
+  login = (input: LoginFormState) => {
     this.setState({ loading: true });
     this.props
       .login(input)
@@ -38,7 +59,7 @@ class Login extends React.Component {
           redirect: "/"
         });
       })
-      .catch(error => {
+      .catch((error: Error) => {
         const parsedError = JSON.parse(error.message);
         if (!parsedError) {
           this.setState({ errors: [error.message] });
@@ -51,12 +72,12 @@ class Login extends React.Component {
       });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event: FormEvent<HTMLElement>) => {
     event.preventDefault();
     this.login(this.state.form);
   };
 
-  handleEmailChange = event => {
+  handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       form: {
         ...this.state.form,
@@ -65,7 +86,7 @@ class Login extends React.Component {
     });
   };
 
-  handlePasswordChange = event => {
+  handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       form: {
         ...this.state.form,
@@ -142,45 +163,47 @@ class Login extends React.Component {
   }
 }
 
-const styles = theme => ({
-  form: {
-    display: "grid",
-    gridRowGap: "1rem",
-    paddingTop: "1rem"
-  },
-  paper: {
-    gridColumnStart: 3,
-    gridColumnEnd: 5,
-    padding: "2rem",
-    minHeight: "15rem",
-    [theme.breakpoints.up("md")]: {
-      justifySelf: "center",
-      minWidth: "400px",
-      maxWidth: "450px"
+const styles = (theme: Theme) =>
+  createStyles({
+    form: {
+      display: "grid",
+      gridRowGap: "1rem",
+      paddingTop: "1rem"
     },
-    [theme.breakpoints.down("sm")]: {
-      gridColumn: "3 / 5"
+    paper: {
+      gridColumnStart: 3,
+      gridColumnEnd: 5,
+      padding: "2rem",
+      minHeight: "15rem",
+      [theme.breakpoints.up("md")]: {
+        justifySelf: "center",
+        minWidth: "400px",
+        maxWidth: "450px"
+      },
+      [theme.breakpoints.down("sm")]: {
+        gridColumn: "3 / 5"
+      },
+      [theme.breakpoints.down("xs")]: {
+        gridColumn: "1 / -1"
+      }
     },
-    [theme.breakpoints.down("xs")]: {
-      gridColumn: "1 / -1"
-    }
-  },
-  categoryGroup: {
-    gridColumn: "1 / 2",
-    display: "grid",
-    gridTemplateColumns: "30% 70%"
-  },
-  categoryChild: {},
-  buttons: {
-    gridColumn: "1 / 2",
-    justifySelf: "center"
-  },
-  button: {
-    margin: "0 0.5rem"
-  },
-  justifyCenter: {
-    justifySelf: "center"
-  }
-});
+    categoryGroup: {
+      gridColumn: "1 / 2",
+      display: "grid",
+      gridTemplateColumns: "30% 70%"
+    },
+    categoryChild: {},
+    buttons: {
+      gridColumn: "1 / 2",
+      justifySelf: "center"
+    },
+    button: {
+      margin: "0 0.5rem"
+    },
+    justifyCenter: {
+      justifySelf: "center"
+    },
+    input: {}
+  });
 
-export default withRouter(withStyles(styles)(Login));
+export default withStyles(styles)(withRouter(Login));
