@@ -219,11 +219,15 @@ const styles = theme => ({
     paddingTop: "1rem"
   },
   paper: {
-    gridColumnStart: 2,
-    gridColumnEnd: 4,
+    gridColumnStart: 3,
+    gridColumnEnd: 5,
     padding: "2rem",
+    [theme.breakpoints.up("md")]: {
+      justifySelf: "center",
+      minWidth: "550px"
+    },
     [theme.breakpoints.down("sm")]: {
-      gridColumn: "2 / 5"
+      gridColumn: "3 / 5"
     },
     [theme.breakpoints.down("xs")]: {
       gridColumn: "1 / -1"
