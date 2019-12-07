@@ -153,8 +153,13 @@ const styles = theme => ({
     gridColumnEnd: 5,
     padding: "2rem",
     minHeight: "15rem",
+    [theme.breakpoints.up("md")]: {
+      justifySelf: "center",
+      minWidth: "400px",
+      maxWidth: "450px"
+    },
     [theme.breakpoints.down("sm")]: {
-      gridColumn: "2 / 6"
+      gridColumn: "3 / 5"
     },
     [theme.breakpoints.down("xs")]: {
       gridColumn: "1 / -1"
