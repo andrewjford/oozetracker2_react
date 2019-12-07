@@ -3,11 +3,12 @@ const defaultState = {
   inlineEditValue: null,
   categories: [],
   categoriesMap: {},
-}
+  dataFetched: false
+};
 
 const categoriesPageReducer = (state = defaultState, action) => {
   switch (action.type) {
-    case 'FETCH_CATEGORIES':
+    case "FETCH_CATEGORIES":
       return {
         ...state,
         categories: action.payload,
@@ -15,8 +16,9 @@ const categoriesPageReducer = (state = defaultState, action) => {
           accum[category.id] = category;
           return accum;
         }, {}),
-      }
-    case 'NEW_CATEGORY':
+        dataFetched: true
+      };
+    case "NEW_CATEGORY":
       const newCategoryMap = {
         ...state.categoriesMap
       };
@@ -24,10 +26,10 @@ const categoriesPageReducer = (state = defaultState, action) => {
       return {
         ...state,
         categories: [...state.categories, action.payload],
-        categoriesMap: newCategoryMap,
-      }
-    case 'UPDATE_CATEGORY':
-      const updatedCategories = state.categories.map((category) => {
+        categoriesMap: newCategoryMap
+      };
+    case "UPDATE_CATEGORY":
+      const updatedCategories = state.categories.map(category => {
         if (category.id === action.payload.id) {
           return action.payload;
         } else {
@@ -42,10 +44,10 @@ const categoriesPageReducer = (state = defaultState, action) => {
       return {
         ...state,
         categories: updatedCategories,
-        categoriesMap: updatedCategoryMap,
-      }
-    case 'DELETE_CATEGORY':
-      const filteredCategories = state.categories.filter((category) => {
+        categoriesMap: updatedCategoryMap
+      };
+    case "DELETE_CATEGORY":
+      const filteredCategories = state.categories.filter(category => {
         return category.id !== action.payload;
       });
       const filteredCategoryMap = {
@@ -56,13 +58,13 @@ const categoriesPageReducer = (state = defaultState, action) => {
       return {
         ...state,
         categories: filteredCategories,
-        categoriesMap: filteredCategoryMap,
-      }
+        categoriesMap: filteredCategoryMap
+      };
     case "PURGE_CATEGORIES":
       return defaultState;
     default:
-      return state
+      return state;
   }
-}
+};
 
 export default categoriesPageReducer;

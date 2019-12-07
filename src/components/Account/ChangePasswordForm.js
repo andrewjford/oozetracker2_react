@@ -181,6 +181,14 @@ class ChangePasswordForm extends React.Component {
 
           <div className={this.props.classes.buttons}>
             <Button
+              variant="contained"
+              color="secondary"
+              onClick={this.handleCancel}
+              className={this.props.classes.button}
+            >
+              Cancel
+            </Button>
+            <Button
               type="submit"
               variant="contained"
               color="secondary"
@@ -188,14 +196,6 @@ class ChangePasswordForm extends React.Component {
               className={this.props.classes.button}
             >
               Submit
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={this.handleCancel}
-              className={this.props.classes.button}
-            >
-              Cancel
             </Button>
           </div>
         </form>

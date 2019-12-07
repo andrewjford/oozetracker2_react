@@ -18,6 +18,7 @@ import Register from "./components/Account/Register";
 import UnverifiedEmail from "./components/Account/UnverifiedEmail";
 import MyAccount from "./components/Account/MyAccount";
 import BottomNavBar from "./components/Nav/BottomNavBar";
+import LoadingPage from "./components/LoadingPage";
 
 import {
   login,
@@ -29,10 +30,32 @@ import { fetchRecentExpenses } from "./actions/expenseActions";
 import { fetchCategories } from "./actions/categoriesActions";
 import ProfilePage from "./components/Account/ProfilePage";
 
-function PrivateRoute({ render, component: Component, isLoggedIn, ...rest }) {
+function PrivateRoute({
+  render,
+  component: Component,
+  isLoggedIn,
+  noBaseData,
+  getBaseData,
+  ...rest
+}) {
   if (!isLoggedIn) {
     return <Redirect to={"/login"} />;
-  } else if (render) {
+  }
+
+  if (noBaseData) {
+    return (
+      <Route
+        render={props => (
+          <LoadingPage
+            getFunction={getBaseData}
+            actualComponent={<Redirect to={"/"} />}
+          />
+        )}
+      />
+    );
+  }
+
+  if (render) {
     return <Route {...rest} render={render} />;
   } else {
     return <Route {...rest} render={props => <Component {...props} />} />;
@@ -45,11 +68,7 @@ class App extends Component {
   expensesRoute = ({ match }) => {
     return (
       <>
-        <Route
-          exact
-          path={match.path}
-          render={() => <SummaryDisplay getBaseData={this.getBaseData} />}
-        />
+        <Route exact path={match.path} render={() => <SummaryDisplay />} />
         <Route
           exact
           path={`${match.path}/:id/edit`}
@@ -103,71 +122,83 @@ class App extends Component {
 
   render() {
     const isLoggedIn = !!this.props.account.token;
+    const noBaseData =
+      !this.props.expensesFetched || !this.props.categoriesFetched;
 
     return (
       <BrowserRouter>
         <MuiThemeProvider theme={Theme}>
-          <NavBar
-            isLoggedIn={this.props.account.token}
-            logout={this.props.logout}
-          />
-          <section className={this.props.classes.section}>
-            <Switch>
-              <Route
-                path="/login"
-                render={() => (
-                  <Login
-                    login={this.props.login}
-                    isLoggedIn={this.props.account.token}
-                  />
-                )}
-              />
-              <Route
-                path="/register"
-                render={() => <Register register={this.props.register} />}
-              />
-              <Route path="/pleaseverify" component={UnverifiedEmail} />
-              <Route path="/myaccount" component={MyAccount} />
-              <PrivateRoute
-                exact
-                path="/"
-                isLoggedIn={isLoggedIn}
-                render={() => <SummaryDisplay getBaseData={this.getBaseData} />}
-              />
-              <PrivateRoute
-                path="/categories"
-                isLoggedIn={isLoggedIn}
-                render={props => (
-                  <CategoriesList {...props} getBaseData={this.getBaseData} />
-                )}
-              />
-              <PrivateRoute
-                path="/expenses"
-                isLoggedIn={isLoggedIn}
-                component={this.expensesRoute}
-              />
-              <PrivateRoute
-                path="/monthly"
-                isLoggedIn={isLoggedIn}
-                render={props => <MonthlyTotals />}
-              />
-              <PrivateRoute
-                path="/profile"
-                isLoggedIn={isLoggedIn}
-                render={props => (
-                  <ProfilePage
-                    isLoggedIn={isLoggedIn}
-                    logout={this.props.logout}
-                  />
-                )}
-              />
-              <Route render={() => <Redirect to={"/"} />} />
-            </Switch>
+          <section className={this.props.classes.page}>
+            <NavBar
+              isLoggedIn={this.props.account.token}
+              logout={this.props.logout}
+            />
+            <section className={this.props.classes.section}>
+              <Switch>
+                <Route
+                  path="/login"
+                  render={() => (
+                    <Login
+                      login={this.props.login}
+                      isLoggedIn={this.props.account.token}
+                    />
+                  )}
+                />
+                <Route
+                  path="/register"
+                  render={() => <Register register={this.props.register} />}
+                />
+                <Route path="/pleaseverify" component={UnverifiedEmail} />
+                <Route path="/myaccount" component={MyAccount} />
+                <PrivateRoute
+                  exact
+                  path="/"
+                  isLoggedIn={isLoggedIn}
+                  getBaseData={this.getBaseData}
+                  noBaseData={noBaseData}
+                  render={() => <SummaryDisplay />}
+                />
+                <PrivateRoute
+                  path="/categories"
+                  isLoggedIn={isLoggedIn}
+                  getBaseData={this.getBaseData}
+                  noBaseData={noBaseData}
+                  render={() => <CategoriesList />}
+                />
+                <PrivateRoute
+                  path="/expenses"
+                  isLoggedIn={isLoggedIn}
+                  getBaseData={this.getBaseData}
+                  noBaseData={noBaseData}
+                  component={this.expensesRoute}
+                />
+                <PrivateRoute
+                  path="/monthly"
+                  isLoggedIn={isLoggedIn}
+                  getBaseData={this.getBaseData}
+                  noBaseData={noBaseData}
+                  render={() => <MonthlyTotals />}
+                />
+                <PrivateRoute
+                  path="/profile"
+                  isLoggedIn={isLoggedIn}
+                  getBaseData={this.getBaseData}
+                  noBaseData={noBaseData}
+                  render={() => (
+                    <ProfilePage
+                      isLoggedIn={isLoggedIn}
+                      logout={this.props.logout}
+                    />
+                  )}
+                />
+                <Route render={() => <Redirect to={"/"} />} />
+              </Switch>
+            </section>
+            <BottomNavBar
+              isLoggedIn={this.props.account.token}
+              logout={this.props.logout}
+            />
           </section>
-          <BottomNavBar
-            isLoggedIn={this.props.account.token}
-            logout={this.props.logout}
-          />
         </MuiThemeProvider>
       </BrowserRouter>
     );
@@ -177,8 +208,10 @@ class App extends Component {
 const mapStateToProps = state => {
   return {
     expenses: state.expenses.expenses,
+    expensesFetched: state.expenses.dataFetched,
     categories: state.categories.categories,
     categoriesMap: state.categories.categoriesMap,
+    categoriesFetched: state.categories.dataFetched,
     account: state.account
   };
 };
@@ -198,8 +231,8 @@ const mapDispatchToProps = dispatch => {
 };
 
 const styles = theme => ({
-  root: {
-    height: "100%"
+  page: {
+    height: "100vh"
   },
   section: {
     marginTop: "1rem",

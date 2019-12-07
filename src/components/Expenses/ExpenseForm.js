@@ -38,7 +38,7 @@ class ExpenseForm extends React.Component {
           description: "",
           amount: 0,
           date: this.convertDateToString(new Date()),
-          category: "choose one"
+          category: props.categories[0].id || null
         },
         history: props.history
       };
@@ -113,6 +113,8 @@ class ExpenseForm extends React.Component {
   };
 
   render() {
+    const classes = this.props.classes;
+
     const header = () => {
       const title = this.state.mode === "edit" ? "Edit Expense" : "New Expense";
       return (
@@ -123,10 +125,10 @@ class ExpenseForm extends React.Component {
     };
 
     return (
-      <Paper className={this.props.classes.paper}>
+      <Paper className={classes.paper}>
         {this.redirect()}
         {header()}
-        <form onSubmit={this.handleSubmit} className={this.props.classes.form}>
+        <form onSubmit={this.handleSubmit} className={classes.form}>
           <TextField
             id="date"
             value={this.state.form.date}
@@ -139,16 +141,12 @@ class ExpenseForm extends React.Component {
             id="description"
             type="text"
             value={this.state.form.description}
-            className={this.props.classes.input}
+            className={classes.input}
             onChange={this.handleChange}
             label="Description"
           />
 
-          <FormControl
-            fullWidth
-            className={this.props.classes.input}
-            variant="standard"
-          >
+          <FormControl fullWidth className={classes.input} variant="standard">
             <InputLabel htmlFor="amount">Amount</InputLabel>
             <Input
               id="amount"
@@ -162,14 +160,12 @@ class ExpenseForm extends React.Component {
             ></Input>
           </FormControl>
 
-          <div className={this.props.classes.categoryGroup}>
-            <InputLabel className={this.props.classes.categoryChild}>
-              Category
-            </InputLabel>
+          <div className={classes.categoryGroup}>
+            <InputLabel className={classes.categoryChild}>Category</InputLabel>
             <Select
               value={this.state.form.category}
               onChange={this.handleCategoryChange}
-              className={this.props.classes.categoryChild}
+              className={classes.categoryChild}
             >
               <MenuItem value="">
                 <em>None</em>
@@ -177,12 +173,12 @@ class ExpenseForm extends React.Component {
               {this.categoriesList()}
             </Select>
           </div>
-          <div className={this.props.classes.buttons}>
+          <div className={classes.buttons}>
             <Button
               variant="contained"
               color="secondary"
               onClick={this.handleCancel}
-              className={this.props.classes.button}
+              className={classes.button}
             >
               Cancel
             </Button>
@@ -191,7 +187,7 @@ class ExpenseForm extends React.Component {
               variant="contained"
               color="secondary"
               onClick={this.handleSubmit}
-              className={this.props.classes.button}
+              className={classes.button}
             >
               Submit
             </Button>
