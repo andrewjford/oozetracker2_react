@@ -15,7 +15,7 @@ const styles = theme => ({
   table: {
     display: "grid",
     gridTemplateColumns: "30% 70%",
-    padding: "1rem 2rem 3rem"
+    paddingBottom: "1rem"
   },
   row1col1: {
     alignSelf: "center",
@@ -39,10 +39,15 @@ const styles = theme => ({
     margin: theme.spacing(1)
   },
   paper: {
-    gridColumnStart: 2,
-    gridColumnEnd: 4,
+    gridColumnStart: 3,
+    gridColumnEnd: 5,
+    padding: "2rem",
+    [theme.breakpoints.up("md")]: {
+      justifySelf: "center",
+      minWidth: "550px"
+    },
     [theme.breakpoints.down("sm")]: {
-      gridColumn: "2 / 5"
+      gridColumn: "3 / 5"
     },
     [theme.breakpoints.down("xs")]: {
       gridColumn: "1 / -1"

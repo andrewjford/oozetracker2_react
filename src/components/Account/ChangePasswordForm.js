@@ -19,16 +19,11 @@ const styles = theme => ({
     gridColumnEnd: -1,
     padding: "2rem",
     [theme.breakpoints.down("sm")]: {
-      gridColumn: "2 / 5"
+      gridColumn: "3 / 5"
     },
     [theme.breakpoints.down("xs")]: {
       gridColumn: "1 / -1"
     }
-  },
-  categoryGroup: {
-    gridColumn: "1 / 2",
-    display: "grid",
-    gridTemplateColumns: "30% 70%"
   },
   buttons: {
     gridColumn: "1 / 2",
