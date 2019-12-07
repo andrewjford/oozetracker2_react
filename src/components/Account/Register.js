@@ -5,40 +5,6 @@ import { Redirect, withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import ErrorDisplay from "../ErrorDisplay";
 
-const styles = theme => ({
-  form: {
-    display: "grid",
-    gridRowGap: "1rem",
-    paddingTop: "1rem"
-  },
-  paper: {
-    gridColumnStart: 3,
-    gridColumnEnd: 5,
-    padding: "2rem",
-    [theme.breakpoints.down("xs")]: {
-      gridColumn: "1 / -1"
-    }
-  },
-  categoryGroup: {
-    gridColumn: "1 / 2",
-    display: "grid",
-    gridTemplateColumns: "30% 70%"
-  },
-  hidden: {
-    visibility: "hidden"
-  },
-  buttons: {
-    gridColumn: "1 / 2",
-    justifySelf: "center"
-  },
-  button: {
-    margin: "0 0.5rem"
-  },
-  justifyCenter: {
-    justifySelf: "center"
-  }
-});
-
 class Register extends React.Component {
   constructor(props) {
     super(props);
@@ -195,5 +161,47 @@ class Register extends React.Component {
     );
   }
 }
+
+const styles = theme => ({
+  form: {
+    display: "grid",
+    gridRowGap: "1rem",
+    paddingTop: "1rem"
+  },
+  paper: {
+    gridColumnStart: 3,
+    gridColumnEnd: 5,
+    padding: "2rem",
+    [theme.breakpoints.up("md")]: {
+      justifySelf: "center",
+      minWidth: "400px",
+      maxWidth: "450px"
+    },
+    [theme.breakpoints.down("sm")]: {
+      gridColumn: "3 / 5"
+    },
+    [theme.breakpoints.down("xs")]: {
+      gridColumn: "1 / -1"
+    }
+  },
+  categoryGroup: {
+    gridColumn: "1 / 2",
+    display: "grid",
+    gridTemplateColumns: "30% 70%"
+  },
+  hidden: {
+    visibility: "hidden"
+  },
+  buttons: {
+    gridColumn: "1 / 2",
+    justifySelf: "center"
+  },
+  button: {
+    margin: "0 0.5rem"
+  },
+  justifyCenter: {
+    justifySelf: "center"
+  }
+});
 
 export default withRouter(withStyles(styles)(Register));
