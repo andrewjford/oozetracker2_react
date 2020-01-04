@@ -6,7 +6,9 @@ import {
   Button,
   Theme,
   createStyles,
-  WithStyles
+  WithStyles,
+  Checkbox,
+  FormControlLabel
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { Redirect, withRouter, RouteComponentProps } from "react-router-dom";
@@ -22,6 +24,7 @@ interface PassedProps extends WithStyles<typeof styles> {
 interface LoginFormState {
   email: string;
   password: string;
+  rememberMe: boolean;
 }
 
 interface LoginState {
@@ -41,7 +44,8 @@ class Login extends React.Component<
     this.state = {
       form: {
         email: "",
-        password: ""
+        password: "",
+        rememberMe: false
       },
       history: props.history,
       errors: [],
@@ -95,6 +99,15 @@ class Login extends React.Component<
     });
   };
 
+  handleRememberMeChange = () => {
+    this.setState({
+      form: {
+        ...this.state.form,
+        rememberMe: !this.state.form.rememberMe
+      }
+    });
+  };
+
   loadingSpinner = () => {
     if (this.state.loading) {
       return <Loading />;
@@ -121,6 +134,16 @@ class Login extends React.Component<
             onChange={this.handlePasswordChange}
             label="Password"
             className={this.props.classes.input}
+          />
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={this.state.form.rememberMe}
+                onChange={this.handleRememberMeChange}
+              />
+            }
+            label={<Typography variant="body2">Remember Me</Typography>}
           />
 
           <div className={this.props.classes.buttons}>
