@@ -6,7 +6,7 @@
 - categories page - add button needs to stay on top when out of vertical room
 - fix buttons/colors/button order
 - bug - routing - onLogin react state update attempted which throws error warning to console ?
-- bug - there is an element 'Unknown' in the /expenses/new DOM
+- bug - expense detail date can show different than expense edit screen date
 - loading spinner
   - after hitting register - should show spinner
   - show spinner everywhere
