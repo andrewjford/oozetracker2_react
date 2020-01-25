@@ -2,7 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
-import { withStyles } from "@material-ui/core/styles";
+import {
+  withStyles,
+  Theme,
+  WithStyles,
+  createStyles
+} from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -15,49 +20,68 @@ import ChevronRight from "@material-ui/icons/ChevronRight";
 import Refresh from "@material-ui/icons/Refresh";
 
 import { getMonthly, changeMonthlyView } from "../actions/expenseActions";
+import {
+  MonthlyExpenseSummary,
+  MonthlyLineItem,
+  MonthRequest
+} from "../types/expenseTypes";
 
-const styles = theme => ({
-  mainHeader: {
-    gridColumn: "1 / 5",
-    height: "2rem",
-    padding: "1rem 1rem 0"
-  },
-  summary: {
-    marginTop: "1rem",
-    display: "grid",
-    gridTemplateColumns: "1rem 20% auto 20% 1rem"
-  },
-  paper: {
-    gridColumnStart: 3,
-    gridColumnEnd: 5,
-    [theme.breakpoints.down("sm")]: {
-      gridColumn: "2 / 6"
+const styles = (theme: Theme) =>
+  createStyles({
+    mainHeader: {
+      gridColumn: "1 / 5",
+      height: "2rem",
+      padding: "1rem 1rem 0"
     },
-    [theme.breakpoints.down("xs")]: {
-      gridColumn: "1 / -1"
+    summary: {
+      marginTop: "1rem",
+      display: "grid",
+      gridTemplateColumns: "1rem 20% auto 20% 1rem"
+    },
+    paper: {
+      gridColumnStart: 3,
+      gridColumnEnd: 5,
+      [theme.breakpoints.down("sm")]: {
+        gridColumn: "2 / 6"
+      },
+      [theme.breakpoints.down("xs")]: {
+        gridColumn: "1 / -1"
+      }
+    },
+    headerItem: {
+      verticalAlign: "middle",
+      display: "inline"
+    },
+    headerItemRight: {
+      verticalAlign: "middle",
+      display: "inline",
+      float: "right",
+      color: theme.palette.primary.main
+    },
+    rotate: {
+      animation: `$spin 1s`
+    },
+    "@keyframes spin": {
+      "0%": { transform: "rotate(0deg)" },
+      "100%": { transform: "rotate(360deg)" }
     }
-  },
-  headerItem: {
-    verticalAlign: "middle",
-    display: "inline"
-  },
-  headerItemRight: {
-    verticalAlign: "middle",
-    display: "inline",
-    float: "right",
-    color: theme.palette.primary.main
-  },
-  rotate: {
-    animation: `$spin 1s`
-  },
-  "@keyframes spin": {
-    "0%": { transform: "rotate(0deg)" },
-    "100%": { transform: "rotate(360deg)" }
-  }
-});
+  });
 
-class MonthlyTotals extends React.Component {
-  constructor(props) {
+interface MonthlyProps extends WithStyles<typeof styles> {
+  changeMonthlyView: (param: any) => any;
+  getMonthly: (current: any) => any;
+  monthlies: any;
+  monthlyView: any;
+}
+
+interface MonthlyState {
+  date: Date;
+  monthNames: string[];
+  rotate: boolean;
+}
+
+class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
+  constructor(props: MonthlyProps) {
     super(props);
 
     this.state = {
@@ -80,20 +104,22 @@ class MonthlyTotals extends React.Component {
     };
   }
   componentDidMount() {
-    const currentMonthRequest = {
+    const currentMonthRequest: MonthRequest = {
       month: this.state.date.getMonth(),
       year: this.state.date.getFullYear()
     };
     this.props.getMonthly(currentMonthRequest);
   }
 
-  changeMonthlyView = monthlyObject => {
-    const cachedView = this.props.monthlies.find(monthly => {
-      return (
-        monthly.month === monthlyObject.month &&
-        monthly.year === monthlyObject.year
-      );
-    });
+  changeMonthlyView = (monthlyObject: MonthRequest) => {
+    const cachedView = this.props.monthlies.find(
+      (monthly: MonthlyExpenseSummary) => {
+        return (
+          monthly.month === monthlyObject.month &&
+          monthly.year === monthlyObject.year
+        );
+      }
+    );
 
     if (cachedView) {
       this.props.changeMonthlyView(cachedView);
@@ -126,7 +152,7 @@ class MonthlyTotals extends React.Component {
     this.changeMonthlyView(currentMonthRequest);
   };
 
-  handleRefreshClick = event => {
+  handleRefreshClick = () => {
     this.setState({ rotate: true });
     this.props.getMonthly({
       month: this.state.date.getMonth(),
@@ -138,7 +164,7 @@ class MonthlyTotals extends React.Component {
     if (!this.props.monthlyView) {
       return <></>;
     }
-    return this.props.monthlyView.rows.map(lineItem => {
+    return this.props.monthlyView.rows.map((lineItem: MonthlyLineItem) => {
       return (
         <TableRow key={lineItem.id}>
           <TableCell>{lineItem.name}</TableCell>
@@ -152,7 +178,7 @@ class MonthlyTotals extends React.Component {
     const total = !this.props.monthlyView
       ? 0
       : this.props.monthlyView.rows
-          .reduce((accum, lineItem) => {
+          .reduce((accum: number, lineItem: MonthlyLineItem) => {
             return accum + parseFloat(lineItem.sum);
           }, 0)
           .toFixed(2);
@@ -210,14 +236,21 @@ class MonthlyTotals extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: {
+  expenses: {
+    monthlies: {
+      currentView: MonthlyExpenseSummary | null;
+      monthlies: MonthlyExpenseSummary[];
+    };
+  };
+}) => {
   return {
     monthlyView: state.expenses.monthlies.currentView,
     monthlies: state.expenses.monthlies.monthlies
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators(
     {
       getMonthly,

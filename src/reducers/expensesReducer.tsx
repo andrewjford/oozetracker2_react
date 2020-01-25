@@ -1,12 +1,18 @@
-const defaultState = {
+import { ExpenseState } from "../types/expenseTypes";
+
+const defaultState: ExpenseState = {
   monthlies: {
+    currentView: null,
     monthlies: []
   },
   expenses: [],
   dataFetched: false
 };
 
-const expensesReducer = (state = defaultState, action) => {
+const expensesReducer = (
+  state = defaultState,
+  action: { type: string; payload: any }
+) => {
   switch (action.type) {
     case "FETCH_RECENT_EXPENSES":
       return {
@@ -16,7 +22,7 @@ const expensesReducer = (state = defaultState, action) => {
       };
     case "NEW_EXPENSE":
       const sortedExpenses = [action.payload, ...state.expenses].sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       );
       return {
         ...state,
