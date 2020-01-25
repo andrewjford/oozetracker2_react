@@ -32,3 +32,11 @@ export interface MonthRequest {
   month: number;
   year: number;
 }
+
+export interface ExpenseFormState {
+  description: string;
+  amount: number;
+  date: string;
+  category: string;
+  id?: string;
+}
