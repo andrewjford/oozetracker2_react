@@ -1,11 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, WithStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, RouteComponentProps } from "react-router-dom";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import { AccountMenu } from "./AccountMenu";
@@ -31,7 +30,13 @@ const styles = () => ({
   }
 });
 
-function ButtonAppBar(props) {
+interface PassedProps extends WithStyles<typeof styles> {
+  logout: () => any;
+  isLoggedIn: string;
+  theme: Theme;
+}
+
+function TopNavBar(props: PassedProps & RouteComponentProps) {
   const notSmallScreen = useMediaQuery(props.theme.breakpoints.up("sm"));
   const { classes } = props;
 
@@ -64,10 +69,4 @@ function ButtonAppBar(props) {
   return <div />;
 }
 
-ButtonAppBar.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withRouter(
-  withStyles(styles, { withTheme: true })(ButtonAppBar)
-);
+export default withRouter(withStyles(styles, { withTheme: true })(TopNavBar));

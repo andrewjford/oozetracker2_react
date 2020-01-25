@@ -7,7 +7,7 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 import Theme from "./Theme";
 import { withStyles } from "@material-ui/core";
 
-import NavBar from "./components/Nav/NavBar";
+import TopNavBar from "./components/Nav/TopNavBar";
 import ExpenseForm from "./components/Expenses/ExpenseForm";
 import SummaryDisplay from "./components/SummaryDisplay";
 import CategoriesList from "./components/Categories/CategoriesList";
@@ -129,7 +129,7 @@ class App extends Component {
       <BrowserRouter>
         <MuiThemeProvider theme={Theme}>
           <section className={this.props.classes.page}>
-            <NavBar
+            <TopNavBar
               isLoggedIn={this.props.account.token}
               logout={this.props.logout}
             />
