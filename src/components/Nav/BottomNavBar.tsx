@@ -14,11 +14,11 @@ import {
   BottomNavigationAction,
   Toolbar,
   AppBar,
-  Button,
   Theme
 } from "@material-ui/core";
 import { HamburgerMenu } from "./HamburgerMenu";
 import { AccountMenu } from "./AccountMenu";
+import SubNavBar from "./SubNavBar";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -55,30 +55,11 @@ const styles = (theme: Theme) =>
     }
   });
 
-const NewExpenseBar = (props: any) => {
-  const onHomePage = props.location.pathname === "/";
-
-  if (onHomePage) {
-    return (
-      <div className={props.classes.newExpense}>
-        <Link className={props.classes.link} to="/expenses/new">
-          <Button
-            variant="contained"
-            color="primary"
-            className={props.classes.button}
-          >
-            New Expense
-          </Button>
-        </Link>
-      </div>
-    );
-  }
-};
-
 const BottomNavBar = (props: any) => {
   const [value, setValue] = React.useState(0);
   const biggerScreen = useMediaQuery(props.theme.breakpoints.up("sm"));
   const smallerScreen = useMediaQuery(props.theme.breakpoints.up("xs"));
+  const pathName = props.location.pathname;
   const { classes } = props;
 
   if (biggerScreen) {
@@ -88,7 +69,7 @@ const BottomNavBar = (props: any) => {
   if (smallerScreen) {
     return (
       <div className={classes.root}>
-        {NewExpenseBar(props)}
+        <SubNavBar pathName={pathName} />
         <BottomNavigation
           value={value}
           onChange={(event, newValue) => {
