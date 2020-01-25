@@ -8,13 +8,13 @@ export interface ExpenseState {
 }
 
 export interface MonthlyExpenseSummary {
-  rows: MonthlyLineItem[];
+  rows: MonthlyLineItemInterface[];
   rowCount: number;
   month: number;
   year: number;
 }
 
-export interface MonthlyLineItem {
+export interface MonthlyLineItemInterface {
   sum: string;
   id: number;
   name: string;

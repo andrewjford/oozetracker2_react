@@ -22,9 +22,10 @@ import Refresh from "@material-ui/icons/Refresh";
 import { getMonthly, changeMonthlyView } from "../actions/expenseActions";
 import {
   MonthlyExpenseSummary,
-  MonthlyLineItem,
+  MonthlyLineItemInterface,
   MonthRequest
 } from "../types/expenseTypes";
+import { MonthlyLineItem } from "./Monthlies/MonthlyLineItem";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -68,8 +69,8 @@ const styles = (theme: Theme) =>
   });
 
 interface MonthlyProps extends WithStyles<typeof styles> {
-  changeMonthlyView: (param: any) => any;
-  getMonthly: (current: any) => any;
+  changeMonthlyView: (param: MonthRequest) => any;
+  getMonthly: (current: MonthRequest) => any;
   monthlies: any;
   monthlyView: any;
 }
@@ -160,25 +161,33 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
     });
   };
 
+  handleRowClick = (id: string) => {
+    console.log("hi: " + id);
+    // navigate to expense category (id) and month-year (from this.state.date)
+  };
+
   renderLineItems = () => {
     if (!this.props.monthlyView) {
-      return <></>;
+      return null;
     }
-    return this.props.monthlyView.rows.map((lineItem: MonthlyLineItem) => {
-      return (
-        <TableRow key={lineItem.id}>
-          <TableCell>{lineItem.name}</TableCell>
-          <TableCell align="right">{lineItem.sum}</TableCell>
-        </TableRow>
-      );
-    });
+    return this.props.monthlyView.rows.map(
+      (lineItem: MonthlyLineItemInterface) => {
+        return (
+          <MonthlyLineItem
+            key={lineItem.id}
+            lineItem={lineItem}
+            handleRowClick={this.handleRowClick}
+          />
+        );
+      }
+    );
   };
 
   render() {
     const total = !this.props.monthlyView
       ? 0
       : this.props.monthlyView.rows
-          .reduce((accum: number, lineItem: MonthlyLineItem) => {
+          .reduce((accum: number, lineItem: MonthlyLineItemInterface) => {
             return accum + parseFloat(lineItem.sum);
           }, 0)
           .toFixed(2);
