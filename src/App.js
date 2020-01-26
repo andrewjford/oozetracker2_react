@@ -8,10 +8,8 @@ import Theme from "./Theme";
 import { withStyles } from "@material-ui/core";
 
 import TopNavBar from "./components/Nav/TopNavBar";
-import ExpenseForm from "./components/Expenses/ExpenseForm";
 import SummaryDisplay from "./components/SummaryDisplay";
 import CategoriesList from "./components/Categories/CategoriesList";
-import ExpenseDetail from "./components/Expenses/ExpenseDetail";
 import MonthlyTotals from "./components/Monthlies/MonthlyTotals";
 import Login from "./components/Account/Login";
 import Register from "./components/Account/Register";
@@ -65,42 +63,6 @@ function PrivateRoute({
 
 class App extends Component {
   state = {};
-
-  expensesRoute = ({ match }) => {
-    return (
-      <>
-        <Route exact path={match.path} render={() => <SummaryDisplay />} />
-        <Route
-          exact
-          path={`${match.path}/:id/edit`}
-          render={props => {
-            return (
-              <ExpenseForm
-                categories={this.props.categories}
-                expense={this.getExpense(props.match.params.id)}
-              />
-            );
-          }}
-        />
-        <Route
-          exact
-          path={`${match.path}/:id`}
-          render={props => {
-            if (props.match.params.id === "new") {
-              return <ExpenseForm categories={this.props.categories} />;
-            } else {
-              return (
-                <ExpenseDetail
-                  categoriesMap={this.props.categoriesMap}
-                  expense={this.getExpense(props.match.params.id)}
-                />
-              );
-            }
-          }}
-        />
-      </>
-    );
-  };
 
   getBaseData = () => {
     return this.props.fetchRecentExpenses().then(() => {
