@@ -104,3 +104,33 @@ export const changeMonthlyView = (monthly: MonthRequest) => {
     });
   };
 };
+
+export const getAllMonth = (monthString: string, targetDate: Date) => {
+  return (dispatch: Dispatch, getState: () => RootState) => {
+    const lastDayOfMonth = new Date(
+      targetDate.getFullYear(),
+      targetDate.getMonth() + 1,
+      0
+    );
+    const paramsArray = [
+      `startDate=${lastDayOfMonth.getFullYear()}-${lastDayOfMonth.getMonth() +
+        1}-01`,
+      `endDate=${lastDayOfMonth.getFullYear()}-${lastDayOfMonth.getMonth() +
+        1}-${lastDayOfMonth.getDate()}`,
+      `pageSize=ALL`
+    ];
+
+    return BackendCallout.getFromApi(
+      `${API_URL}/api/v1/expenses/?` + paramsArray.join("&"),
+      getState().account.token
+    ).then(response => {
+      return dispatch({
+        type: "GET_ALL_MONTH",
+        payload: {
+          monthString,
+          expenses: response.expenses
+        }
+      });
+    });
+  };
+};

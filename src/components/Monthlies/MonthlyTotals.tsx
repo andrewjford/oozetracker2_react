@@ -19,13 +19,13 @@ import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
 import Refresh from "@material-ui/icons/Refresh";
 
-import { getMonthly, changeMonthlyView } from "../actions/expenseActions";
+import { getMonthly, changeMonthlyView } from "../../actions/expenseActions";
 import {
   MonthlyExpenseSummary,
   MonthlyLineItemInterface,
   MonthRequest
-} from "../types/expenseTypes";
-import { MonthlyLineItem } from "./Monthlies/MonthlyLineItem";
+} from "../../types/expenseTypes";
+import { MonthlyLineItem } from "./MonthlyLineItem";
 
 const styles = (theme: Theme) =>
   createStyles({

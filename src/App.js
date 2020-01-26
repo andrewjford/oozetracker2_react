@@ -12,7 +12,7 @@ import ExpenseForm from "./components/Expenses/ExpenseForm";
 import SummaryDisplay from "./components/SummaryDisplay";
 import CategoriesList from "./components/Categories/CategoriesList";
 import ExpenseDetail from "./components/Expenses/ExpenseDetail";
-import MonthlyTotals from "./components/MonthlyTotals";
+import MonthlyTotals from "./components/Monthlies/MonthlyTotals";
 import Login from "./components/Account/Login";
 import Register from "./components/Account/Register";
 import UnverifiedEmail from "./components/Account/UnverifiedEmail";

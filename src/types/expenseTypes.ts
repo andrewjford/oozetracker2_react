@@ -26,6 +26,7 @@ export interface Expense {
   amount: number;
   category_id: number;
   date: string;
+  category?: any;
 }
 
 export interface MonthRequest {
