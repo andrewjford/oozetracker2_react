@@ -38,6 +38,6 @@ export interface ExpenseFormState {
   description: string;
   amount: number;
   date: string;
-  category: string;
+  category: number;
   id?: string;
 }

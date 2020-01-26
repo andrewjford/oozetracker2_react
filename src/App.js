@@ -29,6 +29,7 @@ import {
 import { fetchRecentExpenses } from "./actions/expenseActions";
 import { fetchCategories } from "./actions/categoriesActions";
 import ProfilePage from "./components/Account/ProfilePage";
+import { ExpensesRoute } from "./routes/ExpensesRoute";
 
 function PrivateRoute({
   render,
@@ -170,7 +171,14 @@ class App extends Component {
                   isLoggedIn={isLoggedIn}
                   getBaseData={this.getBaseData}
                   noBaseData={noBaseData}
-                  component={this.expensesRoute}
+                  component={props => (
+                    <ExpensesRoute
+                      getExpense={this.getExpense}
+                      categories={this.props.categories}
+                      categoriesMap={this.props.categoriesMap}
+                      match={props.match}
+                    />
+                  )}
                 />
                 <PrivateRoute
                   path="/monthly"
