@@ -6,7 +6,8 @@ const defaultState: ExpenseState = {
     monthlies: []
   },
   expenses: [],
-  dataFetched: false
+  dataFetched: false,
+  byMonth: {}
 };
 
 const expensesReducer = (
@@ -68,6 +69,17 @@ const expensesReducer = (
         monthlies: {
           ...state.monthlies,
           currentView: action.payload
+        }
+      };
+    case "GET_MONTH_BY_CATEGORY":
+      return {
+        ...state,
+        byMonth: {
+          ...state.byMonth,
+          [action.payload.monthString]: {
+            ...state.byMonth[action.payload.monthString],
+            [action.payload.categoryId]: action.payload.expenses
+          }
         }
       };
     case "PURGE_EXPENSES":

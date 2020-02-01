@@ -10,7 +10,6 @@ import { withStyles } from "@material-ui/core";
 import TopNavBar from "./components/Nav/TopNavBar";
 import SummaryDisplay from "./components/SummaryDisplay";
 import CategoriesList from "./components/Categories/CategoriesList";
-import MonthlyTotals from "./components/Monthlies/MonthlyTotals";
 import Login from "./components/Account/Login";
 import Register from "./components/Account/Register";
 import UnverifiedEmail from "./components/Account/UnverifiedEmail";
@@ -24,10 +23,14 @@ import {
   setTokenFromLocalStorage,
   register
 } from "./actions/accountActions";
-import { fetchRecentExpenses } from "./actions/expenseActions";
+import {
+  fetchRecentExpenses,
+  getMonthByCategory
+} from "./actions/expenseActions";
 import { fetchCategories } from "./actions/categoriesActions";
 import ProfilePage from "./components/Account/ProfilePage";
 import { ExpensesRoute } from "./routes/ExpensesRoute";
+import { MonthlyRoute } from "./routes/MonthlyRoute";
 
 function PrivateRoute({
   render,
@@ -147,7 +150,13 @@ class App extends Component {
                   isLoggedIn={isLoggedIn}
                   getBaseData={this.getBaseData}
                   noBaseData={noBaseData}
-                  render={() => <MonthlyTotals />}
+                  render={props => (
+                    <MonthlyRoute
+                      match={props.match}
+                      getMonthByCategory={this.props.getMonthByCategory}
+                      expensesByMonth={this.props.expensesByMonth}
+                    />
+                  )}
                 />
                 <PrivateRoute
                   path="/profile"
@@ -179,6 +188,7 @@ const mapStateToProps = state => {
   return {
     expenses: state.expenses.expenses,
     expensesFetched: state.expenses.dataFetched,
+    expensesByMonth: state.expenses.byMonth,
     categories: state.categories.categories,
     categoriesMap: state.categories.categoriesMap,
     categoriesFetched: state.categories.dataFetched,
@@ -194,7 +204,8 @@ const mapDispatchToProps = dispatch => {
       setTokenFromLocalStorage,
       register,
       fetchRecentExpenses,
-      fetchCategories
+      fetchCategories,
+      getMonthByCategory
     },
     dispatch
   );

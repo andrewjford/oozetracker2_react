@@ -5,6 +5,7 @@ export interface ExpenseState {
     monthlies: MonthlyExpenseSummary[];
   };
   dataFetched: boolean;
+  byMonth: any;
 }
 
 export interface MonthlyExpenseSummary {

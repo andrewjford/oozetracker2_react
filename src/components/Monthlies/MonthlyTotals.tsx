@@ -26,6 +26,7 @@ import {
   MonthRequest
 } from "../../types/expenseTypes";
 import { MonthlyLineItem } from "./MonthlyLineItem";
+import { Redirect } from "react-router-dom";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -79,6 +80,7 @@ interface MonthlyState {
   date: Date;
   monthNames: string[];
   rotate: boolean;
+  redirect: string;
 }
 
 class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
@@ -101,7 +103,8 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
         "Nov",
         "Dec"
       ],
-      rotate: false
+      rotate: false,
+      redirect: ""
     };
   }
   componentDidMount() {
@@ -161,9 +164,12 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
     });
   };
 
-  handleRowClick = (id: string) => {
-    console.log("hi: " + id);
-    // navigate to expense category (id) and month-year (from this.state.date)
+  handleRowClick = (categoryId: number) => {
+    const monthString = `${this.state.date.getFullYear()}-${this.state.date.getMonth() +
+      1}`;
+    this.setState({
+      redirect: `/monthly/${monthString}/category/${categoryId}`
+    });
   };
 
   renderLineItems = () => {
@@ -183,6 +189,13 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
     );
   };
 
+  redirect = () => {
+    const { redirect } = this.state;
+    if (!!redirect) {
+      return <Redirect to={redirect} />;
+    }
+  };
+
   render() {
     const total = !this.props.monthlyView
       ? 0
@@ -194,6 +207,7 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
 
     return (
       <Paper className={this.props.classes.paper}>
+        {this.redirect()}
         <div className={this.props.classes.mainHeader}>
           <ChevronLeft
             className={this.props.classes.headerItem}
