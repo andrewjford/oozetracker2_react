@@ -1,17 +1,19 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import MonthlyTotals from "../components/Monthlies/MonthlyTotals";
-import { MonthByCategory } from "../components/Monthlies/MonthByCategory";
+import MonthByCategory from "../components/Monthlies/MonthByCategory";
 
 interface PassedProps {
   match: any;
   expensesByMonth: any;
+  categoriesMap: any;
   getMonthByCategory: (monthString: string, categoryId: number) => any;
 }
 
 export const MonthlyRoute = (props: PassedProps) => {
   const expensesByMonth = props.expensesByMonth;
   const getMonthByCategory = props.getMonthByCategory;
+  const categoriesMap = props.categoriesMap;
 
   return (
     <>
@@ -20,13 +22,14 @@ export const MonthlyRoute = (props: PassedProps) => {
         exact
         path={`${props.match.path}/:monthString/category/:id`}
         render={props => {
-          const { match } = props;
+          const { monthString, id } = props.match.params;
           return (
             <MonthByCategory
               getMonthByCategory={getMonthByCategory}
               expensesByMonth={expensesByMonth}
-              monthString={match.params.monthString}
-              categoryId={match.params.id}
+              monthString={monthString}
+              categoryId={id}
+              categoryName={categoriesMap[id].name}
             />
           );
         }}

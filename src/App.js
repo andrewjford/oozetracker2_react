@@ -155,6 +155,7 @@ class App extends Component {
                       match={props.match}
                       getMonthByCategory={this.props.getMonthByCategory}
                       expensesByMonth={this.props.expensesByMonth}
+                      categoriesMap={this.props.categoriesMap}
                     />
                   )}
                 />
