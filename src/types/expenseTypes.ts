@@ -5,16 +5,17 @@ export interface ExpenseState {
     monthlies: MonthlyExpenseSummary[];
   };
   dataFetched: boolean;
+  byMonth: any;
 }
 
 export interface MonthlyExpenseSummary {
-  rows: MonthlyLineItem[];
+  rows: MonthlyLineItemInterface[];
   rowCount: number;
   month: number;
   year: number;
 }
 
-export interface MonthlyLineItem {
+export interface MonthlyLineItemInterface {
   sum: string;
   id: number;
   name: string;
@@ -26,6 +27,7 @@ export interface Expense {
   amount: number;
   category_id: number;
   date: string;
+  category?: any;
 }
 
 export interface MonthRequest {
@@ -37,6 +39,6 @@ export interface ExpenseFormState {
   description: string;
   amount: number;
   date: string;
-  category: string;
+  category: number;
   id?: string;
 }

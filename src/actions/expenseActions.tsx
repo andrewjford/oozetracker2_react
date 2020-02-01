@@ -104,3 +104,62 @@ export const changeMonthlyView = (monthly: MonthRequest) => {
     });
   };
 };
+
+export const getAllMonth = (monthString: string, targetDate: Date) => {
+  return (dispatch: Dispatch, getState: () => RootState) => {
+    const lastDayOfMonth = new Date(
+      targetDate.getFullYear(),
+      targetDate.getMonth() + 1,
+      0
+    );
+    const paramsArray = [
+      `startDate=${lastDayOfMonth.getFullYear()}-${lastDayOfMonth.getMonth() +
+        1}-01`,
+      `endDate=${lastDayOfMonth.getFullYear()}-${lastDayOfMonth.getMonth() +
+        1}-${lastDayOfMonth.getDate()}`,
+      `pageSize=ALL`
+    ];
+
+    return BackendCallout.getFromApi(
+      `${API_URL}/api/v1/expenses/?` + paramsArray.join("&"),
+      getState().account.token
+    ).then(response => {
+      return dispatch({
+        type: "GET_ALL_MONTH",
+        payload: {
+          monthString,
+          expenses: response.expenses
+        }
+      });
+    });
+  };
+};
+
+export const getMonthByCategory = (monthString: string, categoryId: number) => {
+  return (dispatch: Dispatch, getState: () => RootState) => {
+    const [year, month] = monthString.split("-");
+    const lastDayOfMonth = new Date(parseInt(year, 10), parseInt(month, 10), 0);
+    const paramsArray = [
+      `startDate=${lastDayOfMonth.getFullYear()}-${lastDayOfMonth.getMonth() +
+        1}-01`,
+      `endDate=${lastDayOfMonth.getFullYear()}-${lastDayOfMonth.getMonth() +
+        1}-${lastDayOfMonth.getDate()}`,
+      `categoryId=${categoryId}`,
+      `pageSize=ALL`
+    ];
+
+    return BackendCallout.getFromApi(
+      `${API_URL}/api/v1/expenses/?` + paramsArray.join("&"),
+      getState().account.token
+    ).then(response => {
+      return dispatch({
+        type: "GET_MONTH_BY_CATEGORY",
+        payload: {
+          monthString,
+          categoryId,
+          expenses: response.expenses
+        }
+      });
+    });
+  };
+};

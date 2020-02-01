@@ -1,4 +1,5 @@
-- monthly by category list view
+- monthly by category - title should link back to monthly summary
+  - monthly summary should be route paramed
 - mobile screen size
   - recent expenses should cutoff category column
 - get routing correct

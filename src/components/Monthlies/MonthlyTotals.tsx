@@ -19,12 +19,14 @@ import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
 import Refresh from "@material-ui/icons/Refresh";
 
-import { getMonthly, changeMonthlyView } from "../actions/expenseActions";
+import { getMonthly, changeMonthlyView } from "../../actions/expenseActions";
 import {
   MonthlyExpenseSummary,
-  MonthlyLineItem,
+  MonthlyLineItemInterface,
   MonthRequest
-} from "../types/expenseTypes";
+} from "../../types/expenseTypes";
+import { MonthlyLineItem } from "./MonthlyLineItem";
+import { Redirect } from "react-router-dom";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -68,8 +70,8 @@ const styles = (theme: Theme) =>
   });
 
 interface MonthlyProps extends WithStyles<typeof styles> {
-  changeMonthlyView: (param: any) => any;
-  getMonthly: (current: any) => any;
+  changeMonthlyView: (param: MonthRequest) => any;
+  getMonthly: (current: MonthRequest) => any;
   monthlies: any;
   monthlyView: any;
 }
@@ -78,6 +80,7 @@ interface MonthlyState {
   date: Date;
   monthNames: string[];
   rotate: boolean;
+  redirect: string;
 }
 
 class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
@@ -87,20 +90,21 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
     this.state = {
       date: new Date(),
       monthNames: [
-        "January",
-        "February",
-        "March",
-        "April",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
         "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
       ],
-      rotate: false
+      rotate: false,
+      redirect: ""
     };
   }
   componentDidMount() {
@@ -160,31 +164,50 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
     });
   };
 
+  handleRowClick = (categoryId: number) => {
+    const monthString = `${this.state.date.getFullYear()}-${this.state.date.getMonth() +
+      1}`;
+    this.setState({
+      redirect: `/monthly/${monthString}/category/${categoryId}`
+    });
+  };
+
   renderLineItems = () => {
     if (!this.props.monthlyView) {
-      return <></>;
+      return null;
     }
-    return this.props.monthlyView.rows.map((lineItem: MonthlyLineItem) => {
-      return (
-        <TableRow key={lineItem.id}>
-          <TableCell>{lineItem.name}</TableCell>
-          <TableCell align="right">{lineItem.sum}</TableCell>
-        </TableRow>
-      );
-    });
+    return this.props.monthlyView.rows.map(
+      (lineItem: MonthlyLineItemInterface) => {
+        return (
+          <MonthlyLineItem
+            key={lineItem.id}
+            lineItem={lineItem}
+            handleRowClick={this.handleRowClick}
+          />
+        );
+      }
+    );
+  };
+
+  redirect = () => {
+    const { redirect } = this.state;
+    if (!!redirect) {
+      return <Redirect to={redirect} />;
+    }
   };
 
   render() {
     const total = !this.props.monthlyView
       ? 0
       : this.props.monthlyView.rows
-          .reduce((accum: number, lineItem: MonthlyLineItem) => {
+          .reduce((accum: number, lineItem: MonthlyLineItemInterface) => {
             return accum + parseFloat(lineItem.sum);
           }, 0)
           .toFixed(2);
 
     return (
       <Paper className={this.props.classes.paper}>
+        {this.redirect()}
         <div className={this.props.classes.mainHeader}>
           <ChevronLeft
             className={this.props.classes.headerItem}

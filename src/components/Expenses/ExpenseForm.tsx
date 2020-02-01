@@ -1,6 +1,6 @@
-import React from "react";
+import React, { MouseEvent, FormEvent } from "react";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import { bindActionCreators, Dispatch } from "redux";
 import {
   Paper,
   TextField,
@@ -11,15 +11,73 @@ import {
   Button,
   Input,
   InputAdornment,
-  FormControl
+  FormControl,
+  WithStyles,
+  Theme
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import { Redirect, withRouter } from "react-router-dom";
+import { Redirect, withRouter, RouteComponentProps } from "react-router-dom";
 
 import { createExpense, updateExpense } from "../../actions/expenseActions";
+import { Expense, ExpenseFormState } from "../../types/expenseTypes";
 
-class ExpenseForm extends React.Component {
-  constructor(props) {
+const styles = (theme: Theme) => ({
+  form: {
+    display: "grid",
+    gridRowGap: "1rem",
+    paddingTop: "1rem"
+  },
+  paper: {
+    gridColumnStart: 3,
+    gridColumnEnd: 5,
+    padding: "2rem",
+    [theme.breakpoints.up("md")]: {
+      justifySelf: "center",
+      minWidth: "550px"
+    },
+    [theme.breakpoints.down("sm")]: {
+      gridColumn: "3 / 5"
+    },
+    [theme.breakpoints.down("xs")]: {
+      gridColumn: "1 / -1"
+    }
+  },
+  categoryGroup: {
+    gridColumn: "1 / 2",
+    display: "grid",
+    gridTemplateColumns: "30% 70%"
+  },
+  categoryChild: {},
+  buttons: {
+    gridColumn: "1 / 2",
+    justifySelf: "center"
+  },
+  button: {
+    margin: "0 0.5rem"
+  },
+  input: {}
+});
+
+interface PassedProps extends WithStyles<typeof styles> {
+  expense: Expense | null;
+  history: any;
+  categories: any;
+  createExpense: (newExpense: ExpenseFormState) => any;
+  updateExpense: (updatedExpense: ExpenseFormState) => any;
+}
+
+interface TheState {
+  mode: string;
+  form: ExpenseFormState;
+  history: any;
+  redirect?: string;
+}
+
+class ExpenseForm extends React.Component<
+  PassedProps & RouteComponentProps,
+  TheState
+> {
+  constructor(props: PassedProps & RouteComponentProps) {
     super(props);
     if (props.expense) {
       this.state = {
@@ -45,16 +103,16 @@ class ExpenseForm extends React.Component {
     }
   }
 
-  convertDateToString = date => {
-    let month = date.getMonth() + 1;
+  convertDateToString = (date: Date) => {
+    let month: string | number = date.getMonth() + 1;
     month = month.toString().length === 1 ? "0" + month : month;
-    let day = date.getDate();
+    let day: string | number = date.getDate();
     day = day.toString().length === 1 ? "0" + day : day;
     return `${date.getFullYear()}-${month}-${day}`;
   };
 
   categoriesList = () => {
-    return this.props.categories.map((category, index) => {
+    return this.props.categories.map((category: any, index: number) => {
       return (
         <MenuItem key={index} value={category.id}>
           {category.name}
@@ -63,12 +121,12 @@ class ExpenseForm extends React.Component {
     });
   };
 
-  createExpense = newExpense => {
+  createExpense = (newExpense: ExpenseFormState) => {
     this.props.createExpense(newExpense);
     this.setState({ redirect: "/" });
   };
 
-  updateExpense = expense => {
+  updateExpense = (expense: ExpenseFormState) => {
     this.props.updateExpense(expense);
     this.setState({ redirect: `/expenses/${expense.id}` });
   };
@@ -80,7 +138,7 @@ class ExpenseForm extends React.Component {
     }
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     if (this.state.mode === "edit") {
       this.updateExpense(this.state.form);
@@ -89,11 +147,11 @@ class ExpenseForm extends React.Component {
     }
   };
 
-  handleCancel = event => {
+  handleCancel = (event: MouseEvent) => {
     this.state.history.goBack();
   };
 
-  handleChange = event => {
+  handleChange = (event: any) => {
     const field = event.target.id;
     this.setState({
       form: {
@@ -103,7 +161,7 @@ class ExpenseForm extends React.Component {
     });
   };
 
-  handleCategoryChange = event => {
+  handleCategoryChange = (event: any) => {
     this.setState({
       form: {
         ...this.state.form,
@@ -198,7 +256,7 @@ class ExpenseForm extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators(
     {
       createExpense,
@@ -207,42 +265,6 @@ const mapDispatchToProps = dispatch => {
     dispatch
   );
 };
-
-const styles = theme => ({
-  form: {
-    display: "grid",
-    gridRowGap: "1rem",
-    paddingTop: "1rem"
-  },
-  paper: {
-    gridColumnStart: 3,
-    gridColumnEnd: 5,
-    padding: "2rem",
-    [theme.breakpoints.up("md")]: {
-      justifySelf: "center",
-      minWidth: "550px"
-    },
-    [theme.breakpoints.down("sm")]: {
-      gridColumn: "3 / 5"
-    },
-    [theme.breakpoints.down("xs")]: {
-      gridColumn: "1 / -1"
-    }
-  },
-  categoryGroup: {
-    gridColumn: "1 / 2",
-    display: "grid",
-    gridTemplateColumns: "30% 70%"
-  },
-  categoryChild: {},
-  buttons: {
-    gridColumn: "1 / 2",
-    justifySelf: "center"
-  },
-  button: {
-    margin: "0 0.5rem"
-  }
-});
 
 export default connect(
   null,

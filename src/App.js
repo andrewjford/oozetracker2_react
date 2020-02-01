@@ -8,11 +8,8 @@ import Theme from "./Theme";
 import { withStyles } from "@material-ui/core";
 
 import TopNavBar from "./components/Nav/TopNavBar";
-import ExpenseForm from "./components/Expenses/ExpenseForm";
 import SummaryDisplay from "./components/SummaryDisplay";
 import CategoriesList from "./components/Categories/CategoriesList";
-import ExpenseDetail from "./components/Expenses/ExpenseDetail";
-import MonthlyTotals from "./components/MonthlyTotals";
 import Login from "./components/Account/Login";
 import Register from "./components/Account/Register";
 import UnverifiedEmail from "./components/Account/UnverifiedEmail";
@@ -26,9 +23,14 @@ import {
   setTokenFromLocalStorage,
   register
 } from "./actions/accountActions";
-import { fetchRecentExpenses } from "./actions/expenseActions";
+import {
+  fetchRecentExpenses,
+  getMonthByCategory
+} from "./actions/expenseActions";
 import { fetchCategories } from "./actions/categoriesActions";
 import ProfilePage from "./components/Account/ProfilePage";
+import { ExpensesRoute } from "./routes/ExpensesRoute";
+import { MonthlyRoute } from "./routes/MonthlyRoute";
 
 function PrivateRoute({
   render,
@@ -64,42 +66,6 @@ function PrivateRoute({
 
 class App extends Component {
   state = {};
-
-  expensesRoute = ({ match }) => {
-    return (
-      <>
-        <Route exact path={match.path} render={() => <SummaryDisplay />} />
-        <Route
-          exact
-          path={`${match.path}/:id/edit`}
-          render={props => {
-            return (
-              <ExpenseForm
-                categories={this.props.categories}
-                expense={this.getExpense(props.match.params.id)}
-              />
-            );
-          }}
-        />
-        <Route
-          exact
-          path={`${match.path}/:id`}
-          render={props => {
-            if (props.match.params.id === "new") {
-              return <ExpenseForm categories={this.props.categories} />;
-            } else {
-              return (
-                <ExpenseDetail
-                  categoriesMap={this.props.categoriesMap}
-                  expense={this.getExpense(props.match.params.id)}
-                />
-              );
-            }
-          }}
-        />
-      </>
-    );
-  };
 
   getBaseData = () => {
     return this.props.fetchRecentExpenses().then(() => {
@@ -170,14 +136,28 @@ class App extends Component {
                   isLoggedIn={isLoggedIn}
                   getBaseData={this.getBaseData}
                   noBaseData={noBaseData}
-                  component={this.expensesRoute}
+                  component={props => (
+                    <ExpensesRoute
+                      getExpense={this.getExpense}
+                      categories={this.props.categories}
+                      categoriesMap={this.props.categoriesMap}
+                      match={props.match}
+                    />
+                  )}
                 />
                 <PrivateRoute
                   path="/monthly"
                   isLoggedIn={isLoggedIn}
                   getBaseData={this.getBaseData}
                   noBaseData={noBaseData}
-                  render={() => <MonthlyTotals />}
+                  render={props => (
+                    <MonthlyRoute
+                      match={props.match}
+                      getMonthByCategory={this.props.getMonthByCategory}
+                      expensesByMonth={this.props.expensesByMonth}
+                      categoriesMap={this.props.categoriesMap}
+                    />
+                  )}
                 />
                 <PrivateRoute
                   path="/profile"
@@ -209,6 +189,7 @@ const mapStateToProps = state => {
   return {
     expenses: state.expenses.expenses,
     expensesFetched: state.expenses.dataFetched,
+    expensesByMonth: state.expenses.byMonth,
     categories: state.categories.categories,
     categoriesMap: state.categories.categoriesMap,
     categoriesFetched: state.categories.dataFetched,
@@ -224,7 +205,8 @@ const mapDispatchToProps = dispatch => {
       setTokenFromLocalStorage,
       register,
       fetchRecentExpenses,
-      fetchCategories
+      fetchCategories,
+      getMonthByCategory
     },
     dispatch
   );
