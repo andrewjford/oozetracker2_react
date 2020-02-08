@@ -27,6 +27,7 @@ import {
 } from "../../types/expenseTypes";
 import { MonthlyLineItem } from "./MonthlyLineItem";
 import { Redirect } from "react-router-dom";
+import { MONTHS_ARRAY } from "./constants";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -74,62 +75,71 @@ interface MonthlyProps extends WithStyles<typeof styles> {
   getMonthly: (current: MonthRequest) => any;
   monthlies: any;
   monthlyView: any;
+  monthString: string;
 }
 
 interface MonthlyState {
   date: Date;
-  monthNames: string[];
   rotate: boolean;
   redirect: string;
+  currentView?: MonthlyExpenseSummary;
 }
 
 class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
   constructor(props: MonthlyProps) {
     super(props);
 
-    this.state = {
-      date: new Date(),
-      monthNames: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-      ],
-      rotate: false,
-      redirect: ""
-    };
+    const [year, month] = props.monthString.split("-");
+    const monthStringAsDate: Date = new Date();
+
+    if (!props.monthString) {
+      const monthString = `${monthStringAsDate.getFullYear()}-${monthStringAsDate.getMonth() +
+        1}`;
+      this.state = {
+        date: monthStringAsDate,
+        rotate: false,
+        redirect: `/monthly/${monthString}`
+      };
+    } else {
+      monthStringAsDate.setMonth(parseInt(month, 10) - 1);
+      monthStringAsDate.setFullYear(parseInt(year, 10));
+
+      this.state = {
+        date: monthStringAsDate,
+        rotate: false,
+        redirect: ""
+      };
+    }
   }
   componentDidMount() {
     const currentMonthRequest: MonthRequest = {
       month: this.state.date.getMonth(),
       year: this.state.date.getFullYear()
     };
-    this.props.getMonthly(currentMonthRequest);
+
+    this.getCurrentView(currentMonthRequest);
   }
 
-  changeMonthlyView = (monthlyObject: MonthRequest) => {
-    const cachedView = this.props.monthlies.find(
+  getCurrentView = (monthRequest: MonthRequest) => {
+    const cachedView: MonthlyExpenseSummary = this.props.monthlies.find(
       (monthly: MonthlyExpenseSummary) => {
         return (
-          monthly.month === monthlyObject.month &&
-          monthly.year === monthlyObject.year
+          monthly.month === monthRequest.month &&
+          monthly.year === monthRequest.year
         );
       }
     );
 
-    if (cachedView) {
-      this.props.changeMonthlyView(cachedView);
-    } else {
-      this.props.getMonthly(monthlyObject);
+    if (!cachedView) {
+      this.props.getMonthly(monthRequest);
     }
+  };
+
+  changeMonthlyView = (monthlyObject: MonthRequest) => {
+    const monthString = `${monthlyObject.year}-${monthlyObject.month + 1}`;
+    this.setState({
+      redirect: `/monthly/${monthString}`
+    });
   };
 
   handleLeftMonthClick = () => {
@@ -172,21 +182,19 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
     });
   };
 
-  renderLineItems = () => {
-    if (!this.props.monthlyView) {
+  renderLineItems = (currentView: MonthlyExpenseSummary) => {
+    if (!currentView) {
       return null;
     }
-    return this.props.monthlyView.rows.map(
-      (lineItem: MonthlyLineItemInterface) => {
-        return (
-          <MonthlyLineItem
-            key={lineItem.id}
-            lineItem={lineItem}
-            handleRowClick={this.handleRowClick}
-          />
-        );
-      }
-    );
+    return currentView.rows.map((lineItem: MonthlyLineItemInterface) => {
+      return (
+        <MonthlyLineItem
+          key={lineItem.id}
+          lineItem={lineItem}
+          handleRowClick={this.handleRowClick}
+        />
+      );
+    });
   };
 
   redirect = () => {
@@ -197,9 +205,23 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
   };
 
   render() {
-    const total = !this.props.monthlyView
+    const currentMonthRequest: MonthRequest = {
+      month: this.state.date.getMonth(),
+      year: this.state.date.getFullYear()
+    };
+
+    const currentView: MonthlyExpenseSummary = this.props.monthlies.find(
+      (monthly: MonthlyExpenseSummary) => {
+        return (
+          monthly.month === currentMonthRequest.month &&
+          monthly.year === currentMonthRequest.year
+        );
+      }
+    );
+
+    const total = !currentView
       ? 0
-      : this.props.monthlyView.rows
+      : currentView.rows
           .reduce((accum: number, lineItem: MonthlyLineItemInterface) => {
             return accum + parseFloat(lineItem.sum);
           }, 0)
@@ -219,7 +241,7 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
             component="h3"
           >
             {this.state.date.getFullYear()}{" "}
-            {this.state.monthNames[this.state.date.getMonth()]}
+            {MONTHS_ARRAY[this.state.date.getMonth()]}
           </Typography>
           <ChevronRight
             className={this.props.classes.headerItem}
@@ -243,7 +265,7 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
           </TableHead>
 
           <TableBody>
-            {this.renderLineItems()}
+            {this.renderLineItems(currentView)}
             <TableRow>
               <TableCell>
                 <b>Total</b>
