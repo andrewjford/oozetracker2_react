@@ -1,10 +1,7 @@
 import { ExpenseState } from "../types/expenseTypes";
 
 const defaultState: ExpenseState = {
-  monthlies: {
-    currentView: null,
-    monthlies: []
-  },
+  monthlies: {},
   expenses: [],
   dataFetched: false,
   byMonth: {}
@@ -56,19 +53,14 @@ const expensesReducer = (
         expenses: afterDelete
       };
     case "GET_MONTHLY":
-      return {
-        ...state,
-        monthlies: {
-          currentView: action.payload,
-          monthlies: [...state.monthlies.monthlies, action.payload]
-        }
-      };
-    case "CHANGE_MONTHLY_VIEW":
+      const monthString: string = `${action.payload.year}-${action.payload
+        .month + 1}`;
+
       return {
         ...state,
         monthlies: {
           ...state.monthlies,
-          currentView: action.payload
+          [monthString]: action.payload
         }
       };
     case "GET_MONTH_BY_CATEGORY":

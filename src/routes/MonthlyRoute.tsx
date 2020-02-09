@@ -17,7 +17,22 @@ export const MonthlyRoute = (props: PassedProps) => {
 
   return (
     <>
-      <Route exact path={props.match.path} render={() => <MonthlyTotals />} />
+      <Route
+        exact
+        path={props.match.path}
+        render={() => {
+          const monthString = "";
+          return <MonthlyTotals monthString={monthString} />;
+        }}
+      />
+      <Route
+        exact
+        path={`${props.match.path}/:monthString/`}
+        render={props => {
+          const { monthString } = props.match.params;
+          return <MonthlyTotals monthString={monthString} />;
+        }}
+      />
       <Route
         exact
         path={`${props.match.path}/:monthString/category/:id`}
