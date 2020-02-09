@@ -3,7 +3,6 @@
 - mobile screen size
   - recent expenses should cutoff category column
 - get routing correct
-- stay logged in checkbox
 - categories page - add button needs to stay on top when out of vertical room
 - fix buttons/colors/button order
 - bug - routing - onLogin react state update attempted which throws error warning to console ?
