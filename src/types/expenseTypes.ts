@@ -1,7 +1,6 @@
 export interface ExpenseState {
   expenses: Expense[];
   monthlies: {
-    currentView: MonthlyExpenseSummary | null;
     monthlies: MonthlyExpenseSummary[];
   };
   dataFetched: boolean;

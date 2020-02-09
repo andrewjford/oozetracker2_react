@@ -29,6 +29,10 @@ import { MonthlyLineItem } from "./MonthlyLineItem";
 import { Redirect } from "react-router-dom";
 import { MONTHS_ARRAY } from "./constants";
 
+export function dateToMonthString(date: Date): string {
+  return `${date.getFullYear()}-${date.getMonth() + 1}`;
+}
+
 const styles = (theme: Theme) =>
   createStyles({
     mainHeader: {
@@ -74,7 +78,6 @@ interface MonthlyProps extends WithStyles<typeof styles> {
   changeMonthlyView: (param: MonthRequest) => any;
   getMonthly: (current: MonthRequest) => any;
   monthlies: any;
-  monthlyView: any;
   monthString: string;
 }
 
@@ -82,7 +85,6 @@ interface MonthlyState {
   date: Date;
   rotate: boolean;
   redirect: string;
-  currentView?: MonthlyExpenseSummary;
 }
 
 class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
@@ -90,37 +92,32 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
     super(props);
 
     const [year, month] = props.monthString.split("-");
-    const monthStringAsDate: Date = new Date();
+    const date: Date = new Date();
 
     if (!props.monthString) {
-      const monthString = `${monthStringAsDate.getFullYear()}-${monthStringAsDate.getMonth() +
-        1}`;
+      const todayMonthString = dateToMonthString(date);
       this.state = {
-        date: monthStringAsDate,
+        date,
         rotate: false,
-        redirect: `/monthly/${monthString}`
+        redirect: `/monthly/${todayMonthString}`
       };
     } else {
-      monthStringAsDate.setMonth(parseInt(month, 10) - 1);
-      monthStringAsDate.setFullYear(parseInt(year, 10));
+      date.setMonth(parseInt(month, 10) - 1);
+      date.setFullYear(parseInt(year, 10));
 
       this.state = {
-        date: monthStringAsDate,
+        date,
         rotate: false,
         redirect: ""
       };
     }
   }
-  componentDidMount() {
-    const currentMonthRequest: MonthRequest = {
+
+  getCurrentView = () => {
+    const monthRequest: MonthRequest = {
       month: this.state.date.getMonth(),
       year: this.state.date.getFullYear()
     };
-
-    this.getCurrentView(currentMonthRequest);
-  }
-
-  getCurrentView = (monthRequest: MonthRequest) => {
     const cachedView: MonthlyExpenseSummary = this.props.monthlies.find(
       (monthly: MonthlyExpenseSummary) => {
         return (
@@ -142,9 +139,9 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
     });
   };
 
-  handleLeftMonthClick = () => {
+  handleMonthClick = (monthChange: number) => {
     const date = this.state.date;
-    date.setMonth(this.state.date.getMonth() - 1);
+    date.setMonth(this.state.date.getMonth() + monthChange);
     this.setState({ date });
 
     const currentMonthRequest = {
@@ -154,16 +151,12 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
     this.changeMonthlyView(currentMonthRequest);
   };
 
-  handleRightMonthClick = () => {
-    const date = this.state.date;
-    date.setMonth(this.state.date.getMonth() + 1);
-    this.setState({ date });
+  handleLeftMonthClick = () => {
+    this.handleMonthClick(-1);
+  };
 
-    const currentMonthRequest = {
-      month: date.getMonth(),
-      year: date.getFullYear()
-    };
-    this.changeMonthlyView(currentMonthRequest);
+  handleRightMonthClick = () => {
+    this.handleMonthClick(1);
   };
 
   handleRefreshClick = () => {
@@ -175,8 +168,7 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
   };
 
   handleRowClick = (categoryId: number) => {
-    const monthString = `${this.state.date.getFullYear()}-${this.state.date.getMonth() +
-      1}`;
+    const monthString = dateToMonthString(this.state.date);
     this.setState({
       redirect: `/monthly/${monthString}/category/${categoryId}`
     });
@@ -218,6 +210,10 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
         );
       }
     );
+
+    if (!currentView) {
+      this.getCurrentView();
+    }
 
     const total = !currentView
       ? 0
@@ -284,13 +280,11 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
 const mapStateToProps = (state: {
   expenses: {
     monthlies: {
-      currentView: MonthlyExpenseSummary | null;
       monthlies: MonthlyExpenseSummary[];
     };
   };
 }) => {
   return {
-    monthlyView: state.expenses.monthlies.currentView,
     monthlies: state.expenses.monthlies.monthlies
   };
 };
