@@ -1,7 +1,7 @@
 export interface ExpenseState {
   expenses: Expense[];
   monthlies: {
-    monthlies: MonthlyExpenseSummary[];
+    [key: string]: MonthlyExpenseSummary;
   };
   dataFetched: boolean;
   byMonth: any;

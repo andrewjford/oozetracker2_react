@@ -19,7 +19,7 @@ import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
 import Refresh from "@material-ui/icons/Refresh";
 
-import { getMonthly, changeMonthlyView } from "../../actions/expenseActions";
+import { getMonthly } from "../../actions/expenseActions";
 import {
   MonthlyExpenseSummary,
   MonthlyLineItemInterface,
@@ -75,9 +75,8 @@ const styles = (theme: Theme) =>
   });
 
 interface MonthlyProps extends WithStyles<typeof styles> {
-  changeMonthlyView: (param: MonthRequest) => any;
   getMonthly: (current: MonthRequest) => any;
-  monthlies: any;
+  monthlies: { [key: string]: MonthlyExpenseSummary };
   monthString: string;
 }
 
@@ -118,14 +117,8 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
       month: this.state.date.getMonth(),
       year: this.state.date.getFullYear()
     };
-    const cachedView: MonthlyExpenseSummary = this.props.monthlies.find(
-      (monthly: MonthlyExpenseSummary) => {
-        return (
-          monthly.month === monthRequest.month &&
-          monthly.year === monthRequest.year
-        );
-      }
-    );
+    const monthString: string = dateToMonthString(this.state.date);
+    const cachedView: MonthlyExpenseSummary = this.props.monthlies[monthString];
 
     if (!cachedView) {
       this.props.getMonthly(monthRequest);
@@ -197,19 +190,10 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
   };
 
   render() {
-    const currentMonthRequest: MonthRequest = {
-      month: this.state.date.getMonth(),
-      year: this.state.date.getFullYear()
-    };
-
-    const currentView: MonthlyExpenseSummary = this.props.monthlies.find(
-      (monthly: MonthlyExpenseSummary) => {
-        return (
-          monthly.month === currentMonthRequest.month &&
-          monthly.year === currentMonthRequest.year
-        );
-      }
-    );
+    const monthString: string = dateToMonthString(this.state.date);
+    const currentView: MonthlyExpenseSummary = this.props.monthlies[
+      monthString
+    ];
 
     if (!currentView) {
       this.getCurrentView();
@@ -279,21 +263,18 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
 
 const mapStateToProps = (state: {
   expenses: {
-    monthlies: {
-      monthlies: MonthlyExpenseSummary[];
-    };
+    monthlies: {};
   };
 }) => {
   return {
-    monthlies: state.expenses.monthlies.monthlies
+    monthlies: state.expenses.monthlies
   };
 };
 
 const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators(
     {
-      getMonthly,
-      changeMonthlyView
+      getMonthly
     },
     dispatch
   );

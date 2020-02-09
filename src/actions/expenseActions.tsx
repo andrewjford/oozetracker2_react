@@ -96,15 +96,6 @@ export const getMonthly = (monthObject: MonthRequest) => {
   };
 };
 
-export const changeMonthlyView = (monthly: MonthRequest) => {
-  return (dispatch: Dispatch) => {
-    dispatch({
-      type: "CHANGE_MONTHLY_VIEW",
-      payload: monthly
-    });
-  };
-};
-
 export const getAllMonth = (monthString: string, targetDate: Date) => {
   return (dispatch: Dispatch, getState: () => RootState) => {
     const lastDayOfMonth = new Date(
