@@ -1,5 +1,4 @@
-- monthly by category - title should link back to monthly summary
-  - monthly summary should be route paramed
+- date in expense form gets set a day early
 - mobile screen size
   - recent expenses should cutoff category column
 - get routing correct

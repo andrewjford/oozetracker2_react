@@ -185,7 +185,7 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
   redirect = () => {
     const { redirect } = this.state;
     if (!!redirect) {
-      return <Redirect to={redirect} />;
+      return <Redirect to={redirect} push={true} />;
     }
   };
 
