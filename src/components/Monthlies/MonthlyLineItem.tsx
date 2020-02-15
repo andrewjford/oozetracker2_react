@@ -12,7 +12,6 @@ import { MonthlyLineItemInterface } from "../../types/expenseTypes";
 const styles = (theme: Theme) =>
   createStyles({
     rowLink: {
-      color: "orange",
       "&:hover": {
         // @ts-ignore
         backgroundColor: theme.palette.primary.alt1,
