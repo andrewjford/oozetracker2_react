@@ -1,5 +1,4 @@
-- monthly by category - title should link back to monthly summary
-  - monthly summary should be route paramed
+- monthly screen does not push on nav history
 - mobile screen size
   - recent expenses should cutoff category column
 - get routing correct

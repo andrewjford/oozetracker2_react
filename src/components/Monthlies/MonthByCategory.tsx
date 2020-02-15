@@ -10,6 +10,7 @@ import {
   withStyles
 } from "@material-ui/core";
 import { MONTHS_ARRAY } from "./constants";
+import { Link } from "react-router-dom";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -30,6 +31,10 @@ const styles = (theme: Theme) =>
     },
     tableWrapper: {
       overflowX: "auto"
+    },
+    link: {
+      textDecoration: "none",
+      color: "inherit"
     }
   });
 
@@ -49,6 +54,7 @@ const MonthByCategory = (props: PassedProps) => {
   const title = `${
     MONTHS_ARRAY[parseInt(month, 10) - 1]
   } ${year} - ${categoryName}`;
+  const monthRoute = `/monthly/${monthString}`;
 
   if (cachedExpenses || cachedExpenses === []) {
     return (
@@ -58,7 +64,9 @@ const MonthByCategory = (props: PassedProps) => {
           variant="h5"
           component="h3"
         >
-          {title}
+          <Link className={props.classes.link} to={monthRoute}>
+            {title}
+          </Link>
         </Typography>
         <section className={props.classes.tableWrapper}>
           <MonthlyExpenseList expenses={cachedExpenses} />
