@@ -1,6 +1,7 @@
 - state management - individual expenses
   - think this is done
 - date in expense form gets set a day early
+- routing on default monthly doesnt let you go back
 - mobile screen size
   - recent expenses should cutoff category column
 - get routing correct
