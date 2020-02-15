@@ -58,7 +58,12 @@ const styles = theme => ({
 class ExpenseDetail extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      redirect: {
+        path: null,
+        push: false
+      }
+    };
   }
 
   componentDidMount() {
@@ -68,18 +73,28 @@ class ExpenseDetail extends React.Component {
   }
 
   handleEditClick = () => {
-    this.setState({ redirect: `/expenses/${this.props.expense.id}/edit` });
+    this.setState({
+      redirect: {
+        path: `/expenses/${this.props.expense.id}/edit`,
+        push: true
+      }
+    });
   };
 
   handleDeleteClick = () => {
     this.props.deleteExpense(this.props.expense.id);
-    this.setState({ redirect: "/" });
+    this.setState({
+      redirect: {
+        path: "/",
+        push: false
+      }
+    });
   };
 
   redirect = () => {
     const { redirect } = this.state;
-    if (!!redirect) {
-      return <Redirect to={redirect} />;
+    if (!!redirect.path) {
+      return <Redirect to={redirect.path} push={redirect.push} />;
     }
   };
 

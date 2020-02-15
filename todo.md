@@ -1,4 +1,4 @@
-- monthly screen does not push on nav history
+- date in expense form gets set a day early
 - mobile screen size
   - recent expenses should cutoff category column
 - get routing correct
