@@ -74,9 +74,7 @@ class App extends Component {
   };
 
   getExpense = expenseId => {
-    const expense = this.props.expenses.find(expense => {
-      return expense.id === expenseId;
-    });
+    const expense = this.props.expenses[expenseId];
     if (expense) {
       return expense;
     } else {

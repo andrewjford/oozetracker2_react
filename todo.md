@@ -1,3 +1,4 @@
+- state management - individual expenses
 - date in expense form gets set a day early
 - mobile screen size
   - recent expenses should cutoff category column

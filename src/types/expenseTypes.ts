@@ -1,7 +1,9 @@
 export interface ExpenseState {
-  expenses: Expense[];
+  expenses: {
+    [key: string]: Expense | undefined;
+  };
   monthlies: {
-    [key: string]: MonthlyExpenseSummary;
+    [key: string]: MonthlyExpenseSummary | undefined;
   };
   dataFetched: boolean;
   byMonth: any;

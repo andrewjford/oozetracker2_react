@@ -1,8 +1,8 @@
-import { ExpenseState } from "../types/expenseTypes";
+import { ExpenseState, Expense } from "../types/expenseTypes";
 
 const defaultState: ExpenseState = {
   monthlies: {},
-  expenses: [],
+  expenses: {},
   dataFetched: false,
   byMonth: {}
 };
@@ -13,45 +13,37 @@ const expensesReducer = (
 ) => {
   switch (action.type) {
     case "FETCH_RECENT_EXPENSES":
+      const expenseMap = action.payload.reduce((map: any, expense: Expense) => {
+        map[expense.id] = expense;
+        return map;
+      }, {});
       return {
         ...state,
-        expenses: action.payload,
+        expenses: {
+          ...state.expenses,
+          ...expenseMap
+        },
         dataFetched: true
       };
-    case "NEW_EXPENSE":
-      const sortedExpenses = [action.payload, ...state.expenses].sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
+    case "ADD_EXPENSE":
       return {
         ...state,
-        expenses: sortedExpenses
-      };
-    case "UPDATE_EXPENSE":
-      const updatedExpenses = state.expenses.map(expense => {
-        if (expense.id === action.payload.id) {
-          return action.payload;
-        } else {
-          return expense;
+        expenses: {
+          ...state.expenses,
+          [action.payload.id]: action.payload
         }
-      });
-
-      return {
-        ...state,
-        expenses: updatedExpenses
-      };
-    case "GET_EXPENSE":
-      return {
-        ...state,
-        expenses: [...state.expenses, action.payload]
       };
     case "DELETE_EXPENSE":
-      const afterDelete = state.expenses.filter(expense => {
-        return expense.id !== action.payload;
-      });
-      return {
+      const afterDelete = {
         ...state,
-        expenses: afterDelete
+        expenses: {
+          ...state.expenses
+        }
       };
+
+      delete afterDelete.expenses[action.payload];
+
+      return afterDelete;
     case "GET_MONTHLY":
       const monthString: string = `${action.payload.year}-${action.payload
         .month + 1}`;

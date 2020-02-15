@@ -27,7 +27,7 @@ export const createExpense = (newExpense: ExpenseFormState) => {
       getState().account.token
     ).then(responseExpense => {
       return dispatch({
-        type: "NEW_EXPENSE",
+        type: "ADD_EXPENSE",
         payload: responseExpense
       });
     });
@@ -42,7 +42,7 @@ export const updateExpense = (expense: ExpenseFormState) => {
       getState().account.token
     ).then(responseExpense => {
       return dispatch({
-        type: "UPDATE_EXPENSE",
+        type: "ADD_EXPENSE",
         payload: responseExpense
       });
     });
@@ -56,7 +56,7 @@ export const getExpense = (id: string) => {
       getState().account.token
     ).then(expense => {
       return dispatch({
-        type: "GET_EXPENSE",
+        type: "ADD_EXPENSE",
         payload: expense
       });
     });

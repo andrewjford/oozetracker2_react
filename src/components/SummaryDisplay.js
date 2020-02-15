@@ -29,14 +29,25 @@ const styles = theme => ({
 
 class SummaryDisplay extends React.Component {
   render() {
-    const recentExpenses = this.props.expenses
+    const recentExpenses = Object.values(this.props.expenses)
       .map(expense => {
         return {
           ...expense,
-          category: this.props.categoriesMap[expense.category_id]
+          dateTyped: new Date(expense.date)
         };
       })
+      .sort((a, b) => {
+        return b.dateTyped - a.dateTyped;
+      })
       .slice(0, 9);
+    // const recentExpenses = this.props.expenses
+    //   .map(expense => {
+    //     return {
+    //       ...expense,
+    //       category: this.props.categoriesMap[expense.category_id]
+    //     };
+    //   })
+    //   .slice(0, 9);
 
     return (
       <Paper className={this.props.classes.paper}>
