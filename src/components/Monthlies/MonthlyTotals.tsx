@@ -25,7 +25,7 @@ import {
   MonthlyLineItemInterface,
   MonthRequest
 } from "../../types/expenseTypes";
-import { MonthlyLineItem } from "./MonthlyLineItem";
+import MonthlyLineItem from "./MonthlyLineItem";
 import { Redirect } from "react-router-dom";
 import { MONTHS_ARRAY } from "./constants";
 
