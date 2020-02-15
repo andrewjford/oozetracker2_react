@@ -56,8 +56,20 @@ const expensesReducer = (
         }
       };
     case "GET_MONTH_BY_CATEGORY":
+      const expensesForMap = action.payload.expenses.reduce(
+        (map: any, expense: Expense) => {
+          map[expense.id] = expense;
+          return map;
+        },
+        {}
+      );
+
       return {
         ...state,
+        expenses: {
+          ...state.expenses,
+          ...expensesForMap
+        },
         byMonth: {
           ...state.byMonth,
           [action.payload.monthString]: {
