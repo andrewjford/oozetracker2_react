@@ -2,23 +2,15 @@ import Loading from "./Loading";
 import React from "react";
 import { withStyles, WithStyles } from "@material-ui/core";
 
-interface LoadingPageProps extends WithStyles<typeof styles> {
-  getFunction: () => Promise<any>;
-}
+interface LoadingPageProps extends WithStyles<typeof styles> {}
 
-class LoadingPage extends React.Component<LoadingPageProps> {
-  componentDidMount() {
-    this.props.getFunction();
-  }
-
-  render() {
-    return (
-      <div className={this.props.classes.container}>
-        <Loading />
-      </div>
-    );
-  }
-}
+const LoadingPage = (props: LoadingPageProps) => {
+  return (
+    <div className={props.classes.container}>
+      <Loading />
+    </div>
+  );
+};
 
 const styles = (theme: any) => ({
   container: {

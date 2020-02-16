@@ -45,16 +45,8 @@ function PrivateRoute({
   }
 
   if (noBaseData) {
-    return (
-      <Route
-        render={props => (
-          <LoadingPage
-            getFunction={getBaseData}
-            actualComponent={<Redirect to={"/"} />}
-          />
-        )}
-      />
-    );
+    getBaseData();
+    return <LoadingPage />;
   }
 
   if (render) {
