@@ -1,4 +1,4 @@
-import { ExpenseState } from "./expenseTypes";
+import { ExpenseState } from "./expenseInterfaces";
 
 export interface RootState {
   account: any;

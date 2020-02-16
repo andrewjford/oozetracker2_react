@@ -1,4 +1,4 @@
-import { ExpenseState, Expense } from "../types/expenseTypes";
+import { ExpenseState, Expense } from "../interfaces/expenseInterfaces";
 
 const defaultState: ExpenseState = {
   monthlies: {},

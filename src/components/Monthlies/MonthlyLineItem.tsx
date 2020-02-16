@@ -7,7 +7,7 @@ import {
   withStyles,
   Theme
 } from "@material-ui/core";
-import { MonthlyLineItemInterface } from "../../types/expenseTypes";
+import { MonthlyLineItemInterface } from "../../interfaces/expenseInterfaces";
 
 const styles = (theme: Theme) =>
   createStyles({

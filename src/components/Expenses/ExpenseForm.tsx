@@ -19,7 +19,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { Redirect, withRouter, RouteComponentProps } from "react-router-dom";
 
 import { createExpense, updateExpense } from "../../actions/expenseActions";
-import { Expense, ExpenseFormState } from "../../types/expenseTypes";
+import { Expense, ExpenseFormState } from "../../interfaces/expenseInterfaces";
 
 const styles = (theme: Theme) => ({
   form: {

@@ -1,7 +1,10 @@
 import BackendCallout from "../services/BackendCallout";
-import { MonthRequest, ExpenseFormState } from "../types/expenseTypes";
+import {
+  MonthRequest,
+  ExpenseFormState
+} from "../interfaces/expenseInterfaces";
 import { Dispatch } from "redux";
-import { RootState } from "../types/generalTypes";
+import { RootState } from "../interfaces/generalInterfaces";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

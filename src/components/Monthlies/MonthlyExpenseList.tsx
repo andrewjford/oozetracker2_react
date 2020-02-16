@@ -8,7 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 
 import HoverTableRow from "../HoverTableRow";
-import { Expense } from "../../types/expenseTypes";
+import { Expense } from "../../interfaces/expenseInterfaces";
 
 const styles = (theme: Theme) => ({
   link: {

@@ -1,21 +1,32 @@
-const defaultState = {
+import {
+  CategoriesState,
+  CategoriesMap,
+  Category
+} from "../interfaces/categoryInterfaces";
+
+const defaultState: CategoriesState = {
   displayCategoryInput: false,
-  inlineEditValue: null,
   categories: [],
   categoriesMap: {},
   dataFetched: false
 };
 
-const categoriesPageReducer = (state = defaultState, action) => {
+const categoriesPageReducer = (
+  state = defaultState,
+  action: { type: string; payload: any }
+) => {
   switch (action.type) {
     case "FETCH_CATEGORIES":
       return {
         ...state,
         categories: action.payload,
-        categoriesMap: action.payload.reduce((accum, category) => {
-          accum[category.id] = category;
-          return accum;
-        }, {}),
+        categoriesMap: action.payload.reduce(
+          (accum: CategoriesMap, category: Category) => {
+            accum[category.id] = category;
+            return accum;
+          },
+          {}
+        ),
         dataFetched: true
       };
     case "NEW_CATEGORY":
