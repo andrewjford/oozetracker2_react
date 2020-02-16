@@ -4,37 +4,19 @@ import { withStyles, WithStyles } from "@material-ui/core";
 
 interface LoadingPageProps extends WithStyles<typeof styles> {
   getFunction: () => Promise<any>;
-  actualComponent: React.Component;
 }
 
-class LoadingPage extends React.Component<
-  LoadingPageProps,
-  { isLoading: boolean }
-> {
-  constructor(props: LoadingPageProps) {
-    super(props);
-
-    this.state = {
-      isLoading: true
-    };
-  }
-
+class LoadingPage extends React.Component<LoadingPageProps> {
   componentDidMount() {
-    this.props.getFunction().then(() => {
-      this.setState({ isLoading: false });
-    });
+    this.props.getFunction();
   }
 
   render() {
-    if (this.state.isLoading) {
-      return (
-        <div className={this.props.classes.container}>
-          <Loading />
-        </div>
-      );
-    } else {
-      return this.props.actualComponent;
-    }
+    return (
+      <div className={this.props.classes.container}>
+        <Loading />
+      </div>
+    );
   }
 }
 
