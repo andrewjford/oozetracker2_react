@@ -1,7 +1,9 @@
+- bug after add expense submit
+- budget class? field on Category?
+- `go back` button from expense detail page?
 - mobile screen size
   - recent expenses should cutoff category column
 - categories page - add button needs to stay on top when out of vertical room
-- bug - expense detail date can show different than expense edit screen date
 - loading spinner
   - after hitting register - should show spinner
   - show spinner everywhere
