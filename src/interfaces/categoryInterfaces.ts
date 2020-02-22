@@ -12,5 +12,5 @@ export interface Category {
 }
 
 export interface CategoriesMap {
-  [key: string]: Category | undefined;
+  [id: string]: Category | undefined;
 }

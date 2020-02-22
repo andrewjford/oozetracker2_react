@@ -33,21 +33,14 @@ class SummaryDisplay extends React.Component {
       .map(expense => {
         return {
           ...expense,
-          dateTyped: new Date(expense.date)
+          dateTyped: new Date(expense.date),
+          category: this.props.categoriesMap[expense.category_id]
         };
       })
       .sort((a, b) => {
         return b.dateTyped - a.dateTyped;
       })
       .slice(0, 9);
-    // const recentExpenses = this.props.expenses
-    //   .map(expense => {
-    //     return {
-    //       ...expense,
-    //       category: this.props.categoriesMap[expense.category_id]
-    //     };
-    //   })
-    //   .slice(0, 9);
 
     return (
       <Paper className={this.props.classes.paper}>
