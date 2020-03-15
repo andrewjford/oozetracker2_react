@@ -15,6 +15,7 @@ import {
   WithStyles,
   Theme
 } from "@material-ui/core";
+import { Autocomplete } from "@material-ui/lab";
 import { withStyles } from "@material-ui/core/styles";
 import { Redirect, withRouter, RouteComponentProps } from "react-router-dom";
 
@@ -195,13 +196,20 @@ class ExpenseForm extends React.Component<
             onChange={this.handleChange}
           />
 
-          <TextField
-            id="description"
-            type="text"
-            value={this.state.form.description}
-            className={classes.input}
-            onChange={this.handleChange}
-            label="Description"
+          <Autocomplete
+            freeSolo
+            options={["test", "test2", "best"]}
+            renderInput={params => (
+              <TextField
+                {...params}
+                id="description"
+                type="text"
+                value={this.state.form.description}
+                className={classes.input}
+                onChange={this.handleChange}
+                label="Description"
+              />
+            )}
           />
 
           <FormControl fullWidth className={classes.input} variant="standard">
