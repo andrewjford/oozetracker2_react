@@ -7,6 +7,10 @@ export interface ExpenseState {
   };
   dataFetched: boolean;
   byMonth: any;
+  suggestions: {
+    topDescriptions: any;
+    categoryToDescription: any;
+  };
 }
 
 export interface MonthlyExpenseSummary {

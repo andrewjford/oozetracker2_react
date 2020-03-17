@@ -19,7 +19,11 @@ import { Autocomplete } from "@material-ui/lab";
 import { withStyles } from "@material-ui/core/styles";
 import { Redirect, withRouter, RouteComponentProps } from "react-router-dom";
 
-import { createExpense, updateExpense } from "../../actions/expenseActions";
+import {
+  createExpense,
+  updateExpense,
+  getExpenseSuggestions
+} from "../../actions/expenseActions";
 import { Expense, ExpenseFormState } from "../../interfaces/expenseInterfaces";
 
 const styles = (theme: Theme) => ({
@@ -63,8 +67,13 @@ interface PassedProps extends WithStyles<typeof styles> {
   expense: Expense | null;
   history: any;
   categories: any;
+  suggestions: {
+    topDescriptions: any;
+    categoryToDescription: any;
+  };
   createExpense: (newExpense: ExpenseFormState) => any;
   updateExpense: (updatedExpense: ExpenseFormState) => any;
+  getExpenseSuggestions: () => any;
 }
 
 interface TheState {
@@ -80,6 +89,7 @@ class ExpenseForm extends React.Component<
 > {
   constructor(props: PassedProps & RouteComponentProps) {
     super(props);
+
     if (props.expense) {
       this.state = {
         mode: "edit",
@@ -102,6 +112,10 @@ class ExpenseForm extends React.Component<
         history: props.history
       };
     }
+  }
+
+  componentDidMount() {
+    this.props.getExpenseSuggestions();
   }
 
   convertDateToString = (date: Date) => {
@@ -162,6 +176,27 @@ class ExpenseForm extends React.Component<
     });
   };
 
+  handleDescriptionChange = (event: any, value: any) => {
+    const suggestionEvent = this.props.suggestions.topDescriptions[value];
+
+    if (suggestionEvent && this.state.form.description !== value) {
+      this.setState({
+        form: {
+          ...this.state.form,
+          description: value,
+          category: suggestionEvent.category_id
+        }
+      });
+    } else {
+      this.setState({
+        form: {
+          ...this.state.form,
+          description: value
+        }
+      });
+    }
+  };
+
   handleCategoryChange = (event: any) => {
     this.setState({
       form: {
@@ -183,6 +218,12 @@ class ExpenseForm extends React.Component<
       );
     };
 
+    const descriptionSuggestions: string[] = Object.keys(
+      this.props.suggestions.topDescriptions
+    );
+
+    descriptionSuggestions.push(this.state.form.description);
+
     return (
       <Paper className={classes.paper}>
         {this.redirect()}
@@ -198,15 +239,14 @@ class ExpenseForm extends React.Component<
 
           <Autocomplete
             freeSolo
-            options={["test", "test2", "best"]}
+            options={descriptionSuggestions}
+            onChange={this.handleDescriptionChange}
+            value={this.state.form.description}
             renderInput={params => (
               <TextField
                 {...params}
-                id="description"
                 type="text"
-                value={this.state.form.description}
                 className={classes.input}
-                onChange={this.handleChange}
                 label="Description"
               />
             )}
@@ -264,17 +304,28 @@ class ExpenseForm extends React.Component<
   }
 }
 
+const mapStateToProps = (state: {
+  expenses: {
+    suggestions: any;
+  };
+}) => {
+  return {
+    suggestions: state.expenses.suggestions
+  };
+};
+
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators(
     {
       createExpense,
-      updateExpense
+      updateExpense,
+      getExpenseSuggestions
     },
     dispatch
   );
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(withRouter(withStyles(styles)(ExpenseForm)));

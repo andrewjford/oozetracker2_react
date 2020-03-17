@@ -2,6 +2,7 @@
   - keep it defaulting to email
   - allow login with username
 - suggest/autocomplete Expense.name
+  - needs to fill on edit mode
 - bug after add expense submit
 - budget class? field on Category?
 - `go back` button from expense detail page?
