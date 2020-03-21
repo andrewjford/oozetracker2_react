@@ -11,7 +11,7 @@ export default class BackendCallout extends React.Component {
     const body = response.json();
 
     if (response.status !== 200) {
-      throw Error(body.message);
+      throw new Error(body.message);
     }
 
     return body;
@@ -44,7 +44,7 @@ export default class BackendCallout extends React.Component {
     });
     if (response.status < 200 || response.status > 299) {
       const responseBody = await response.json();
-      throw Error(JSON.stringify(responseBody.message));
+      throw new Error(JSON.stringify(responseBody.message));
     }
     return response.json();
   };
@@ -59,7 +59,7 @@ export default class BackendCallout extends React.Component {
     });
 
     if (response.status !== 204) {
-      throw Error("wut");
+      throw new Error("wut");
     }
     return "success";
   };
