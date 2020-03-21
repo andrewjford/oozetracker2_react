@@ -15,11 +15,17 @@ import {
   WithStyles,
   Theme
 } from "@material-ui/core";
+import { Autocomplete } from "@material-ui/lab";
 import { withStyles } from "@material-ui/core/styles";
-import { Redirect, withRouter, RouteComponentProps } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-import { createExpense, updateExpense } from "../../actions/expenseActions";
+import {
+  createExpense,
+  updateExpense,
+  getExpenseSuggestions
+} from "../../actions/expenseActions";
 import { Expense, ExpenseFormState } from "../../interfaces/expenseInterfaces";
+import ErrorDisplay from "../ErrorDisplay";
 
 const styles = (theme: Theme) => ({
   form: {
@@ -62,15 +68,20 @@ interface PassedProps extends WithStyles<typeof styles> {
   expense: Expense | null;
   history: any;
   categories: any;
+  suggestions: {
+    topDescriptions: any;
+    categoryToDescription: any;
+  };
   createExpense: (newExpense: ExpenseFormState) => any;
   updateExpense: (updatedExpense: ExpenseFormState) => any;
+  getExpenseSuggestions: () => any;
 }
 
 interface TheState {
   mode: string;
   form: ExpenseFormState;
   history: any;
-  redirect?: string;
+  errors: any[];
 }
 
 class ExpenseForm extends React.Component<
@@ -79,6 +90,7 @@ class ExpenseForm extends React.Component<
 > {
   constructor(props: PassedProps & RouteComponentProps) {
     super(props);
+
     if (props.expense) {
       this.state = {
         mode: "edit",
@@ -87,7 +99,8 @@ class ExpenseForm extends React.Component<
           category: props.expense.category_id,
           date: props.expense.date
         },
-        history: props.history
+        history: props.history,
+        errors: []
       };
     } else {
       this.state = {
@@ -98,8 +111,15 @@ class ExpenseForm extends React.Component<
           date: this.convertDateToString(new Date()),
           category: props.categories[0].id || null
         },
-        history: props.history
+        history: props.history,
+        errors: []
       };
+    }
+  }
+
+  componentDidMount() {
+    if (Object.keys(this.props.suggestions.topDescriptions).length === 0) {
+      this.props.getExpenseSuggestions();
     }
   }
 
@@ -122,19 +142,26 @@ class ExpenseForm extends React.Component<
   };
 
   createExpense = (newExpense: ExpenseFormState) => {
-    this.props.createExpense(newExpense);
-    this.setState({ redirect: "/" });
+    return this.props
+      .createExpense(newExpense)
+      .then(() => {
+        this.props.history.push("/");
+      })
+      .catch((err: Error) => {
+        this.setState({
+          errors: [err.message]
+        });
+      });
   };
 
-  updateExpense = (expense: ExpenseFormState) => {
-    this.props.updateExpense(expense);
-    this.setState({ redirect: `/expenses/${expense.id}` });
-  };
-
-  redirect = () => {
-    const { redirect } = this.state;
-    if (!!redirect) {
-      return <Redirect to={redirect} />;
+  updateExpense = async (expense: ExpenseFormState) => {
+    try {
+      await this.props.updateExpense(expense);
+      this.props.history.push(`/expenses/${expense.id}`);
+    } catch (err) {
+      this.setState({
+        errors: [err.message]
+      });
     }
   };
 
@@ -161,6 +188,31 @@ class ExpenseForm extends React.Component<
     });
   };
 
+  handleDescriptionChange = (event: any, value: any) => {
+    const suggestionEvent = this.props.suggestions.topDescriptions[value];
+
+    if (
+      suggestionEvent &&
+      this.state.form.description !== value &&
+      this.state.mode === "new"
+    ) {
+      this.setState({
+        form: {
+          ...this.state.form,
+          description: value,
+          category: suggestionEvent.category_id
+        }
+      });
+    } else {
+      this.setState({
+        form: {
+          ...this.state.form,
+          description: value
+        }
+      });
+    }
+  };
+
   handleCategoryChange = (event: any) => {
     this.setState({
       form: {
@@ -182,10 +234,16 @@ class ExpenseForm extends React.Component<
       );
     };
 
+    const descriptionSuggestions: string[] = Object.keys(
+      this.props.suggestions.topDescriptions
+    );
+
+    descriptionSuggestions.push(this.state.form.description);
+
     return (
       <Paper className={classes.paper}>
-        {this.redirect()}
         {header()}
+        <ErrorDisplay errors={this.state.errors} />
         <form onSubmit={this.handleSubmit} className={classes.form}>
           <TextField
             id="date"
@@ -195,13 +253,20 @@ class ExpenseForm extends React.Component<
             onChange={this.handleChange}
           />
 
-          <TextField
-            id="description"
-            type="text"
+          <Autocomplete
+            freeSolo
+            options={descriptionSuggestions}
             value={this.state.form.description}
-            className={classes.input}
-            onChange={this.handleChange}
-            label="Description"
+            onChange={this.handleDescriptionChange}
+            autoSelect={true}
+            renderInput={params => (
+              <TextField
+                {...params}
+                type="text"
+                className={classes.input}
+                label="Description"
+              />
+            )}
           />
 
           <FormControl fullWidth className={classes.input} variant="standard">
@@ -256,17 +321,28 @@ class ExpenseForm extends React.Component<
   }
 }
 
+const mapStateToProps = (state: {
+  expenses: {
+    suggestions: any;
+  };
+}) => {
+  return {
+    suggestions: state.expenses.suggestions
+  };
+};
+
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators(
     {
       createExpense,
-      updateExpense
+      updateExpense,
+      getExpenseSuggestions
     },
     dispatch
   );
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(withRouter(withStyles(styles)(ExpenseForm)));

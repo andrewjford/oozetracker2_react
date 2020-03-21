@@ -157,3 +157,17 @@ export const getMonthByCategory = (monthString: string, categoryId: number) => {
     });
   };
 };
+
+export const getExpenseSuggestions = () => {
+  return async (dispatch: Dispatch, getState: () => RootState) => {
+    const suggestions: any = await BackendCallout.getFromApi(
+      `${API_URL}/api/v1/reports/expenseSuggestions`,
+      getState().account.token
+    );
+
+    return dispatch({
+      type: "GOT_EXPENSE_SUGGESTIONS",
+      payload: suggestions
+    });
+  };
+};

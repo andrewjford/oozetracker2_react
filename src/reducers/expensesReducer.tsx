@@ -4,7 +4,11 @@ const defaultState: ExpenseState = {
   monthlies: {},
   expenses: {},
   dataFetched: false,
-  byMonth: {}
+  byMonth: {},
+  suggestions: {
+    topDescriptions: {},
+    categoryToDescription: {}
+  }
 };
 
 const expensesReducer = (
@@ -76,6 +80,14 @@ const expensesReducer = (
             ...state.byMonth[action.payload.monthString],
             [action.payload.categoryId]: action.payload.expenses
           }
+        }
+      };
+    case "GOT_EXPENSE_SUGGESTIONS":
+      return {
+        ...state,
+        suggestions: {
+          ...state.suggestions,
+          ...action.payload
         }
       };
     case "PURGE_EXPENSES":
