@@ -118,7 +118,9 @@ class ExpenseForm extends React.Component<
   }
 
   componentDidMount() {
-    this.props.getExpenseSuggestions();
+    if (Object.keys(this.props.suggestions.topDescriptions).length === 0) {
+      this.props.getExpenseSuggestions();
+    }
   }
 
   convertDateToString = (date: Date) => {
