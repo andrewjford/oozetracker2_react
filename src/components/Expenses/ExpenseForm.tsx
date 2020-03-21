@@ -17,7 +17,7 @@ import {
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { withStyles } from "@material-ui/core/styles";
-import { Redirect, withRouter, RouteComponentProps } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
 import {
   createExpense,
@@ -81,7 +81,6 @@ interface TheState {
   mode: string;
   form: ExpenseFormState;
   history: any;
-  redirect?: string;
   errors: any[];
 }
 
@@ -145,7 +144,6 @@ class ExpenseForm extends React.Component<
       .createExpense(newExpense)
       .then(() => {
         this.props.history.push("/");
-        // this.setState({ redirect: "/" });
       })
       .catch((err: Error) => {
         this.setState({
@@ -157,18 +155,11 @@ class ExpenseForm extends React.Component<
   updateExpense = async (expense: ExpenseFormState) => {
     try {
       await this.props.updateExpense(expense);
-      this.setState({ redirect: `/expenses/${expense.id}` });
+      this.props.history.push(`/expenses/${expense.id}`);
     } catch (err) {
       this.setState({
         errors: [err.message]
       });
-    }
-  };
-
-  redirect = () => {
-    const { redirect } = this.state;
-    if (!!redirect) {
-      return <Redirect to={redirect} />;
     }
   };
 
@@ -249,7 +240,6 @@ class ExpenseForm extends React.Component<
 
     return (
       <Paper className={classes.paper}>
-        {this.redirect()}
         {header()}
         <ErrorDisplay errors={this.state.errors} />
         <form onSubmit={this.handleSubmit} className={classes.form}>
@@ -264,9 +254,9 @@ class ExpenseForm extends React.Component<
           <Autocomplete
             freeSolo
             options={descriptionSuggestions}
-            defaultValue={this.state.form.description}
-            onInputChange={this.handleDescriptionChange}
-            inputValue={this.state.form.description}
+            value={this.state.form.description}
+            onChange={this.handleDescriptionChange}
+            autoSelect={true}
             renderInput={params => (
               <TextField
                 {...params}
