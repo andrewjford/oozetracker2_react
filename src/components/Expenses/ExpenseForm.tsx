@@ -240,8 +240,9 @@ class ExpenseForm extends React.Component<
           <Autocomplete
             freeSolo
             options={descriptionSuggestions}
-            onChange={this.handleDescriptionChange}
-            value={this.state.form.description}
+            defaultValue={this.state.form.description}
+            onInputChange={this.handleDescriptionChange}
+            inputValue={this.state.form.description}
             renderInput={params => (
               <TextField
                 {...params}
