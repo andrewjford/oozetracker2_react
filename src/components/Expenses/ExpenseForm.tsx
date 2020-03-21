@@ -25,6 +25,7 @@ import {
   getExpenseSuggestions
 } from "../../actions/expenseActions";
 import { Expense, ExpenseFormState } from "../../interfaces/expenseInterfaces";
+import ErrorDisplay from "../ErrorDisplay";
 
 const styles = (theme: Theme) => ({
   form: {
@@ -81,6 +82,7 @@ interface TheState {
   form: ExpenseFormState;
   history: any;
   redirect?: string;
+  errors: any[];
 }
 
 class ExpenseForm extends React.Component<
@@ -98,7 +100,8 @@ class ExpenseForm extends React.Component<
           category: props.expense.category_id,
           date: props.expense.date
         },
-        history: props.history
+        history: props.history,
+        errors: []
       };
     } else {
       this.state = {
@@ -109,7 +112,8 @@ class ExpenseForm extends React.Component<
           date: this.convertDateToString(new Date()),
           category: props.categories[0].id || null
         },
-        history: props.history
+        history: props.history,
+        errors: []
       };
     }
   }
@@ -137,13 +141,28 @@ class ExpenseForm extends React.Component<
   };
 
   createExpense = (newExpense: ExpenseFormState) => {
-    this.props.createExpense(newExpense);
-    this.setState({ redirect: "/" });
+    return this.props
+      .createExpense(newExpense)
+      .then(() => {
+        this.props.history.push("/");
+        // this.setState({ redirect: "/" });
+      })
+      .catch((err: Error) => {
+        this.setState({
+          errors: [err.message]
+        });
+      });
   };
 
-  updateExpense = (expense: ExpenseFormState) => {
-    this.props.updateExpense(expense);
-    this.setState({ redirect: `/expenses/${expense.id}` });
+  updateExpense = async (expense: ExpenseFormState) => {
+    try {
+      await this.props.updateExpense(expense);
+      this.setState({ redirect: `/expenses/${expense.id}` });
+    } catch (err) {
+      this.setState({
+        errors: [err.message]
+      });
+    }
   };
 
   redirect = () => {
@@ -179,7 +198,11 @@ class ExpenseForm extends React.Component<
   handleDescriptionChange = (event: any, value: any) => {
     const suggestionEvent = this.props.suggestions.topDescriptions[value];
 
-    if (suggestionEvent && this.state.form.description !== value) {
+    if (
+      suggestionEvent &&
+      this.state.form.description !== value &&
+      this.state.mode === "new"
+    ) {
       this.setState({
         form: {
           ...this.state.form,
@@ -228,6 +251,7 @@ class ExpenseForm extends React.Component<
       <Paper className={classes.paper}>
         {this.redirect()}
         {header()}
+        <ErrorDisplay errors={this.state.errors} />
         <form onSubmit={this.handleSubmit} className={classes.form}>
           <TextField
             id="date"
