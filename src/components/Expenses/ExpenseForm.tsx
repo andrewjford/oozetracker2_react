@@ -189,37 +189,45 @@ class ExpenseForm extends React.Component<
   };
 
   handleDescriptionChange = (event: any, value: any) => {
-    const suggestionEvent = this.props.suggestions.topDescriptions[value];
+    this.setState({
+      form: {
+        ...this.state.form,
+        description: value
+      }
+    });
 
-    if (
-      suggestionEvent &&
-      this.state.form.description !== value &&
-      this.state.mode === "new"
-    ) {
-      this.setState({
-        form: {
-          ...this.state.form,
-          description: value,
-          category: suggestionEvent.category_id
-        }
-      });
-    } else {
-      this.setState({
-        form: {
-          ...this.state.form,
-          description: value
-        }
-      });
-    }
+    this.autoChangeCategory(value);
   };
 
   handleCategoryChange = (event: any) => {
+    // change description suggestions
+
     this.setState({
       form: {
         ...this.state.form,
         category: event.target.value
       }
     });
+  };
+
+  autoChangeCategory = (description: string) => {
+    const relatedSuggestion = this.props.suggestions.topDescriptions[
+      description
+    ];
+
+    if (
+      relatedSuggestion &&
+      this.state.form.description !== description &&
+      this.state.mode === "new"
+    ) {
+      this.setState({
+        form: {
+          ...this.state.form,
+          description,
+          category: relatedSuggestion.category_id
+        }
+      });
+    }
   };
 
   render() {
