@@ -24,7 +24,11 @@ import {
   updateExpense,
   getExpenseSuggestions
 } from "../../actions/expenseActions";
-import { Expense, ExpenseFormState } from "../../interfaces/expenseInterfaces";
+import {
+  Expense,
+  ExpenseFormState,
+  ExpenseSuggestionData
+} from "../../interfaces/expenseInterfaces";
 import ErrorDisplay from "../ErrorDisplay";
 
 const styles = (theme: Theme) => ({
@@ -69,7 +73,9 @@ interface PassedProps extends WithStyles<typeof styles> {
   history: any;
   categories: any;
   suggestions: {
-    topDescriptions: any;
+    topDescriptions: {
+      [key: string]: ExpenseSuggestionData;
+    };
     categoryToDescription: any;
   };
   createExpense: (newExpense: ExpenseFormState) => any;
@@ -80,6 +86,7 @@ interface PassedProps extends WithStyles<typeof styles> {
 interface TheState {
   mode: string;
   form: ExpenseFormState;
+  suggestions: string[];
   history: any;
   errors: any[];
 }
@@ -99,6 +106,7 @@ class ExpenseForm extends React.Component<
           category: props.expense.category_id,
           date: props.expense.date
         },
+        suggestions: Object.keys(props.suggestions.topDescriptions),
         history: props.history,
         errors: []
       };
@@ -111,6 +119,7 @@ class ExpenseForm extends React.Component<
           date: this.convertDateToString(new Date()),
           category: props.categories[0].id || null
         },
+        suggestions: Object.keys(props.suggestions.topDescriptions),
         history: props.history,
         errors: []
       };
@@ -119,7 +128,9 @@ class ExpenseForm extends React.Component<
 
   componentDidMount() {
     if (Object.keys(this.props.suggestions.topDescriptions).length === 0) {
-      this.props.getExpenseSuggestions();
+      this.props.getExpenseSuggestions().catch((error: Error) => {
+        this.setState({ errors: [error] });
+      });
     }
   }
 
@@ -200,14 +211,14 @@ class ExpenseForm extends React.Component<
   };
 
   handleCategoryChange = (event: any) => {
-    // change description suggestions
-
     this.setState({
       form: {
         ...this.state.form,
         category: event.target.value
       }
     });
+
+    this.filterDescriptionSuggestions(event.target.value);
   };
 
   autoChangeCategory = (description: string) => {
@@ -230,6 +241,48 @@ class ExpenseForm extends React.Component<
     }
   };
 
+  getDescriptionSuggestions() {
+    if (
+      this.state.suggestions.length === 0 &&
+      Object.keys(this.props.suggestions.topDescriptions).length > 0
+    ) {
+      const sortedFullList = Object.values(
+        this.props.suggestions.topDescriptions
+      )
+        .sort((a: ExpenseSuggestionData, b: ExpenseSuggestionData) => {
+          return b.recurrence - a.recurrence;
+        })
+        .map(each => each.description);
+
+      this.setState({
+        suggestions: sortedFullList
+      });
+    }
+
+    return this.state.suggestions;
+  }
+
+  filterDescriptionSuggestions = (categoryId: number): void => {
+    const filteredList = Object.values(this.props.suggestions.topDescriptions)
+      .filter(expenseSuggestions => {
+        return expenseSuggestions.category_id === categoryId;
+      })
+      .sort((a: ExpenseSuggestionData, b: ExpenseSuggestionData) => {
+        return b.recurrence - a.recurrence;
+      })
+      .map(each => each.description);
+
+    if (filteredList.length === 0) {
+      return;
+    }
+
+    const mergedSet = new Set([...filteredList, ...this.state.suggestions]);
+
+    this.setState({
+      suggestions: Array.from(mergedSet)
+    });
+  };
+
   render() {
     const classes = this.props.classes;
 
@@ -241,12 +294,6 @@ class ExpenseForm extends React.Component<
         </Typography>
       );
     };
-
-    const descriptionSuggestions: string[] = Object.keys(
-      this.props.suggestions.topDescriptions
-    );
-
-    descriptionSuggestions.push(this.state.form.description);
 
     return (
       <Paper className={classes.paper}>
@@ -263,7 +310,7 @@ class ExpenseForm extends React.Component<
 
           <Autocomplete
             freeSolo
-            options={descriptionSuggestions}
+            options={this.getDescriptionSuggestions()}
             value={this.state.form.description}
             onChange={this.handleDescriptionChange}
             autoSelect={true}

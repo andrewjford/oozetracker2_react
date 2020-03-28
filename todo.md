@@ -1,3 +1,5 @@
+- clicking out of autocomplete can be weird, changes selection
+- insert new exp at top of array
 - allow username change in profile
   - keep it defaulting to email
   - allow login with username
