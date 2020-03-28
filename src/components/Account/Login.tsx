@@ -200,8 +200,8 @@ const styles = (theme: Theme) =>
       minHeight: "15rem",
       [theme.breakpoints.up("md")]: {
         justifySelf: "center",
-        minWidth: "400px",
-        maxWidth: "450px"
+        minWidth: "500px",
+        maxWidth: "500px"
       },
       [theme.breakpoints.down("sm")]: {
         gridColumn: "3 / 5"

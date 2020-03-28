@@ -8,13 +8,13 @@ export default class BackendCallout extends React.Component {
         Authorization: `Bearer ${token}`
       }
     });
-    const body = response.json();
 
-    if (response.status !== 200) {
-      throw new Error(body.message);
+    if (response.status < 200 || response.status > 299) {
+      const responseBody = await response.json();
+      debugger;
+      throw new Error(JSON.stringify(responseBody.message));
     }
-
-    return body;
+    return response.json();
   };
 
   static postToApi = async (url, body, token) => {
@@ -26,6 +26,7 @@ export default class BackendCallout extends React.Component {
       },
       body: JSON.stringify(body)
     });
+
     if (response.status < 200 || response.status > 299) {
       const responseBody = await response.json();
       throw new Error(JSON.stringify(responseBody.message));

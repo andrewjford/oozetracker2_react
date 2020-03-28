@@ -1,3 +1,5 @@
+import { Category } from "./categoryInterfaces";
+
 export interface ExpenseState {
   expenses: {
     [key: string]: Expense | undefined;
@@ -46,4 +48,11 @@ export interface ExpenseFormState {
   date: string;
   category: number;
   id?: string;
+}
+
+export interface ExpenseSuggestionData {
+  description: string;
+  category_id: number;
+  category: Category;
+  recurrence: number;
 }
