@@ -1,15 +1,18 @@
 import { RevenuesState, Revenue } from "../interfaces/revenueInterfaces";
 
+const getMonthString = (date: string): string => {
+  let dateString = date.slice(0, 7);
+
+  if (dateString[5] === "0") {
+    dateString = dateString.slice(0, 5) + dateString[6];
+  }
+
+  return dateString;
+};
+
 const defaultState: RevenuesState = {
-  byMonth: {
-    "2020-4": [
-      {
-        amount: "1234.56",
-        description: "Payroll Income",
-        date: "2020-04-11",
-      },
-    ],
-  },
+  byMonth: {},
+  fetched: false,
 };
 
 const revenuesReducer = (
@@ -20,7 +23,7 @@ const revenuesReducer = (
     case "GET_REVENUES":
       const revenuesByMonth = action.payload.reduce(
         (accum: any, revenue: Revenue) => {
-          const monthString = revenue.date.slice(0, 7);
+          const monthString = getMonthString(revenue.date);
           if (!accum[monthString]) {
             accum[monthString] = [];
           }
@@ -34,9 +37,10 @@ const revenuesReducer = (
       return {
         ...state,
         byMonth: revenuesByMonth,
+        fetched: true,
       };
     case "NEW_REVENUE":
-      const monthString = action.payload.date.slice(0, 7);
+      const monthString = getMonthString(action.payload.date);
 
       return {
         ...state,

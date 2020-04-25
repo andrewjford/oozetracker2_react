@@ -19,6 +19,10 @@ const styles = (theme: Theme) =>
     revenueSummary: {
       padding: 0,
     },
+    revenueDetail: {
+      display: "inherit",
+      padding: "0 1rem 1rem 1rem",
+    },
     subtitle: {
       padding: "1rem",
     },
@@ -43,22 +47,12 @@ const styles = (theme: Theme) =>
   });
 
 interface RevenueSectionProps extends WithStyles<typeof styles> {
-  revenues: Revenue[] | undefined;
+  revenues: Revenue[];
 }
-
-const nullRevenue: Revenue = {
-  amount: "0",
-  description: "",
-  date: "",
-};
 
 const RevenueSection = (props: RevenueSectionProps) => {
   const classes = props.classes;
   const dispatch = useDispatch();
-  // const createNewRevenue = useCallback(
-  //   (revenue) => dispatch(createRevenue(revenue)),
-  //   [dispatch]
-  // );
   const editRevenue = useCallback(
     (revenue) => dispatch(updateRevenue(revenue)),
     [dispatch]
@@ -72,8 +66,29 @@ const RevenueSection = (props: RevenueSectionProps) => {
     }
   };
 
-  const revenueLine: Revenue =
-    (props.revenues && props.revenues[0]) || nullRevenue;
+  const revenueLines = () => {
+    return props.revenues.map((revenue: Revenue) => {
+      return (
+        <div className={classes.wideGrid}>
+          <Typography variant="subtitle1" className={classes.col1}>
+            {revenue.description}
+          </Typography>
+          <Typography variant="subtitle1" className={classes.col2}>
+            <RevenueInput
+              revenue={revenue}
+              handleOnBlur={handleRevenueChange}
+            />
+          </Typography>
+        </div>
+      );
+    });
+  };
+
+  const totalRevenue: string = props.revenues
+    .reduce((sum, each) => {
+      return sum + parseFloat(each.amount);
+    }, 0)
+    .toFixed(2);
 
   return (
     <ExpansionPanel>
@@ -86,22 +101,12 @@ const RevenueSection = (props: RevenueSectionProps) => {
             Revenue
           </Typography>
           <Typography variant="subtitle1" className={classes.col2}>
-            {revenueLine.amount}
+            {totalRevenue}
           </Typography>
         </div>
       </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-        <div className={classes.wideGrid}>
-          <Typography variant="subtitle1" className={classes.col1}>
-            {revenueLine.description}
-          </Typography>
-          <Typography variant="subtitle1" className={classes.col2}>
-            <RevenueInput
-              revenue={revenueLine}
-              handleOnBlur={handleRevenueChange}
-            />
-          </Typography>
-        </div>
+      <ExpansionPanelDetails className={classes.revenueDetail}>
+        {revenueLines()}
       </ExpansionPanelDetails>
     </ExpansionPanel>
   );

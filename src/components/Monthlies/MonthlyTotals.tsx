@@ -21,6 +21,7 @@ import Refresh from "@material-ui/icons/Refresh";
 import RevenueSection from "./RevenueSection";
 
 import { getMonthly } from "../../actions/expenseActions";
+import { getRevenues } from "../../actions/revenueActions";
 import {
   MonthlyExpenseSummary,
   MonthlyLineItemInterface,
@@ -30,7 +31,7 @@ import MonthlyLineItem from "./MonthlyLineItem";
 import { Redirect } from "react-router-dom";
 import { MONTHS_ARRAY } from "./constants";
 import { TableContainer } from "@material-ui/core";
-import { RevenuesMap } from "../../interfaces/revenueInterfaces";
+import { RevenuesMap, Revenue } from "../../interfaces/revenueInterfaces";
 
 export function dateToMonthString(date: Date): string {
   return `${date.getFullYear()}-${date.getMonth() + 1}`;
@@ -79,8 +80,10 @@ const styles = (theme: Theme) =>
 
 interface MonthlyProps extends WithStyles<typeof styles> {
   getMonthly: (current: MonthRequest) => any;
+  getRevenues: () => any;
   monthlies: { [key: string]: MonthlyExpenseSummary };
   revenuesByMonth: RevenuesMap;
+  revenuesFetched: boolean;
   monthString: string;
 }
 
@@ -89,6 +92,12 @@ interface MonthlyState {
   rotate: boolean;
   redirect: string;
 }
+
+export const nullRevenue: Revenue = {
+  amount: "0",
+  description: "",
+  date: "",
+};
 
 class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
   constructor(props: MonthlyProps) {
@@ -113,6 +122,12 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
         rotate: false,
         redirect: "",
       };
+    }
+  }
+
+  componentDidMount() {
+    if (!this.props.revenuesFetched) {
+      this.props.getRevenues();
     }
   }
 
@@ -212,6 +227,10 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
           }, 0)
           .toFixed(2);
 
+    const revenues = () => {
+      return this.props.revenuesByMonth[monthString] || [nullRevenue];
+    };
+
     return (
       <Paper className={classes.paper}>
         {this.redirect()}
@@ -240,7 +259,7 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
             onClick={this.handleRefreshClick}
           />
         </div>
-        <RevenueSection revenues={this.props.revenuesByMonth[monthString]} />
+        <RevenueSection revenues={revenues()} />
         <TableContainer>
           <Table>
             <TableHead>
@@ -274,11 +293,13 @@ const mapStateToProps = (state: {
   };
   revenues: {
     byMonth: RevenuesMap;
+    fetched: boolean;
   };
 }) => {
   return {
     monthlies: state.expenses.monthlies,
     revenuesByMonth: state.revenues.byMonth,
+    revenuesFetched: state.revenues.fetched,
   };
 };
 
@@ -286,6 +307,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators(
     {
       getMonthly,
+      getRevenues,
     },
     dispatch
   );

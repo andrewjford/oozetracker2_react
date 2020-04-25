@@ -6,14 +6,14 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 type GetState = () => RootState;
 
-export const fetchRevenues = () => {
+export const getRevenues = () => {
   return (dispatch: Dispatch, getState: GetState) => {
     return BackendCallout.getFromApi(
       `${API_URL}/api/v1/revenues`,
       getState().account.token
     ).then((data) => {
       return dispatch({
-        type: "FETCH_REVENUES",
+        type: "GET_REVENUES",
         payload: data.rows,
       });
     });

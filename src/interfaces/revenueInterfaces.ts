@@ -1,5 +1,6 @@
 export interface RevenuesState {
   byMonth: RevenuesMap;
+  fetched: boolean;
 }
 
 export interface RevenuesMap {
