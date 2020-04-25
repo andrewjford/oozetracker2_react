@@ -6,7 +6,14 @@ import {
   Theme,
   createStyles,
   withStyles,
+  WithStyles,
 } from "@material-ui/core";
+import { Revenue } from "../../interfaces/revenueInterfaces";
+
+interface RevenueInputProps extends WithStyles<typeof styles> {
+  revenue: Revenue;
+  handleOnBlur: () => {};
+}
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -14,8 +21,15 @@ const styles = (theme: Theme) =>
   });
 
 const RevenueInput = (props: any) => {
-  const [amount, setAmount] = useState(props.initialValue);
+  const [amount, setAmount] = useState(props.revenue.amount);
   const classes = props.classes;
+
+  const handleOnBlur = (event: any) => {
+    props.handleOnBlur({
+      ...props.revenue,
+      amount,
+    });
+  };
 
   return (
     <FormControl fullWidth className={classes.input} variant="standard">
@@ -26,6 +40,7 @@ const RevenueInput = (props: any) => {
         value={amount}
         onChange={(event) => setAmount(event.target.value as any)}
         onFocus={(event) => event.target.select()}
+        onBlur={handleOnBlur}
       ></Input>
     </FormControl>
   );

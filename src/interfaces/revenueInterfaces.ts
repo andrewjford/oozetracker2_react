@@ -3,7 +3,7 @@ export interface RevenuesState {
 }
 
 export interface RevenuesMap {
-  [id: string]: Revenue[] | undefined;
+  [id: string]: Revenue[];
 }
 
 export interface Revenue {

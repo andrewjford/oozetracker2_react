@@ -5,13 +5,12 @@ export default class BackendCallout extends React.Component {
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (response.status < 200 || response.status > 299) {
       const responseBody = await response.json();
-      debugger;
       throw new Error(JSON.stringify(responseBody.message));
     }
     return response.json();
@@ -22,9 +21,9 @@ export default class BackendCallout extends React.Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     });
 
     if (response.status < 200 || response.status > 299) {
@@ -39,9 +38,9 @@ export default class BackendCallout extends React.Component {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     });
     if (response.status < 200 || response.status > 299) {
       const responseBody = await response.json();
@@ -55,8 +54,8 @@ export default class BackendCallout extends React.Component {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (response.status !== 204) {

@@ -8,9 +8,11 @@ import {
   ExpansionPanelDetails,
   WithStyles,
 } from "@material-ui/core";
-import React from "react";
+import React, { useCallback } from "react";
 import RevenueInput from "../Revenues/RevenueInput";
-import { RevenuesMap, Revenue } from "../../interfaces/revenueInterfaces";
+import { Revenue } from "../../interfaces/revenueInterfaces";
+import { useDispatch } from "react-redux";
+import { createRevenue, updateRevenue } from "../../actions/revenueActions";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -52,6 +54,23 @@ const nullRevenue: Revenue = {
 
 const RevenueSection = (props: RevenueSectionProps) => {
   const classes = props.classes;
+  const dispatch = useDispatch();
+  // const createNewRevenue = useCallback(
+  //   (revenue) => dispatch(createRevenue(revenue)),
+  //   [dispatch]
+  // );
+  const editRevenue = useCallback(
+    (revenue) => dispatch(updateRevenue(revenue)),
+    [dispatch]
+  );
+
+  const handleRevenueChange = (revenue: Revenue) => {
+    if (revenue.id) {
+      editRevenue(revenue);
+    } else {
+      dispatch(createRevenue(revenue));
+    }
+  };
 
   const revenueLine: Revenue =
     (props.revenues && props.revenues[0]) || nullRevenue;
@@ -74,10 +93,13 @@ const RevenueSection = (props: RevenueSectionProps) => {
       <ExpansionPanelDetails>
         <div className={classes.wideGrid}>
           <Typography variant="subtitle1" className={classes.col1}>
-            Revenue
+            {revenueLine.description}
           </Typography>
           <Typography variant="subtitle1" className={classes.col2}>
-            <RevenueInput initialValue={revenueLine.amount} />
+            <RevenueInput
+              revenue={revenueLine}
+              handleOnBlur={handleRevenueChange}
+            />
           </Typography>
         </div>
       </ExpansionPanelDetails>
