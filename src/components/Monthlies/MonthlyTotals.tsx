@@ -30,6 +30,7 @@ import MonthlyLineItem from "./MonthlyLineItem";
 import { Redirect } from "react-router-dom";
 import { MONTHS_ARRAY } from "./constants";
 import { TableContainer } from "@material-ui/core";
+import { RevenuesMap } from "../../interfaces/revenueInterfaces";
 
 export function dateToMonthString(date: Date): string {
   return `${date.getFullYear()}-${date.getMonth() + 1}`;
@@ -79,6 +80,7 @@ const styles = (theme: Theme) =>
 interface MonthlyProps extends WithStyles<typeof styles> {
   getMonthly: (current: MonthRequest) => any;
   monthlies: { [key: string]: MonthlyExpenseSummary };
+  revenuesByMonth: RevenuesMap;
   monthString: string;
 }
 
@@ -238,7 +240,7 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
             onClick={this.handleRefreshClick}
           />
         </div>
-        <RevenueSection />
+        <RevenueSection revenues={this.props.revenuesByMonth[monthString]} />
         <TableContainer>
           <Table>
             <TableHead>
@@ -270,9 +272,13 @@ const mapStateToProps = (state: {
   expenses: {
     monthlies: {};
   };
+  revenues: {
+    byMonth: RevenuesMap;
+  };
 }) => {
   return {
     monthlies: state.expenses.monthlies,
+    revenuesByMonth: state.revenues.byMonth,
   };
 };
 

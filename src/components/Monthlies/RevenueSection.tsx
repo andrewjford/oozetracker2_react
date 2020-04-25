@@ -6,10 +6,11 @@ import {
   withStyles,
   Typography,
   ExpansionPanelDetails,
+  WithStyles,
 } from "@material-ui/core";
 import React from "react";
-import { MonthlyLineItemInterface } from "../../interfaces/expenseInterfaces";
 import RevenueInput from "../Revenues/RevenueInput";
+import { RevenuesMap, Revenue } from "../../interfaces/revenueInterfaces";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -39,14 +40,21 @@ const styles = (theme: Theme) =>
     },
   });
 
-const RevenueSection = (props: any) => {
+interface RevenueSectionProps extends WithStyles<typeof styles> {
+  revenues: Revenue[] | undefined;
+}
+
+const nullRevenue: Revenue = {
+  amount: "0",
+  description: "",
+  date: "",
+};
+
+const RevenueSection = (props: RevenueSectionProps) => {
   const classes = props.classes;
 
-  const revenueLine: any = {
-    sum: 1000.0,
-    id: 1,
-    name: "Revenue",
-  };
+  const revenueLine: Revenue =
+    (props.revenues && props.revenues[0]) || nullRevenue;
 
   return (
     <ExpansionPanel>
@@ -59,7 +67,7 @@ const RevenueSection = (props: any) => {
             Revenue
           </Typography>
           <Typography variant="subtitle1" className={classes.col2}>
-            {revenueLine.sum}
+            {revenueLine.amount}
           </Typography>
         </div>
       </ExpansionPanelSummary>
@@ -69,7 +77,7 @@ const RevenueSection = (props: any) => {
             Revenue
           </Typography>
           <Typography variant="subtitle1" className={classes.col2}>
-            <RevenueInput initialValue={revenueLine.sum} />
+            <RevenueInput initialValue={revenueLine.amount} />
           </Typography>
         </div>
       </ExpansionPanelDetails>
