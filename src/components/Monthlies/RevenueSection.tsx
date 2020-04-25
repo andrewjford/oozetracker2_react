@@ -5,9 +5,11 @@ import {
   createStyles,
   withStyles,
   Typography,
+  ExpansionPanelDetails,
 } from "@material-ui/core";
 import React from "react";
 import { MonthlyLineItemInterface } from "../../interfaces/expenseInterfaces";
+import RevenueInput from "../Revenues/RevenueInput";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -23,6 +25,11 @@ const styles = (theme: Theme) =>
       padding: "0 1rem 0 1rem",
       width: "100%",
     },
+    wideGrid: {
+      display: "grid",
+      gridTemplateColumns: "30% 70%",
+      width: "100%",
+    },
     col1: {
       gridColumn: "1 / 2",
     },
@@ -35,8 +42,8 @@ const styles = (theme: Theme) =>
 const RevenueSection = (props: any) => {
   const classes = props.classes;
 
-  const revenueLine: MonthlyLineItemInterface = {
-    sum: "1,000.00",
+  const revenueLine: any = {
+    sum: 1000.0,
     id: 1,
     name: "Revenue",
   };
@@ -45,7 +52,6 @@ const RevenueSection = (props: any) => {
     <ExpansionPanel>
       <ExpansionPanelSummary
         aria-controls="panel1a-content"
-        id="panel1a-header"
         className={classes.revenueSummary}
       >
         <div className={classes.grid}>
@@ -57,6 +63,16 @@ const RevenueSection = (props: any) => {
           </Typography>
         </div>
       </ExpansionPanelSummary>
+      <ExpansionPanelDetails>
+        <div className={classes.wideGrid}>
+          <Typography variant="subtitle1" className={classes.col1}>
+            Revenue
+          </Typography>
+          <Typography variant="subtitle1" className={classes.col2}>
+            <RevenueInput initialValue={revenueLine.sum} />
+          </Typography>
+        </div>
+      </ExpansionPanelDetails>
     </ExpansionPanel>
   );
 };
