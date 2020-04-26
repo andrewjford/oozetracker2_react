@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
     mainHeader: {
       gridColumn: "1 / 5",
       height: "2rem",
-      padding: "1rem 1rem 0",
+      padding: "1rem 1rem 0.5rem",
     },
     summary: {
       marginTop: "1rem",
