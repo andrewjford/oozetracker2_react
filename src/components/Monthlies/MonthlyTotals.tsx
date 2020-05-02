@@ -226,19 +226,25 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
       this.getCurrentView();
     }
 
-    const total = !currentView
+    const totalExpense: number = !currentView
       ? 0
-      : currentView.rows
-          .reduce((accum: number, lineItem: MonthlyLineItemInterface) => {
+      : currentView.rows.reduce(
+          (accum: number, lineItem: MonthlyLineItemInterface) => {
             return accum + parseFloat(lineItem.sum);
-          }, 0)
-          .toFixed(2);
+          },
+          0
+        );
 
     const revenues = () => {
       return (
         this.props.revenuesByMonth[monthString] || [this.getDefaultRevenue()]
       );
     };
+
+    const netIncome: number =
+      revenues().reduce((sum, each) => {
+        return sum + parseFloat(each.amount);
+      }, 0) - totalExpense;
 
     return (
       <Paper className={classes.paper}>
@@ -282,10 +288,18 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
               {this.renderLineItems(currentView)}
               <TableRow>
                 <TableCell>
-                  <b>Total</b>
+                  <b>Total Expenses</b>
                 </TableCell>
                 <TableCell align="right">
-                  <b>{total}</b>
+                  <b>{totalExpense.toFixed(2)}</b>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <b>Net Income</b>
+                </TableCell>
+                <TableCell align="right">
+                  <b>{netIncome.toFixed(2)}</b>
                 </TableCell>
               </TableRow>
             </TableBody>
