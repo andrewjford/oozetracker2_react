@@ -8,12 +8,8 @@ import {
   ExpansionPanelDetails,
   WithStyles,
 } from "@material-ui/core";
-import React, { useCallback } from "react";
-import RevenueInput from "../Revenues/RevenueInput";
+import React from "react";
 import { Revenue } from "../../interfaces/revenueInterfaces";
-import { useDispatch } from "react-redux";
-import { createRevenue, updateRevenue } from "../../actions/revenueActions";
-import RevenueDescriptionInput from "../Revenues/RevenueDescriptionInput";
 import RevenueLineItem from "../Revenues/RevenueLineItem";
 
 const styles = (theme: Theme) =>
@@ -50,23 +46,20 @@ const styles = (theme: Theme) =>
 
 interface RevenueSectionProps extends WithStyles<typeof styles> {
   revenues: Revenue[];
+  date: Date;
 }
 
 const RevenueSection = (props: RevenueSectionProps) => {
   const classes = props.classes;
-  const dispatch = useDispatch();
-
-  const handleRevenueChange = (revenue: Revenue) => {
-    if (revenue.id) {
-      dispatch(updateRevenue(revenue));
-    } else {
-      dispatch(createRevenue(revenue));
-    }
-  };
 
   const revenueLines = () => {
-    return props.revenues.map((revenue: Revenue, index: number) => {
-      return <RevenueLineItem revenue={revenue} key={index} />;
+    return props.revenues.map((revenue: Revenue) => {
+      return (
+        <RevenueLineItem
+          revenue={revenue}
+          key={`${props.date.toISOString()}${revenue.id}`}
+        />
+      );
     });
   };
 

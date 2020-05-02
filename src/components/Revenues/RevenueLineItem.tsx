@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Theme,
   createStyles,
@@ -9,6 +9,8 @@ import {
 import { Revenue } from "../../interfaces/revenueInterfaces";
 import RevenueDescriptionInput from "./RevenueDescriptionInput";
 import RevenueInput from "./RevenueInput";
+import { useDispatch } from "react-redux";
+import { createRevenue, updateRevenue } from "../../actions/revenueActions";
 
 interface RevenueLineItemProps extends WithStyles<typeof styles> {
   revenue: Revenue;
@@ -32,24 +34,32 @@ const styles = (theme: Theme) =>
   });
 
 const RevenueLineItem = (props: RevenueLineItemProps) => {
-  const [revenue, setRevenue] = useState(props.revenue);
   const classes = props.classes;
+  const dispatch = useDispatch();
+
+  const handleRevenueChange = (revenue: Revenue) => {
+    if (revenue.id) {
+      dispatch(updateRevenue(revenue));
+    } else {
+      dispatch(createRevenue(revenue));
+    }
+  };
+
+  const revenue = props.revenue;
 
   return (
     <div className={classes.root}>
-      {/* <Typography variant="subtitle1" className={classes.col1}> */}
       <RevenueDescriptionInput
         description={revenue.description}
         handleSubmit={(description: string) => {
-          setRevenue({ ...revenue, description });
+          handleRevenueChange({ ...revenue, description });
         }}
       />
-      {/* </Typography> */}
       <Typography variant="subtitle1" className={classes.amount}>
         <RevenueInput
           revenue={revenue}
           handleOnBlur={(updatedRev: Revenue) => {
-            setRevenue(updatedRev);
+            handleRevenueChange(updatedRev);
           }}
         />
       </Typography>

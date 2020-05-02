@@ -5,7 +5,6 @@ import {
   withStyles,
   WithStyles,
   TextField,
-  Button,
 } from "@material-ui/core";
 
 interface RevenueDescriptionInputProps extends WithStyles<typeof styles> {
@@ -29,7 +28,9 @@ const RevenueDescriptionInput = (props: RevenueDescriptionInputProps) => {
       onChange={(event) => setDescription(event.target.value)}
       label="Revenue Name"
       className={classes.item}
-      autoFocus={true}
+      onBlur={() => {
+        props.handleSubmit(description);
+      }}
     />
   );
 };

@@ -53,7 +53,7 @@ const revenuesReducer = (
           ...state.byMonth,
           [monthString]: [
             action.payload,
-            ...(state.byMonth[monthString] || null),
+            ...(state.byMonth[monthString] ? state.byMonth[monthString] : []),
           ],
         },
       };

@@ -208,6 +208,13 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
     }
   };
 
+  getDefaultRevenue = () => {
+    return {
+      ...nullRevenue,
+      date: this.state.date,
+    };
+  };
+
   render() {
     const classes = this.props.classes;
     const monthString: string = dateToMonthString(this.state.date);
@@ -228,7 +235,9 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
           .toFixed(2);
 
     const revenues = () => {
-      return this.props.revenuesByMonth[monthString] || [nullRevenue];
+      return (
+        this.props.revenuesByMonth[monthString] || [this.getDefaultRevenue()]
+      );
     };
 
     return (
@@ -259,7 +268,7 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
             onClick={this.handleRefreshClick}
           />
         </div>
-        <RevenueSection revenues={revenues()} />
+        <RevenueSection revenues={revenues()} date={this.state.date} />
         <TableContainer>
           <Table>
             <TableHead>
