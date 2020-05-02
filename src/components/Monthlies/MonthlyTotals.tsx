@@ -31,7 +31,7 @@ import MonthlyLineItem from "./MonthlyLineItem";
 import { Redirect } from "react-router-dom";
 import { MONTHS_ARRAY } from "./constants";
 import { TableContainer } from "@material-ui/core";
-import { RevenuesMap, Revenue } from "../../interfaces/revenueInterfaces";
+import { RevenuesMap } from "../../interfaces/revenueInterfaces";
 
 export function dateToMonthString(date: Date): string {
   return `${date.getFullYear()}-${date.getMonth() + 1}`;
@@ -92,12 +92,6 @@ interface MonthlyState {
   rotate: boolean;
   redirect: string;
 }
-
-export const nullRevenue: Revenue = {
-  amount: "0",
-  description: "",
-  date: "",
-};
 
 class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
   constructor(props: MonthlyProps) {
@@ -208,13 +202,6 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
     }
   };
 
-  getDefaultRevenue = (): Revenue => {
-    return {
-      ...nullRevenue,
-      date: this.state.date.toISOString(),
-    };
-  };
-
   render() {
     const classes = this.props.classes;
     const monthString: string = dateToMonthString(this.state.date);
@@ -236,9 +223,7 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
         );
 
     const revenues = () => {
-      return (
-        this.props.revenuesByMonth[monthString] || [this.getDefaultRevenue()]
-      );
+      return this.props.revenuesByMonth[monthString] || [];
     };
 
     const netIncome: number =

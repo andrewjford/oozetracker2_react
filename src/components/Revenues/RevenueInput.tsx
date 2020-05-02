@@ -14,6 +14,7 @@ import { Revenue } from "../../interfaces/revenueInterfaces";
 interface RevenueInputProps extends WithStyles<typeof styles> {
   revenue: Revenue;
   handleOnBlur: () => {};
+  isEditing: boolean;
 }
 
 const styles = (theme: Theme) =>

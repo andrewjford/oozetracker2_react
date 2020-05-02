@@ -12,6 +12,7 @@ interface RevenueDescriptionInputProps extends WithStyles<typeof styles> {
   description: string;
   handleSubmit: (description: string) => any;
   handleIsEditing: (isEditing: boolean) => any;
+  detachEditing: () => any;
 }
 
 const styles = (theme: Theme) =>
@@ -51,7 +52,8 @@ const RevenueDescriptionInput = (props: RevenueDescriptionInputProps) => {
       label="Revenue Name"
       autoFocus={true}
       onBlur={() => {
-        changeEditing(false);
+        setTimeout(() => changeEditing(false), 600);
+        props.detachEditing();
         props.handleSubmit(description);
       }}
     />

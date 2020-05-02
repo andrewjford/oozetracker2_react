@@ -11,13 +11,16 @@ import {
 import React, { useState } from "react";
 import { Revenue } from "../../interfaces/revenueInterfaces";
 import RevenueLineItem from "../Revenues/RevenueLineItem";
-import AddIcon from "@material-ui/icons/Add";
-import { nullRevenue } from "./MonthlyTotals";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import NewRevenueLineItem from "../Revenues/NewRevenueLineItem";
 
 const styles = (theme: Theme) =>
   createStyles({
     revenueSummary: {
       padding: 0,
+    },
+    revenueTitle: {
+      fontSize: "0.875rem",
     },
     revenueDetail: {
       display: "inherit",
@@ -41,9 +44,13 @@ const styles = (theme: Theme) =>
       gridColumn: "1 / 2",
       display: "flex",
     },
-    col2: {
+    revenueAmount: {
       gridColumn: "2",
       justifySelf: "right",
+      fontSize: "0.875rem",
+    },
+    addIcon: {
+      paddingLeft: "0.25rem",
     },
   });
 
@@ -52,8 +59,15 @@ interface RevenueSectionProps extends WithStyles<typeof styles> {
   date: Date;
 }
 
+export const nullRevenue: Revenue = {
+  amount: "0",
+  description: "enter revenue description",
+  date: "",
+};
+
 const RevenueSection = (props: RevenueSectionProps) => {
   const [newRevenues, setNewRevenues] = useState<Revenue[]>([]);
+  const [expanded, setExpanded] = useState<boolean>(false);
   const classes = props.classes;
 
   const addNewRevenue = (event: any) => {
@@ -75,11 +89,17 @@ const RevenueSection = (props: RevenueSectionProps) => {
   };
 
   const revenueLines = () => {
-    return props.revenues.concat(newRevenues).map((revenue: Revenue) => {
+    return props.revenues.map((revenue: Revenue) => {
+      return <RevenueLineItem revenue={revenue} key={revenue.id} />;
+    });
+  };
+
+  const newRevenueLines = () => {
+    return newRevenues.map((revenue: Revenue) => {
       return (
-        <RevenueLineItem
+        <NewRevenueLineItem
           revenue={revenue}
-          key={`${props.date.toISOString()}${revenue.id}`}
+          key={revenue.tempId}
           deleteLineItem={deleteNewRevenue}
         />
       );
@@ -92,24 +112,43 @@ const RevenueSection = (props: RevenueSectionProps) => {
     }, 0)
     .toFixed(2);
 
+  const addSection = () => {
+    if (expanded) {
+      return (
+        <AddCircleIcon
+          onClick={addNewRevenue}
+          className={classes.addIcon}
+          color="primary"
+        />
+      );
+    }
+
+    return;
+  };
+
   return (
-    <ExpansionPanel>
+    <ExpansionPanel
+      onChange={(event: object, expanded: boolean) => setExpanded(expanded)}
+    >
       <ExpansionPanelSummary
         aria-controls="panel1a-content"
         className={classes.revenueSummary}
       >
         <div className={classes.grid}>
           <div className={classes.revSectionTitle}>
-            <Typography variant="subtitle1">Revenue</Typography>
-            <AddIcon onClick={addNewRevenue} />
+            <Typography variant="subtitle1" className={classes.revenueTitle}>
+              <b>Revenue</b>
+            </Typography>
+            {addSection()}
           </div>
-          <Typography variant="subtitle1" className={classes.col2}>
-            {totalRevenue}
+          <Typography variant="subtitle1" className={classes.revenueAmount}>
+            <b>{totalRevenue}</b>
           </Typography>
         </div>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails className={classes.revenueDetail}>
         {revenueLines()}
+        {newRevenueLines()}
       </ExpansionPanelDetails>
     </ExpansionPanel>
   );
