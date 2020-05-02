@@ -5,21 +5,43 @@ import {
   withStyles,
   WithStyles,
   TextField,
+  Typography,
 } from "@material-ui/core";
 
 interface RevenueDescriptionInputProps extends WithStyles<typeof styles> {
   description: string;
   handleSubmit: (description: string) => any;
+  handleIsEditing: (isEditing: boolean) => any;
 }
 
 const styles = (theme: Theme) =>
   createStyles({
-    item: {},
+    col1: {
+      gridColumn: "1 / 2",
+    },
   });
 
 const RevenueDescriptionInput = (props: RevenueDescriptionInputProps) => {
   const [description, setDescription] = useState(props.description);
+  const [editing, setEditing] = useState(false);
   const classes = props.classes;
+
+  const changeEditing = (newEdit: boolean) => {
+    setEditing(newEdit);
+    props.handleIsEditing(newEdit);
+  };
+
+  if (!editing) {
+    return (
+      <Typography
+        variant="subtitle1"
+        className={classes.col1}
+        onClick={() => changeEditing(true)}
+      >
+        {description}
+      </Typography>
+    );
+  }
 
   return (
     <TextField
@@ -27,8 +49,9 @@ const RevenueDescriptionInput = (props: RevenueDescriptionInputProps) => {
       value={description}
       onChange={(event) => setDescription(event.target.value)}
       label="Revenue Name"
-      className={classes.item}
+      autoFocus={true}
       onBlur={() => {
+        changeEditing(false);
         props.handleSubmit(description);
       }}
     />

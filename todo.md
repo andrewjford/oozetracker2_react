@@ -1,4 +1,5 @@
 - insert new exp at top of array
+- expense creation - should not flip category if ive selected category before setting description
 - allow username change in profile
   - keep it defaulting to email
   - allow login with username
