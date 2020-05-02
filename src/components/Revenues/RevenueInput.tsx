@@ -17,7 +17,9 @@ interface RevenueInputProps extends WithStyles<typeof styles> {
 
 const styles = (theme: Theme) =>
   createStyles({
-    input: {},
+    root: {
+      alignSelf: "end",
+    },
   });
 
 const RevenueInput = (props: any) => {
@@ -32,7 +34,7 @@ const RevenueInput = (props: any) => {
   };
 
   return (
-    <FormControl fullWidth className={classes.input} variant="standard">
+    <FormControl className={classes.root} variant="standard">
       <Input
         id="amount"
         type="number"

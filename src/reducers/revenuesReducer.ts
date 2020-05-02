@@ -51,7 +51,10 @@ const revenuesReducer = (
         ...state,
         byMonth: {
           ...state.byMonth,
-          [monthString]: [action.payload, ...state.byMonth[monthString]],
+          [monthString]: [
+            action.payload,
+            ...(state.byMonth[monthString] || null),
+          ],
         },
       };
     case "UPDATE_REVENUE":

@@ -13,6 +13,8 @@ import RevenueInput from "../Revenues/RevenueInput";
 import { Revenue } from "../../interfaces/revenueInterfaces";
 import { useDispatch } from "react-redux";
 import { createRevenue, updateRevenue } from "../../actions/revenueActions";
+import RevenueDescriptionInput from "../Revenues/RevenueDescriptionInput";
+import RevenueLineItem from "../Revenues/RevenueLineItem";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -53,34 +55,18 @@ interface RevenueSectionProps extends WithStyles<typeof styles> {
 const RevenueSection = (props: RevenueSectionProps) => {
   const classes = props.classes;
   const dispatch = useDispatch();
-  const editRevenue = useCallback(
-    (revenue) => dispatch(updateRevenue(revenue)),
-    [dispatch]
-  );
 
   const handleRevenueChange = (revenue: Revenue) => {
     if (revenue.id) {
-      editRevenue(revenue);
+      dispatch(updateRevenue(revenue));
     } else {
       dispatch(createRevenue(revenue));
     }
   };
 
   const revenueLines = () => {
-    return props.revenues.map((revenue: Revenue) => {
-      return (
-        <div className={classes.wideGrid}>
-          <Typography variant="subtitle1" className={classes.col1}>
-            {revenue.description}
-          </Typography>
-          <Typography variant="subtitle1" className={classes.col2}>
-            <RevenueInput
-              revenue={revenue}
-              handleOnBlur={handleRevenueChange}
-            />
-          </Typography>
-        </div>
-      );
+    return props.revenues.map((revenue: Revenue, index: number) => {
+      return <RevenueLineItem revenue={revenue} key={index} />;
     });
   };
 
