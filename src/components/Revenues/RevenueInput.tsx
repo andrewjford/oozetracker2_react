@@ -7,6 +7,7 @@ import {
   createStyles,
   withStyles,
   WithStyles,
+  Typography,
 } from "@material-ui/core";
 import { Revenue } from "../../interfaces/revenueInterfaces";
 
@@ -20,31 +21,55 @@ const styles = (theme: Theme) =>
     root: {
       alignSelf: "end",
     },
+    amount: {
+      gridColumn: "3",
+      justifySelf: "right",
+      alignSelf: "end",
+    },
   });
 
 const RevenueInput = (props: any) => {
-  const [amount, setAmount] = useState(props.revenue.amount);
+  const formattedAmount = props.revenue.amount.includes(".")
+    ? props.revenue.amount
+    : `${props.revenue.amount}.00`;
+  const [amount, setAmount] = useState(formattedAmount);
+  const [isEditing, setIsEditing] = useState(false);
   const classes = props.classes;
 
   const handleOnBlur = (event: any) => {
+    setIsEditing(false);
     props.handleOnBlur({
       ...props.revenue,
       amount,
     });
   };
 
+  if (!isEditing) {
+    return (
+      <Typography
+        variant="body2"
+        className={classes.amount}
+        onClick={() => setIsEditing(true)}
+      >
+        {amount}
+      </Typography>
+    );
+  }
+
   return (
-    <FormControl className={classes.root} variant="standard">
-      <Input
-        id="amount"
-        type="number"
-        startAdornment={<InputAdornment position="start">$</InputAdornment>}
-        value={amount}
-        onChange={(event) => setAmount(event.target.value as any)}
-        onFocus={(event) => event.target.select()}
-        onBlur={handleOnBlur}
-      ></Input>
-    </FormControl>
+    <Typography variant="body2" className={classes.amount}>
+      <FormControl className={classes.root} variant="standard">
+        <Input
+          id="amount"
+          type="number"
+          startAdornment={<InputAdornment position="start">$</InputAdornment>}
+          value={amount}
+          onChange={(event) => setAmount(event.target.value as any)}
+          autoFocus={true}
+          onBlur={handleOnBlur}
+        ></Input>
+      </FormControl>
+    </Typography>
   );
 };
 

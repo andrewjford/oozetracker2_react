@@ -34,7 +34,7 @@ const RevenueDescriptionInput = (props: RevenueDescriptionInputProps) => {
   if (!editing) {
     return (
       <Typography
-        variant="subtitle1"
+        variant="body2"
         className={classes.col1}
         onClick={() => changeEditing(true)}
       >

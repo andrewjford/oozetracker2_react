@@ -25,16 +25,12 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       display: "grid",
-      gridTemplateColumns: "30% 10% 60%",
+      gridTemplateColumns: "30% auto 60%",
       width: "100%",
+      padding: "0.25rem 0",
     },
     col1: {
       gridColumn: "1 / 2",
-    },
-    amount: {
-      gridColumn: "3",
-      justifySelf: "right",
-      alignSelf: "end",
     },
     icon: {
       gridColumn: "2",
@@ -56,6 +52,10 @@ const RevenueLineItem = (props: RevenueLineItemProps) => {
     }
   };
 
+  const handleIsEditing = (isEditing: boolean) => {
+    setIsEditing(isEditing);
+  };
+
   const iconSection: any = () => {
     if (revenue.id && isEditing) {
       return <DeleteIcon onClick={() => dispatch(deleteRevenue(revenue))} />;
@@ -73,19 +73,18 @@ const RevenueLineItem = (props: RevenueLineItemProps) => {
         handleSubmit={(description: string) =>
           handleRevenueChange({ ...revenue, description })
         }
-        handleIsEditing={(isEditing: boolean) => {
-          setIsEditing(isEditing);
+        handleIsEditing={handleIsEditing}
+      />
+
+      <div className={classes.icon}>{iconSection()}</div>
+
+      <RevenueInput
+        revenue={revenue}
+        handleOnBlur={(updatedRev: Revenue) => {
+          setIsEditing(false);
+          handleRevenueChange(updatedRev);
         }}
       />
-      <div className={classes.icon}>{iconSection()}</div>
-      <Typography variant="subtitle1" className={classes.amount}>
-        <RevenueInput
-          revenue={revenue}
-          handleOnBlur={(updatedRev: Revenue) => {
-            handleRevenueChange(updatedRev);
-          }}
-        />
-      </Typography>
     </div>
   );
 };
