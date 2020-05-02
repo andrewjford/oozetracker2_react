@@ -8,9 +8,11 @@ import {
   ExpansionPanelDetails,
   WithStyles,
 } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import { Revenue } from "../../interfaces/revenueInterfaces";
 import RevenueLineItem from "../Revenues/RevenueLineItem";
+import AddIcon from "@material-ui/icons/Add";
+import { nullRevenue } from "./MonthlyTotals";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -35,8 +37,9 @@ const styles = (theme: Theme) =>
       gridTemplateColumns: "30% 70%",
       width: "100%",
     },
-    col1: {
+    revSectionTitle: {
       gridColumn: "1 / 2",
+      display: "flex",
     },
     col2: {
       gridColumn: "2",
@@ -50,14 +53,34 @@ interface RevenueSectionProps extends WithStyles<typeof styles> {
 }
 
 const RevenueSection = (props: RevenueSectionProps) => {
+  const [newRevenues, setNewRevenues] = useState<Revenue[]>([]);
   const classes = props.classes;
 
+  const addNewRevenue = (event: any) => {
+    event.stopPropagation();
+    setNewRevenues([
+      ...newRevenues,
+      {
+        ...nullRevenue,
+        date: props.date.toISOString(),
+        tempId: `${props.date.toISOString()}${newRevenues.length}`,
+      },
+    ]);
+  };
+
+  const deleteNewRevenue = (tempId: string) => {
+    setNewRevenues(
+      newRevenues.filter((value: Revenue) => value.tempId !== tempId)
+    );
+  };
+
   const revenueLines = () => {
-    return props.revenues.map((revenue: Revenue) => {
+    return props.revenues.concat(newRevenues).map((revenue: Revenue) => {
       return (
         <RevenueLineItem
           revenue={revenue}
           key={`${props.date.toISOString()}${revenue.id}`}
+          deleteLineItem={deleteNewRevenue}
         />
       );
     });
@@ -76,9 +99,10 @@ const RevenueSection = (props: RevenueSectionProps) => {
         className={classes.revenueSummary}
       >
         <div className={classes.grid}>
-          <Typography variant="subtitle1" className={classes.col1}>
-            Revenue
-          </Typography>
+          <div className={classes.revSectionTitle}>
+            <Typography variant="subtitle1">Revenue</Typography>
+            <AddIcon onClick={addNewRevenue} />
+          </div>
           <Typography variant="subtitle1" className={classes.col2}>
             {totalRevenue}
           </Typography>

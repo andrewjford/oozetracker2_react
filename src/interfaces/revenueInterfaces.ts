@@ -12,4 +12,5 @@ export interface Revenue {
   date: string;
   description: string;
   id?: string;
+  tempId?: string;
 }

@@ -208,10 +208,10 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
     }
   };
 
-  getDefaultRevenue = () => {
+  getDefaultRevenue = (): Revenue => {
     return {
       ...nullRevenue,
-      date: this.state.date,
+      date: this.state.date.toISOString(),
     };
   };
 

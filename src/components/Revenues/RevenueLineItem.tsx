@@ -13,6 +13,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 
 interface RevenueLineItemProps extends WithStyles<typeof styles> {
   revenue: Revenue;
+  deleteLineItem: (tempId: string) => any;
 }
 
 const styles = (theme: Theme) =>
@@ -66,12 +67,20 @@ const RevenueLineItem = (props: RevenueLineItemProps) => {
     }
   };
 
+  const handleDelete = () => {
+    if (revenue.id) {
+      dispatch(deleteRevenue(revenue));
+    } else if (revenue.tempId) {
+      props.deleteLineItem(revenue.tempId);
+    }
+  };
+
   const iconSection: any = () => {
-    if (revenue.id && isEditing) {
+    if (isEditing) {
       return (
         <DeleteIcon
           className={`${removeDelete ? classes.fadeOut : ""}`}
-          onClick={() => dispatch(deleteRevenue(revenue))}
+          onClick={handleDelete}
         />
       );
     } else {
