@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  Theme,
-  createStyles,
-  withStyles,
-  WithStyles,
-  Typography,
-} from "@material-ui/core";
+import { Theme, createStyles, withStyles, WithStyles } from "@material-ui/core";
 import { Revenue } from "../../interfaces/revenueInterfaces";
 import RevenueDescriptionInput from "./RevenueDescriptionInput";
 import RevenueInput from "./RevenueInput";
@@ -37,10 +31,18 @@ const styles = (theme: Theme) =>
       display: "grid",
       alignContent: "end",
     },
+    fadeOut: {
+      animation: "$fadeOut ease-in 2s",
+    },
+    "@keyframes fadeOut": {
+      "0%": { opacity: 1 },
+      "100%": { opacity: 0 },
+    },
   });
 
 const RevenueLineItem = (props: RevenueLineItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [removeDelete, setRemoveDelete] = useState(false);
   const classes = props.classes;
   const dispatch = useDispatch();
 
@@ -53,12 +55,25 @@ const RevenueLineItem = (props: RevenueLineItemProps) => {
   };
 
   const handleIsEditing = (isEditing: boolean) => {
-    setIsEditing(isEditing);
+    if (isEditing) {
+      setIsEditing(isEditing);
+    } else {
+      setRemoveDelete(true);
+      setTimeout(() => {
+        setIsEditing(isEditing);
+        setRemoveDelete(false);
+      }, 2000);
+    }
   };
 
   const iconSection: any = () => {
     if (revenue.id && isEditing) {
-      return <DeleteIcon onClick={() => dispatch(deleteRevenue(revenue))} />;
+      return (
+        <DeleteIcon
+          className={`${removeDelete ? classes.fadeOut : ""}`}
+          onClick={() => dispatch(deleteRevenue(revenue))}
+        />
+      );
     } else {
       return null;
     }
