@@ -6,7 +6,7 @@ import {
   withStyles,
   Theme,
   WithStyles,
-  createStyles
+  createStyles,
 } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
@@ -18,16 +18,20 @@ import TableRow from "@material-ui/core/TableRow";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
 import Refresh from "@material-ui/icons/Refresh";
+import RevenueSection from "./RevenueSection";
 
 import { getMonthly } from "../../actions/expenseActions";
+import { getRevenues } from "../../actions/revenueActions";
 import {
   MonthlyExpenseSummary,
   MonthlyLineItemInterface,
-  MonthRequest
+  MonthRequest,
 } from "../../interfaces/expenseInterfaces";
 import MonthlyLineItem from "./MonthlyLineItem";
 import { Redirect } from "react-router-dom";
 import { MONTHS_ARRAY } from "./constants";
+import { TableContainer } from "@material-ui/core";
+import { RevenuesMap } from "../../interfaces/revenueInterfaces";
 
 export function dateToMonthString(date: Date): string {
   return `${date.getFullYear()}-${date.getMonth() + 1}`;
@@ -38,45 +42,48 @@ const styles = (theme: Theme) =>
     mainHeader: {
       gridColumn: "1 / 5",
       height: "2rem",
-      padding: "1rem 1rem 0"
+      padding: "1rem 1rem 0.5rem",
     },
     summary: {
       marginTop: "1rem",
       display: "grid",
-      gridTemplateColumns: "1rem 20% auto 20% 1rem"
+      gridTemplateColumns: "1rem 20% auto 20% 1rem",
     },
     paper: {
       gridColumnStart: 3,
       gridColumnEnd: 5,
       [theme.breakpoints.down("sm")]: {
-        gridColumn: "2 / 6"
+        gridColumn: "2 / 6",
       },
       [theme.breakpoints.down("xs")]: {
-        gridColumn: "1 / -1"
-      }
+        gridColumn: "1 / -1",
+      },
     },
     headerItem: {
       verticalAlign: "middle",
-      display: "inline"
+      display: "inline",
     },
     headerItemRight: {
       verticalAlign: "middle",
       display: "inline",
       float: "right",
-      color: theme.palette.primary.main
+      color: theme.palette.primary.main,
     },
     rotate: {
-      animation: `$spin 1s`
+      animation: `$spin 1s`,
     },
     "@keyframes spin": {
       "0%": { transform: "rotate(0deg)" },
-      "100%": { transform: "rotate(360deg)" }
-    }
+      "100%": { transform: "rotate(360deg)" },
+    },
   });
 
 interface MonthlyProps extends WithStyles<typeof styles> {
   getMonthly: (current: MonthRequest) => any;
+  getRevenues: () => any;
   monthlies: { [key: string]: MonthlyExpenseSummary };
+  revenuesByMonth: RevenuesMap;
+  revenuesFetched: boolean;
   monthString: string;
 }
 
@@ -98,7 +105,7 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
       this.state = {
         date,
         rotate: false,
-        redirect: `/monthly/${todayMonthString}`
+        redirect: `/monthly/${todayMonthString}`,
       };
     } else {
       date.setMonth(parseInt(month, 10) - 1);
@@ -107,15 +114,21 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
       this.state = {
         date,
         rotate: false,
-        redirect: ""
+        redirect: "",
       };
+    }
+  }
+
+  componentDidMount() {
+    if (!this.props.revenuesFetched) {
+      this.props.getRevenues();
     }
   }
 
   getCurrentView = () => {
     const monthRequest: MonthRequest = {
       month: this.state.date.getMonth(),
-      year: this.state.date.getFullYear()
+      year: this.state.date.getFullYear(),
     };
     const monthString: string = dateToMonthString(this.state.date);
     const cachedView: MonthlyExpenseSummary = this.props.monthlies[monthString];
@@ -128,7 +141,7 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
   changeMonthlyView = (monthlyObject: MonthRequest) => {
     const monthString = `${monthlyObject.year}-${monthlyObject.month + 1}`;
     this.setState({
-      redirect: `/monthly/${monthString}`
+      redirect: `/monthly/${monthString}`,
     });
   };
 
@@ -139,7 +152,7 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
 
     const currentMonthRequest = {
       month: date.getMonth(),
-      year: date.getFullYear()
+      year: date.getFullYear(),
     };
     this.changeMonthlyView(currentMonthRequest);
   };
@@ -156,14 +169,14 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
     this.setState({ rotate: true });
     this.props.getMonthly({
       month: this.state.date.getMonth(),
-      year: this.state.date.getFullYear()
+      year: this.state.date.getFullYear(),
     });
   };
 
   handleRowClick = (categoryId: number) => {
     const monthString = dateToMonthString(this.state.date);
     this.setState({
-      redirect: `/monthly/${monthString}/category/${categoryId}`
+      redirect: `/monthly/${monthString}/category/${categoryId}`,
     });
   };
 
@@ -190,6 +203,7 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
   };
 
   render() {
+    const classes = this.props.classes;
     const monthString: string = dateToMonthString(this.state.date);
     const currentView: MonthlyExpenseSummary = this.props.monthlies[
       monthString
@@ -199,24 +213,34 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
       this.getCurrentView();
     }
 
-    const total = !currentView
+    const totalExpense: number = !currentView
       ? 0
-      : currentView.rows
-          .reduce((accum: number, lineItem: MonthlyLineItemInterface) => {
+      : currentView.rows.reduce(
+          (accum: number, lineItem: MonthlyLineItemInterface) => {
             return accum + parseFloat(lineItem.sum);
-          }, 0)
-          .toFixed(2);
+          },
+          0
+        );
+
+    const revenues = () => {
+      return this.props.revenuesByMonth[monthString] || [];
+    };
+
+    const netIncome: number =
+      revenues().reduce((sum, each) => {
+        return sum + parseFloat(each.amount);
+      }, 0) - totalExpense;
 
     return (
-      <Paper className={this.props.classes.paper}>
+      <Paper className={classes.paper}>
         {this.redirect()}
-        <div className={this.props.classes.mainHeader}>
+        <div className={classes.mainHeader}>
           <ChevronLeft
-            className={this.props.classes.headerItem}
+            className={classes.headerItem}
             onClick={this.handleLeftMonthClick}
           />
           <Typography
-            className={this.props.classes.headerItem}
+            className={classes.headerItem}
             variant="h5"
             component="h3"
           >
@@ -224,38 +248,48 @@ class MonthlyTotals extends React.Component<MonthlyProps, MonthlyState> {
             {MONTHS_ARRAY[this.state.date.getMonth()]}
           </Typography>
           <ChevronRight
-            className={this.props.classes.headerItem}
+            className={classes.headerItem}
             onClick={this.handleRightMonthClick}
           />
           <Refresh
-            className={`${this.props.classes.headerItemRight} ${
-              this.state.rotate ? this.props.classes.rotate : ""
+            className={`${classes.headerItemRight} ${
+              this.state.rotate ? classes.rotate : ""
             }`}
-            onAnimationEnd={event => this.setState({ rotate: false })}
+            onAnimationEnd={(event) => this.setState({ rotate: false })}
             onClick={this.handleRefreshClick}
           />
         </div>
+        <RevenueSection revenues={revenues()} date={this.state.date} />
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Category</TableCell>
+                <TableCell align="right">Amount</TableCell>
+              </TableRow>
+            </TableHead>
 
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Category</TableCell>
-              <TableCell align="right">Amount</TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {this.renderLineItems(currentView)}
-            <TableRow>
-              <TableCell>
-                <b>Total</b>
-              </TableCell>
-              <TableCell align="right">
-                <b>{total}</b>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+            <TableBody>
+              {this.renderLineItems(currentView)}
+              <TableRow>
+                <TableCell>
+                  <b>Total Expenses</b>
+                </TableCell>
+                <TableCell align="right">
+                  <b>{totalExpense.toFixed(2)}</b>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <b>Net Income</b>
+                </TableCell>
+                <TableCell align="right">
+                  <b>{netIncome.toFixed(2)}</b>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Paper>
     );
   }
@@ -265,16 +299,23 @@ const mapStateToProps = (state: {
   expenses: {
     monthlies: {};
   };
+  revenues: {
+    byMonth: RevenuesMap;
+    fetched: boolean;
+  };
 }) => {
   return {
-    monthlies: state.expenses.monthlies
+    monthlies: state.expenses.monthlies,
+    revenuesByMonth: state.revenues.byMonth,
+    revenuesFetched: state.revenues.fetched,
   };
 };
 
 const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators(
     {
-      getMonthly
+      getMonthly,
+      getRevenues,
     },
     dispatch
   );

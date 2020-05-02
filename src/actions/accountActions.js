@@ -4,10 +4,10 @@ import { fetchCategories } from "./categoriesActions";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export const login = account => {
-  return dispatch => {
+export const login = (account) => {
+  return (dispatch) => {
     return BackendCallout.postToApi(`${API_URL}/api/v1/login`, account)
-      .then(response => {
+      .then((response) => {
         const expiryDate = new Date();
         expiryDate.setSeconds(response.tokenExpiration);
         localStorage.setItem("token", response.token);
@@ -15,7 +15,7 @@ export const login = account => {
 
         return dispatch({
           type: "SET_TOKEN",
-          payload: { token: response.token }
+          payload: { token: response.token },
         });
       })
       .then(() => {
@@ -31,39 +31,42 @@ export const logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("expiryDate");
 
-  
-  return dispatch => {
+  return (dispatch) => {
     dispatch({
-      type: "PURGE_EXPENSES"
+      type: "PURGE_EXPENSES",
     });
-  
+
     dispatch({
-      type: "PURGE_CATEGORIES"
+      type: "PURGE_REVENUES",
     });
-    
+
+    dispatch({
+      type: "PURGE_CATEGORIES",
+    });
+
     return dispatch({
-      type: "PURGE_ACCOUNT_STATE"
+      type: "PURGE_ACCOUNT_STATE",
     });
   };
 };
 
-export const setTokenFromLocalStorage = token => {
-  return dispatch => {
+export const setTokenFromLocalStorage = (token) => {
+  return (dispatch) => {
     return dispatch({
       type: "SET_TOKEN",
-      payload: { token }
+      payload: { token },
     });
   };
 };
 
-export const register = form => {
+export const register = (form) => {
   return (dispatch, getState) => {
     return BackendCallout.postToApi(
       `${API_URL}/api/v1/register`,
       form,
       getState().account.token
     )
-      .then(response => {
+      .then((response) => {
         const expiryDate = new Date();
         expiryDate.setSeconds(response.tokenExpiration);
         localStorage.setItem("token", response.token);
@@ -71,7 +74,7 @@ export const register = form => {
 
         return dispatch({
           type: "SET_TOKEN",
-          payload: { token: response.token }
+          payload: { token: response.token },
         });
       })
       .then(() => {
@@ -88,26 +91,26 @@ export const getDetails = () => {
     return BackendCallout.getFromApi(
       `${API_URL}/api/v1/account`,
       getState().account.token
-    ).then(response => {
+    ).then((response) => {
       return dispatch({
         type: "ADD_DETAILS",
-        payload: response
+        payload: response,
       });
     });
   };
 };
 
-export const updateAccount = updatedAccount => {
+export const updateAccount = (updatedAccount) => {
   return (dispatch, getState) => {
     const account = getState().account;
     return BackendCallout.putToApi(
       `${API_URL}/api/v1/accounts/${account.id}`,
       updatedAccount,
       account.token
-    ).then(response => {
+    ).then((response) => {
       return dispatch({
         type: "UPDATE_ACCOUNT",
-        payload: response
+        payload: response,
       });
     });
   };
