@@ -1,4 +1,5 @@
 import { ExpenseState, Expense } from "../interfaces/expenseInterfaces";
+import { buildExpense } from "../actions/expenseActions";
 
 const defaultState: ExpenseState = {
   monthlies: {},
@@ -7,8 +8,8 @@ const defaultState: ExpenseState = {
   byMonth: {},
   suggestions: {
     topDescriptions: {},
-    categoryToDescription: {}
-  }
+    categoryToDescription: {},
+  },
 };
 
 const expensesReducer = (
@@ -18,51 +19,52 @@ const expensesReducer = (
   switch (action.type) {
     case "FETCH_RECENT_EXPENSES":
       const expenseMap = action.payload.reduce((map: any, expense: Expense) => {
-        map[expense.id] = expense;
+        map[expense.id] = buildExpense(expense);
         return map;
       }, {});
       return {
         ...state,
         expenses: {
           ...state.expenses,
-          ...expenseMap
+          ...expenseMap,
         },
-        dataFetched: true
+        dataFetched: true,
       };
     case "ADD_EXPENSE":
       return {
         ...state,
         expenses: {
           ...state.expenses,
-          [action.payload.id]: action.payload
-        }
+          [action.payload.id]: buildExpense(action.payload),
+        },
       };
     case "DELETE_EXPENSE":
       const afterDelete = {
         ...state,
         expenses: {
-          ...state.expenses
-        }
+          ...state.expenses,
+        },
       };
 
       delete afterDelete.expenses[action.payload];
 
       return afterDelete;
     case "GET_MONTHLY":
-      const monthString: string = `${action.payload.year}-${action.payload
-        .month + 1}`;
+      const monthString: string = `${action.payload.year}-${
+        action.payload.month + 1
+      }`;
 
       return {
         ...state,
         monthlies: {
           ...state.monthlies,
-          [monthString]: action.payload
-        }
+          [monthString]: action.payload,
+        },
       };
     case "GET_MONTH_BY_CATEGORY":
       const expensesForMap = action.payload.expenses.reduce(
         (map: any, expense: Expense) => {
-          map[expense.id] = expense;
+          map[expense.id] = buildExpense(expense);
           return map;
         },
         {}
@@ -72,23 +74,23 @@ const expensesReducer = (
         ...state,
         expenses: {
           ...state.expenses,
-          ...expensesForMap
+          ...expensesForMap,
         },
         byMonth: {
           ...state.byMonth,
           [action.payload.monthString]: {
             ...state.byMonth[action.payload.monthString],
-            [action.payload.categoryId]: action.payload.expenses
-          }
-        }
+            [action.payload.categoryId]: action.payload.expenses,
+          },
+        },
       };
     case "GOT_EXPENSE_SUGGESTIONS":
       return {
         ...state,
         suggestions: {
           ...state.suggestions,
-          ...action.payload
-        }
+          ...action.payload,
+        },
       };
     case "PURGE_EXPENSES":
       return defaultState;
