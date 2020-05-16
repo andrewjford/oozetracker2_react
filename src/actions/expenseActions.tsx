@@ -1,7 +1,8 @@
 import BackendCallout from "../services/BackendCallout";
 import {
   MonthRequest,
-  ExpenseFormState
+  ExpenseFormState,
+  Expense,
 } from "../interfaces/expenseInterfaces";
 import { Dispatch } from "redux";
 import { RootState } from "../interfaces/generalInterfaces";
@@ -13,10 +14,10 @@ export const fetchRecentExpenses = () => {
     return BackendCallout.getFromApi(
       `${API_URL}/api/v1/expenses?pageSize=10`,
       getState().account.token
-    ).then(data => {
+    ).then((data) => {
       return dispatch({
         type: "FETCH_RECENT_EXPENSES",
-        payload: data.expenses
+        payload: data.expenses,
       });
     });
   };
@@ -28,10 +29,10 @@ export const createExpense = (newExpense: ExpenseFormState) => {
       `${API_URL}/api/v1/expenses`,
       newExpense,
       getState().account.token
-    ).then(responseExpense => {
+    ).then((responseExpense) => {
       return dispatch({
         type: "ADD_EXPENSE",
-        payload: responseExpense
+        payload: responseExpense,
       });
     });
   };
@@ -43,10 +44,10 @@ export const updateExpense = (expense: ExpenseFormState) => {
       `${API_URL}/api/v1/expenses/${expense.id}`,
       expense,
       getState().account.token
-    ).then(responseExpense => {
+    ).then((responseExpense) => {
       return dispatch({
         type: "ADD_EXPENSE",
-        payload: responseExpense
+        payload: responseExpense,
       });
     });
   };
@@ -57,10 +58,10 @@ export const getExpense = (id: string) => {
     BackendCallout.getFromApi(
       `${API_URL}/api/v1/expenses/${id}`,
       getState().account.token
-    ).then(expense => {
+    ).then((expense) => {
       return dispatch({
         type: "ADD_EXPENSE",
-        payload: expense
+        payload: expense,
       });
     });
   };
@@ -71,10 +72,10 @@ export const deleteExpense = (id: string) => {
     BackendCallout.delete(
       `${API_URL}/api/v1/expenses/${id}`,
       getState().account.token
-    ).then(response => {
+    ).then((response) => {
       return dispatch({
         type: "DELETE_EXPENSE",
-        payload: id
+        payload: id,
       });
     });
   };
@@ -87,13 +88,13 @@ export const getMonthly = (monthObject: MonthRequest) => {
       monthObject,
       getState().account.token
     )
-      .then(report => {
+      .then((report) => {
         return dispatch({
           type: "GET_MONTHLY",
-          payload: report
+          payload: report,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -107,23 +108,25 @@ export const getAllMonth = (monthString: string, targetDate: Date) => {
       0
     );
     const paramsArray = [
-      `startDate=${lastDayOfMonth.getFullYear()}-${lastDayOfMonth.getMonth() +
-        1}-01`,
-      `endDate=${lastDayOfMonth.getFullYear()}-${lastDayOfMonth.getMonth() +
-        1}-${lastDayOfMonth.getDate()}`,
-      `pageSize=ALL`
+      `startDate=${lastDayOfMonth.getFullYear()}-${
+        lastDayOfMonth.getMonth() + 1
+      }-01`,
+      `endDate=${lastDayOfMonth.getFullYear()}-${
+        lastDayOfMonth.getMonth() + 1
+      }-${lastDayOfMonth.getDate()}`,
+      `pageSize=ALL`,
     ];
 
     return BackendCallout.getFromApi(
       `${API_URL}/api/v1/expenses/?` + paramsArray.join("&"),
       getState().account.token
-    ).then(response => {
+    ).then((response) => {
       return dispatch({
         type: "GET_ALL_MONTH",
         payload: {
           monthString,
-          expenses: response.expenses
-        }
+          expenses: response.expenses,
+        },
       });
     });
   };
@@ -134,25 +137,27 @@ export const getMonthByCategory = (monthString: string, categoryId: number) => {
     const [year, month] = monthString.split("-");
     const lastDayOfMonth = new Date(parseInt(year, 10), parseInt(month, 10), 0);
     const paramsArray = [
-      `startDate=${lastDayOfMonth.getFullYear()}-${lastDayOfMonth.getMonth() +
-        1}-01`,
-      `endDate=${lastDayOfMonth.getFullYear()}-${lastDayOfMonth.getMonth() +
-        1}-${lastDayOfMonth.getDate()}`,
+      `startDate=${lastDayOfMonth.getFullYear()}-${
+        lastDayOfMonth.getMonth() + 1
+      }-01`,
+      `endDate=${lastDayOfMonth.getFullYear()}-${
+        lastDayOfMonth.getMonth() + 1
+      }-${lastDayOfMonth.getDate()}`,
       `categoryId=${categoryId}`,
-      `pageSize=ALL`
+      `pageSize=ALL`,
     ];
 
     return BackendCallout.getFromApi(
       `${API_URL}/api/v1/expenses/?` + paramsArray.join("&"),
       getState().account.token
-    ).then(response => {
+    ).then((response) => {
       return dispatch({
         type: "GET_MONTH_BY_CATEGORY",
         payload: {
           monthString,
           categoryId,
-          expenses: response.expenses
-        }
+          expenses: response.expenses,
+        },
       });
     });
   };
@@ -167,7 +172,14 @@ export const getExpenseSuggestions = () => {
 
     return dispatch({
       type: "GOT_EXPENSE_SUGGESTIONS",
-      payload: suggestions
+      payload: suggestions,
     });
+  };
+};
+
+export const buildExpense = (jsonFormat: any): Expense => {
+  return {
+    ...jsonFormat,
+    createdAt: new Date(jsonFormat.createdAt),
   };
 };

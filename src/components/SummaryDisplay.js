@@ -6,39 +6,43 @@ import { connect } from "react-redux";
 
 import ExpenseTable from "./Expenses/ExpenseTable";
 
-const styles = theme => ({
+const styles = (theme) => ({
   mainHeader: {
-    padding: "1rem 1rem 0"
+    padding: "1rem 1rem 0",
   },
   paper: {
     gridColumnStart: 2,
     gridColumnEnd: 6,
     [theme.breakpoints.down("xs")]: {
-      gridColumn: "1 / -1"
-    }
+      gridColumn: "1 / -1",
+    },
   },
   loadingSpinner: {
     gridColumnStart: 2,
     gridColumnEnd: 6,
-    height: "20rem"
+    height: "20rem",
   },
   tableWrapper: {
-    overflowX: "auto"
-  }
+    overflowX: "auto",
+  },
 });
 
 class SummaryDisplay extends React.Component {
   render() {
     const recentExpenses = Object.values(this.props.expenses)
-      .map(expense => {
+      .map((expense) => {
         return {
           ...expense,
           dateTyped: new Date(expense.date),
-          category: this.props.categoriesMap[expense.category_id]
+          category: this.props.categoriesMap[expense.category_id],
         };
       })
       .sort((a, b) => {
-        return b.dateTyped - a.dateTyped;
+        const dateCompare = b.dateTyped - a.dateTyped;
+        if (dateCompare === 0) {
+          return b.createdAt - a.createdAt;
+        }
+        return dateCompare;
       })
       .slice(0, 9);
 
@@ -59,10 +63,10 @@ class SummaryDisplay extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     expenses: state.expenses.expenses,
-    categoriesMap: state.categories.categoriesMap
+    categoriesMap: state.categories.categoriesMap,
   };
 };
 
