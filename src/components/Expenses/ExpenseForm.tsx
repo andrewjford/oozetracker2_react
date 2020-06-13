@@ -13,7 +13,7 @@ import {
   InputAdornment,
   FormControl,
   WithStyles,
-  Theme
+  Theme,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { withStyles } from "@material-ui/core/styles";
@@ -22,20 +22,21 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import {
   createExpense,
   updateExpense,
-  getExpenseSuggestions
+  getExpenseSuggestions,
 } from "../../actions/expenseActions";
 import {
   Expense,
   ExpenseFormState,
-  ExpenseSuggestionData
+  ExpenseSuggestionData,
 } from "../../interfaces/expenseInterfaces";
 import ErrorDisplay from "../ErrorDisplay";
+import { convertErrorToArray } from "../../services/ErrorHandling";
 
 const styles = (theme: Theme) => ({
   form: {
     display: "grid",
     gridRowGap: "1rem",
-    paddingTop: "1rem"
+    paddingTop: "1rem",
   },
   paper: {
     gridColumnStart: 3,
@@ -43,29 +44,29 @@ const styles = (theme: Theme) => ({
     padding: "2rem",
     [theme.breakpoints.up("md")]: {
       justifySelf: "center",
-      minWidth: "550px"
+      minWidth: "550px",
     },
     [theme.breakpoints.down("sm")]: {
-      gridColumn: "3 / 5"
+      gridColumn: "3 / 5",
     },
     [theme.breakpoints.down("xs")]: {
-      gridColumn: "1 / -1"
-    }
+      gridColumn: "1 / -1",
+    },
   },
   categoryGroup: {
     gridColumn: "1 / 2",
     display: "grid",
-    gridTemplateColumns: "30% 70%"
+    gridTemplateColumns: "30% 70%",
   },
   categoryChild: {},
   buttons: {
     gridColumn: "1 / 2",
-    justifySelf: "center"
+    justifySelf: "center",
   },
   button: {
-    margin: "0 0.5rem"
+    margin: "0 0.5rem",
   },
-  input: {}
+  input: {},
 });
 
 interface PassedProps extends WithStyles<typeof styles> {
@@ -87,6 +88,7 @@ interface TheState {
   mode: string;
   form: ExpenseFormState;
   suggestions: string[];
+  categoryChanged: boolean;
   history: any;
   errors: any[];
 }
@@ -104,11 +106,12 @@ class ExpenseForm extends React.Component<
         form: {
           ...props.expense,
           category: props.expense.category_id,
-          date: props.expense.date
+          date: props.expense.date,
         },
         suggestions: Object.keys(props.suggestions.topDescriptions),
+        categoryChanged: false,
         history: props.history,
-        errors: []
+        errors: [],
       };
     } else {
       this.state = {
@@ -117,11 +120,12 @@ class ExpenseForm extends React.Component<
           description: "",
           amount: 0,
           date: this.convertDateToString(new Date()),
-          category: props.categories[0].id || null
+          category: props.categories.length > 0 ? props.categories[0].id : null,
         },
         suggestions: Object.keys(props.suggestions.topDescriptions),
+        categoryChanged: false,
         history: props.history,
-        errors: []
+        errors: [],
       };
     }
   }
@@ -143,6 +147,13 @@ class ExpenseForm extends React.Component<
   };
 
   categoriesList = () => {
+    if (this.props.categories.length === 0) {
+      return [
+        <MenuItem value="None">
+          <em>None</em>
+        </MenuItem>,
+      ];
+    }
     return this.props.categories.map((category: any, index: number) => {
       return (
         <MenuItem key={index} value={category.id}>
@@ -160,7 +171,7 @@ class ExpenseForm extends React.Component<
       })
       .catch((err: Error) => {
         this.setState({
-          errors: [err.message]
+          errors: convertErrorToArray(err),
         });
       });
   };
@@ -171,7 +182,7 @@ class ExpenseForm extends React.Component<
       this.props.history.push(`/expenses/${expense.id}`);
     } catch (err) {
       this.setState({
-        errors: [err.message]
+        errors: [err.message],
       });
     }
   };
@@ -194,8 +205,8 @@ class ExpenseForm extends React.Component<
     this.setState({
       form: {
         ...this.state.form,
-        [field]: event.target.value
-      }
+        [field]: event.target.value,
+      },
     });
   };
 
@@ -203,19 +214,25 @@ class ExpenseForm extends React.Component<
     this.setState({
       form: {
         ...this.state.form,
-        description: value
-      }
+        description: value,
+      },
     });
 
     this.autoChangeCategory(value);
   };
 
   handleCategoryChange = (event: any) => {
+    let categoryChanged: boolean = false;
+    if (this.state.form.category !== event.target.value) {
+      categoryChanged = true;
+    }
+
     this.setState({
       form: {
         ...this.state.form,
-        category: event.target.value
-      }
+        category: event.target.value,
+      },
+      categoryChanged,
     });
 
     this.filterDescriptionSuggestions(event.target.value);
@@ -229,14 +246,15 @@ class ExpenseForm extends React.Component<
     if (
       relatedSuggestion &&
       this.state.form.description !== description &&
-      this.state.mode === "new"
+      this.state.mode === "new" &&
+      !this.state.categoryChanged
     ) {
       this.setState({
         form: {
           ...this.state.form,
           description,
-          category: relatedSuggestion.category_id
-        }
+          category: relatedSuggestion.category_id,
+        },
       });
     }
   };
@@ -252,10 +270,10 @@ class ExpenseForm extends React.Component<
         .sort((a: ExpenseSuggestionData, b: ExpenseSuggestionData) => {
           return b.recurrence - a.recurrence;
         })
-        .map(each => each.description);
+        .map((each) => each.description);
 
       this.setState({
-        suggestions: sortedFullList
+        suggestions: sortedFullList,
       });
     }
 
@@ -264,13 +282,13 @@ class ExpenseForm extends React.Component<
 
   filterDescriptionSuggestions = (categoryId: number): void => {
     const filteredList = Object.values(this.props.suggestions.topDescriptions)
-      .filter(expenseSuggestions => {
+      .filter((expenseSuggestions) => {
         return expenseSuggestions.category_id === categoryId;
       })
       .sort((a: ExpenseSuggestionData, b: ExpenseSuggestionData) => {
         return b.recurrence - a.recurrence;
       })
-      .map(each => each.description);
+      .map((each) => each.description);
 
     if (filteredList.length === 0) {
       return;
@@ -279,7 +297,7 @@ class ExpenseForm extends React.Component<
     const mergedSet = new Set([...filteredList, ...this.state.suggestions]);
 
     this.setState({
-      suggestions: Array.from(mergedSet)
+      suggestions: Array.from(mergedSet),
     });
   };
 
@@ -314,7 +332,7 @@ class ExpenseForm extends React.Component<
             value={this.state.form.description}
             onChange={this.handleDescriptionChange}
             autoSelect={true}
-            renderInput={params => (
+            renderInput={(params) => (
               <TextField
                 {...params}
                 type="text"
@@ -334,7 +352,7 @@ class ExpenseForm extends React.Component<
               }
               value={this.state.form.amount}
               onChange={this.handleChange}
-              onFocus={event => event.target.select()}
+              onFocus={(event) => event.target.select()}
             ></Input>
           </FormControl>
 
@@ -345,9 +363,6 @@ class ExpenseForm extends React.Component<
               onChange={this.handleCategoryChange}
               className={classes.categoryChild}
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
               {this.categoriesList()}
             </Select>
           </div>
@@ -382,7 +397,7 @@ const mapStateToProps = (state: {
   };
 }) => {
   return {
-    suggestions: state.expenses.suggestions
+    suggestions: state.expenses.suggestions,
   };
 };
 
@@ -391,7 +406,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     {
       createExpense,
       updateExpense,
-      getExpenseSuggestions
+      getExpenseSuggestions,
     },
     dispatch
   );

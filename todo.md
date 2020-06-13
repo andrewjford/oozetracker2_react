@@ -1,5 +1,4 @@
-- insert new exp at top of array
-- expense creation - should not flip category if ive selected category before setting description
+- fix rending error message bug - Cannot update during an existing state transition (such as within `render`)
 - allow username change in profile
   - keep it defaulting to email
   - allow login with username
