@@ -8,7 +8,7 @@ import {
   createStyles,
   WithStyles,
   Checkbox,
-  FormControlLabel
+  FormControlLabel,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { Redirect, withRouter, RouteComponentProps } from "react-router-dom";
@@ -45,11 +45,11 @@ class Login extends React.Component<
       form: {
         email: "",
         password: "",
-        rememberMe: false
+        rememberMe: false,
       },
       history: props.history,
       errors: [],
-      loading: false
+      loading: false,
     };
   }
 
@@ -60,7 +60,7 @@ class Login extends React.Component<
       .then(() => {
         this.setState({
           loading: false,
-          redirect: "/"
+          redirect: "/",
         });
       })
       .catch((error: Error) => {
@@ -71,7 +71,7 @@ class Login extends React.Component<
         this.setState({
           errors:
             parsedError.constructor === Array ? parsedError : [parsedError],
-          loading: false
+          loading: false,
         });
       });
   };
@@ -85,8 +85,8 @@ class Login extends React.Component<
     this.setState({
       form: {
         ...this.state.form,
-        email: event.target.value
-      }
+        email: event.target.value,
+      },
     });
   };
 
@@ -94,8 +94,8 @@ class Login extends React.Component<
     this.setState({
       form: {
         ...this.state.form,
-        password: event.target.value
-      }
+        password: event.target.value,
+      },
     });
   };
 
@@ -103,8 +103,8 @@ class Login extends React.Component<
     this.setState({
       form: {
         ...this.state.form,
-        rememberMe: !this.state.form.rememberMe
-      }
+        rememberMe: !this.state.form.rememberMe,
+      },
     });
   };
 
@@ -164,6 +164,13 @@ class Login extends React.Component<
             <span>Not a member? Register </span>
             <Link to="/register">here</Link>
           </Typography>
+          <Typography
+            variant="body2"
+            className={this.props.classes.justifyCenter}
+          >
+            <span>Forgot your password? Reset </span>
+            <Link to="/resetPassword">here</Link>
+          </Typography>
         </form>
       );
     }
@@ -191,7 +198,7 @@ const styles = (theme: Theme) =>
     form: {
       display: "grid",
       gridRowGap: "1rem",
-      paddingTop: "1rem"
+      paddingTop: "1rem",
     },
     paper: {
       gridColumnStart: 3,
@@ -201,32 +208,32 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up("md")]: {
         justifySelf: "center",
         minWidth: "500px",
-        maxWidth: "500px"
+        maxWidth: "500px",
       },
       [theme.breakpoints.down("sm")]: {
-        gridColumn: "3 / 5"
+        gridColumn: "3 / 5",
       },
       [theme.breakpoints.down("xs")]: {
-        gridColumn: "1 / -1"
-      }
+        gridColumn: "1 / -1",
+      },
     },
     categoryGroup: {
       gridColumn: "1 / 2",
       display: "grid",
-      gridTemplateColumns: "30% 70%"
+      gridTemplateColumns: "30% 70%",
     },
     categoryChild: {},
     buttons: {
       gridColumn: "1 / 2",
-      justifySelf: "center"
+      justifySelf: "center",
     },
     button: {
-      margin: "0 0.5rem"
+      margin: "0 0.5rem",
     },
     justifyCenter: {
-      justifySelf: "center"
+      justifySelf: "center",
     },
-    input: {}
+    input: {},
   });
 
 export default withStyles(styles)(withRouter(Login));
