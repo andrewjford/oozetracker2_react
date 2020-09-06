@@ -1,3 +1,4 @@
+- add UI for repeatable revenues
 - fix rending error message bug - Cannot update during an existing state transition (such as within `render`)
 - allow username change in profile
   - keep it defaulting to email
